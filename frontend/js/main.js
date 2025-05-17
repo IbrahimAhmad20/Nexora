@@ -39,7 +39,8 @@ let authButtons;
 let cartCount;
 
 // API Base URL
-const API_BASE_URL = 'http://localhost:5000/api';
+const BASE_API_URL = window.BASE_API_URL;
+const API_BASE_URL = window.API_BASE_URL;
 
 // Initialize DOM Elements
 function initializeElements() {
@@ -401,21 +402,28 @@ async function loadFeaturedProducts() {
         let res = await fetch(`${API_BASE_URL}/products/featured`);
         let products = [];
         if (res.ok) {
-            products = await res.json();
+            const data = await res.json();
+            products = data.products || [];
         } else {
             // fallback
             res = await fetch(`${API_BASE_URL}/products`);
-            products = (await res.json()).slice(0, 6);
+            const data = await res.json();
+            products = (data.products || data).slice(0, 6);
         }
-        landingFeaturedProductsGrid.innerHTML = products.map(product => `
-            <div class="product-card">
-                <img src="${product.image || 'https://via.placeholder.com/180x160?text=No+Image'}" alt="${product.name}">
-                <div class="product-title">${product.name}</div>
-                <div class="product-price">$${product.price.toFixed(2)}</div>
-                <div class="product-vendor">${product.vendor?.name ? 'By ' + product.vendor.name : ''}</div>
-                <button class="add-cart-btn" data-product-id="${product.id}"><i class="fas fa-cart-plus"></i> Add to Cart</button>
-            </div>
-        `).join('');
+        landingFeaturedProductsGrid.innerHTML = products.map(product => {
+            let imageUrl = product.image
+                ? (product.image.startsWith('http') ? product.image : BASE_API_URL + product.image)
+                : 'https://via.placeholder.com/180x160?text=No+Image';
+            return `
+                <div class="product-card">
+                    <img src="${imageUrl}" alt="${product.name}">
+                    <div class="product-title">${product.name}</div>
+                    <div class="product-price">$${product.price.toFixed(2)}</div>
+                    <div class="product-vendor">${product.vendor?.name ? 'By ' + product.vendor.name : ''}</div>
+                    <button class="add-cart-btn" data-product-id="${product.id}"><i class="fas fa-cart-plus"></i> Add to Cart</button>
+                </div>
+            `;
+        }).join('');
         // Add event listeners for Add to Cart
         landingFeaturedProductsGrid.querySelectorAll('.add-cart-btn').forEach(btn => {
             btn.addEventListener('click', function() {

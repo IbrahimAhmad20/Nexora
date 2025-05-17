@@ -1,5 +1,6 @@
 // Nexora Shop Page JS
-const API_BASE_URL = 'http://localhost:5000/api';
+const BASE_API_URL = window.BASE_API_URL;
+const API_BASE_URL = window.API_BASE_URL;
 const productGrid = document.getElementById('shopProductGrid');
 const categoryFilters = document.getElementById('categoryFilters');
 const searchForm = document.getElementById('shopSearchForm');
@@ -35,7 +36,6 @@ async function fetchProducts() {
 
 // Render products
 function renderProducts(products) {
-    const BASE_API_URL = 'http://localhost:5000';
     if (!products.length) {
         productGrid.innerHTML = '<p style="color:#bfc9da">No products found.</p>';
         return;

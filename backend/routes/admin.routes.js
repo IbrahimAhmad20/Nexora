@@ -85,14 +85,13 @@ router.get('/products', verifyToken, checkRole(['admin']), async (req, res) => {
 
         // Get paginated products
         const [products] = await pool.query(`
-            SELECT p.id, p.name, p.description, v.business_name AS vendor_name, c.name AS category, p.price, p.stock_quantity AS stock_quantity, p.status, p.created_at, p.category_id
+            SELECT p.id, p.name, p.description, v.business_name AS vendor_name, c.name AS category, p.price, p.stock_quantity AS stock_quantity, p.status, p.created_at, p.category_id, p.featured
             FROM products p
             LEFT JOIN vendor_profiles v ON p.vendor_id = v.id
             LEFT JOIN categories c ON p.category_id = c.id
             ORDER BY p.created_at DESC
             LIMIT ? OFFSET ?
         `, [limit, offset]);
-
         res.json({
             success: true,
             products,

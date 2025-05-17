@@ -90,4 +90,15 @@ button[type="submit"] {
   margin-top: 1.5rem; width: 100%; padding: 0.75rem; background: #3b82f6; color: #fff; border: none; border-radius: 5px; font-size: 1rem; cursor: pointer;
   transition: background 0.2s;
 }
-button[type="submit"]:hover { background: #2563eb; } 
+button[type="submit"]:hover { background: #2563eb; }
+
+.product-table td input.featured-toggle {
+    display: block;
+    margin: 0 auto;
+    width: 18px;
+    height: 18px;
+    accent-color: #007bff;
+}
+.product-table th:nth-child(8), .product-table td:nth-child(8) {
+    text-align: center;
+} 

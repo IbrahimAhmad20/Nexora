@@ -48,6 +48,7 @@ function renderProducts(products) {
                 <td>${product.price}</td>
                 <td>${product.stock_quantity}</td>
                 <td>${product.status}</td>
+                <td><input type="checkbox" class="featured-toggle" data-id="${product.id}" ${product.featured ? 'checked' : ''}></td>
                 <td>${product.created_at ? new Date(product.created_at).toLocaleString() : ''}</td>
                 <td>
                     <button class="action-btn edit-btn" data-id="${product.id}">Edit</button>
@@ -56,6 +57,27 @@ function renderProducts(products) {
             `;
             tbody.appendChild(tr);
         });
+    // Add event listeners for featured toggles
+    document.querySelectorAll('.featured-toggle').forEach(toggle => {
+        toggle.addEventListener('change', async function() {
+            const productId = this.getAttribute('data-id');
+            const featured = this.checked ? 1 : 0;
+            const token = localStorage.getItem('token');
+            const res = await fetch(`http://localhost:5000/api/admin/products/${productId}/featured`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + token
+                },
+                body: JSON.stringify({ featured })
+            });
+            const data = await res.json();
+            if (!data.success) {
+                alert(data.message || 'Failed to update featured status');
+            }
+            await loadProducts();
+        });
+    });
 }
 
 function filterProducts(query) {

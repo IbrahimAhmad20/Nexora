@@ -1,9 +1,38 @@
+console.log('Loaded product.routes.js');
+
 const express = require('express');
 const router = express.Router();
 const { pool } = require('../config/db.config');
 const { verifyToken, checkRole } = require('../middleware/auth.middleware');
 const { body, validationResult } = require('express-validator');
 const { productUpload } = require('../utils/upload');
+
+// Public: Get all featured products
+router.get('/featured', async (req, res) => {
+  console.log('HIT /api/products/featured');
+  try {
+    const [products] = await pool.query(`
+      SELECT p.*, v.business_name as vendor_name, 
+        (SELECT image_url FROM product_images WHERE product_id = p.id AND is_primary = 1 LIMIT 1) as primary_image
+      FROM products p
+      JOIN vendor_profiles v ON p.vendor_id = v.id
+      WHERE p.featured = 1 AND p.status = 'active'
+      ORDER BY p.created_at DESC
+    `);
+
+    // Format products for frontend
+    const formatted = products.map(p => ({
+      ...p,
+      image: p.primary_image,
+      vendor: { name: p.vendor_name },
+      price: parseFloat(p.price)
+    }));
+
+    res.json({ success: true, products: formatted });
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Failed to fetch featured products' });
+  }
+});
 
 // Get all products (public)
 router.get('/', async (req, res) => {

@@ -1,4 +1,5 @@
-const API_BASE_URL = 'http://localhost:5000/api';
+const BASE_API_URL = window.BASE_API_URL;
+const API_BASE_URL = window.API_BASE_URL;
 
 function getProductIdFromUrl() {
   const params = new URLSearchParams(window.location.search);
