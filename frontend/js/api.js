@@ -8,20 +8,15 @@ class ApiService {
     async request(endpoint, options = {}) {
         try {
             const url = `${this.baseUrl}${endpoint}`;
-            const headers = {
-                'Content-Type': 'application/json',
-                ...options.headers
-            };
-
-            // Add auth token if available
             const token = localStorage.getItem('token');
+            options.headers = options.headers || {};
             if (token) {
-                headers['Authorization'] = `Bearer ${token}`;
+                options.headers['Authorization'] = `Bearer ${token}`;
             }
 
             const response = await fetch(url, {
                 ...options,
-                headers
+                headers: options.headers
             });
 
             if (!response.ok) {
@@ -91,15 +86,27 @@ class ApiService {
                 'Authorization': `Bearer ${localStorage.getItem('token')}`
             }
         });
-
         if (!response.ok) {
-            const error = await response.json();
-            throw new Error(error.message || 'Error deleting product');
+            throw new Error('Failed to delete product');
         }
-
-        return response.json();
+        return await response.json();
     }
-
+    async deleteVendor(vendorId) {
+        const url = `/vendor/admin/vendors/${vendorId}`;
+        const headers = { 'Content-Type': 'application/json' };
+        console.log('[api] deleteVendor url:', url);
+        try {
+            const res = await this.request(url, {
+                method: 'DELETE',
+                headers
+            });
+            console.log('[api] deleteVendor response:', res);
+            return res;
+        } catch (err) {
+            console.error('[api] deleteVendor error:', err);
+            throw err;
+        }
+    }
     // Cart endpoints
     async getCart() {
         const token = localStorage.getItem('token');
@@ -192,6 +199,30 @@ class ApiService {
         return this.request('/admin/users');
     }
 
+    async updateUser(userId, data) {
+        return this.request(`/admin/users/${userId}`, {
+            method: 'PUT',
+            body: JSON.stringify(data)
+        });
+    }
+
+    async deleteUser(userId) {
+        return this.request(`/admin/users/${userId}`, {
+            method: 'DELETE'
+        });
+    }
+
+    async bulkDeleteUsers(userIds) {
+        return this.request('/admin/users/bulk-delete', {
+            method: 'POST',
+            body: JSON.stringify({ userIds })
+        });
+    }
+
+    async getDashboardAnalytics() {
+        return this.request('/admin/dashboard/analytics');
+    }
+
     async updateUserRole(userId, role) {
         return this.request(`/admin/users/${userId}/role`, {
             method: 'PUT',
@@ -200,14 +231,28 @@ class ApiService {
     }
 
     async getAllVendors() {
-        return this.request('/admin/vendors');
+        return this.request('/vendor/admin/vendors');
     }
 
     async updateVendorStatus(vendorId, status) {
-        return this.request(`/admin/vendors/${vendorId}/status`, {
-            method: 'PUT',
-            body: JSON.stringify({ status })
-        });
+        const body = { status };
+        const url = `/vendor/admin/vendors/${vendorId}/status`;
+        const headers = { 'Content-Type': 'application/json' };
+        console.log('[api] updateVendorStatus payload:', body);
+        console.log('[api] updateVendorStatus url:', url);
+        console.log('[api] updateVendorStatus headers:', headers);
+        try {
+            const res = await this.request(url, {
+                method: 'PUT',
+                headers,
+                body: JSON.stringify(body)
+            });
+            console.log('[api] updateVendorStatus response:', res);
+            return res;
+        } catch (err) {
+            console.error('[api] updateVendorStatus error:', err);
+            throw err;
+        }
     }
 
     // Category endpoints
@@ -227,6 +272,7 @@ class ApiService {
     async login(email, password) {
         return this.request('/auth/login', {
             method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ email, password })
         });
     }
@@ -236,6 +282,24 @@ class ApiService {
             method: 'POST',
             body: JSON.stringify({ email, password, role })
         });
+    }
+
+    async addVendor(data) {
+        const url = '/vendor/admin/vendors';
+        const headers = { 'Content-Type': 'application/json' };
+        console.log('[api] addVendor url:', url, 'data:', data);
+        try {
+            const res = await this.request(url, {
+                method: 'POST',
+                headers,
+                body: JSON.stringify(data)
+            });
+            console.log('[api] addVendor response:', res);
+            return res;
+        } catch (err) {
+            console.error('[api] addVendor error:', err);
+            throw err;
+        }
     }
 }
 

@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Vendor Management | Nexora</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/admin-dashboard.css">
+    <link rel="stylesheet" href="css/admin-vendors.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-logo">Nexora</div>
+            <nav class="sidebar-nav">
+                <a href="admin-dashboard.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+                <a href="admin-users.html"><i class="fas fa-users"></i> Users</a>
+                <a href="admin-vendors.html" class="active"><i class="fas fa-store"></i> Vendors</a>
+                <a href="#"><i class="fas fa-box"></i> Products</a>
+                <a href="#"><i class="fas fa-shopping-cart"></i> Orders</a>
+                <a href="#"><i class="fas fa-list"></i> Categories</a>
+                <a href="#"><i class="fas fa-chart-bar"></i> Reports</a>
+                <a href="#"><i class="fas fa-cog"></i> Settings</a>
+                <a href="#"><i class="fas fa-sign-out-alt"></i> Logout</a>
+            </nav>
+        </aside>
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="top-bar">
+                <input type="text" class="search-bar" placeholder="Search vendors...">
+                <div class="user-info">
+                    <span class="user-avatar">AD</span>
+                    <span class="user-name">Admin</span>
+                </div>
+            </header>
+            <section class="vendor-management" id="vendorManagementSection">
+                <div class="section-header">
+                    <h2>Vendor Management</h2>
+                    <button class="add-vendor-btn"><i class="fas fa-user-plus"></i> Add Vendor</button>
+                </div>
+                <div class="vendor-table-controls">
+                    <input type="text" class="vendor-search" placeholder="Search vendors...">
+                </div>
+                <table class="vendor-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Email</th>
+                            <th>Name</th>
+                            <th>Business Name</th>
+                            <th>Status</th>
+                            <th>Created</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="vendorTableBody">
+                        <!-- Vendors will be rendered here by JS -->
+                    </tbody>
+                </table>
+            </section>
+        </main>
+    </div>
+    <!-- Edit Vendor Modal -->
+    <div id="editVendorModal" class="modal" style="display:none;">
+      <div class="modal-content">
+        <span class="close" onclick="closeEditVendorModal()">&times;</span>
+        <h2>Edit Vendor</h2>
+        <form id="editVendorForm">
+          <input type="hidden" id="editVendorId">
+          <div class="form-group">
+            <label for="editBusinessName">Business Name</label>
+            <input type="text" id="editBusinessName" name="business_name">
+          </div>
+          <div class="form-group">
+            <label for="editStatus">Status</label>
+            <select id="editStatus" name="status">
+              <option value="pending">Pending</option>
+              <option value="approved">Approved</option>
+              <option value="rejected">Rejected</option>
+            </select>
+          </div>
+          <div class="form-actions">
+            <button type="button" class="action-btn cancel" onclick="closeEditVendorModal()">Cancel</button>
+            <button type="submit" class="action-btn">Save</button>
+          </div>
+        </form>
+      </div>
+    </div>
+    <!-- Add Vendor Modal -->
+    <div id="addVendorModal" class="modal" style="display:none;">
+      <div class="modal-content">
+        <span class="close" onclick="closeAddVendorModal()">&times;</span>
+        <h2>Add Vendor</h2>
+        <form id="addVendorForm">
+          <div class="form-group">
+            <label for="addVendorEmail">Email</label>
+            <input type="email" id="addVendorEmail" name="email" required>
+          </div>
+          <div class="form-group">
+            <label for="addVendorFirstName">First Name</label>
+            <input type="text" id="addVendorFirstName" name="first_name" required>
+          </div>
+          <div class="form-group">
+            <label for="addVendorLastName">Last Name</label>
+            <input type="text" id="addVendorLastName" name="last_name" required>
+          </div>
+          <div class="form-group">
+            <label for="addVendorBusinessName">Business Name</label>
+            <input type="text" id="addVendorBusinessName" name="business_name" required>
+          </div>
+          <div class="form-group">
+            <label for="addVendorPassword">Password</label>
+            <input type="password" id="addVendorPassword" name="password" required minlength="6">
+          </div>
+          <div class="form-actions">
+            <button type="button" class="action-btn cancel" onclick="closeAddVendorModal()">Cancel</button>
+            <button type="submit" class="action-btn">Save</button>
+          </div>
+        </form>
+      </div>
+    </div>
+    <script src="js/api.js"></script>
+    <script src="js/admin-vendors.js"></script>
+</body>
+</html> 

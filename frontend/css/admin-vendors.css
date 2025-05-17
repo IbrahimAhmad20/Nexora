@@ -1,0 +1,187 @@
+.vendor-management {
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(44,62,80,0.06);
+    padding: 2rem;
+    margin-bottom: 2rem;
+}
+.vendor-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+}
+.vendor-table th, .vendor-table td {
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid #e9ecef;
+    text-align: left;
+}
+.vendor-table th {
+    background: #f8f9fa;
+    color: #343a40;
+    font-weight: 700;
+}
+.vendor-table tr:last-child td {
+    border-bottom: none;
+}
+.vendor-table tr:hover {
+    background: #f1f3f6;
+}
+.vendor-table .action-btn {
+    background: var(--primary-color, #007bff);
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 0.4rem 0.9rem;
+    margin-right: 0.5rem;
+    cursor: pointer;
+    font-size: 0.95rem;
+    transition: background 0.2s;
+}
+.vendor-table .action-btn.delete {
+    background: #e74c3c;
+}
+.vendor-table .action-btn:hover {
+    opacity: 0.85;
+}
+.vendor-table-controls {
+    margin-bottom: 1rem;
+    display: flex;
+    gap: 1rem;
+}
+.vendor-search {
+    padding: 0.5rem 1rem;
+    border: 1px solid #e9ecef;
+    border-radius: 5px;
+    font-size: 1rem;
+    width: 250px;
+}
+.add-vendor-btn {
+    background: var(--primary-color, #007bff);
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 0.5rem 1.2rem;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+.add-vendor-btn:hover {
+    opacity: 0.9;
+}
+
+/* Modal backdrop */
+.modal {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: #fff;
+  border-radius: 16px;
+  padding: 2.5rem 2rem 1.5rem 2rem;
+  box-shadow: 0 8px 32px rgba(44,62,80,0.18);
+  min-width: 340px;
+  max-width: 95vw;
+  position: relative;
+  animation: modalIn 0.2s cubic-bezier(.4,0,.2,1);
+}
+
+@keyframes modalIn {
+  from { transform: translateY(-40px) scale(0.98); opacity: 0; }
+  to   { transform: none; opacity: 1; }
+}
+
+.modal-content h2 {
+  margin-top: 0;
+  margin-bottom: 1.5rem;
+  color: #2ecc71;
+  font-size: 2rem;
+  font-weight: 700;
+  text-align: center;
+}
+
+.modal-content .close {
+  position: absolute;
+  top: 18px;
+  right: 22px;
+  font-size: 1.6rem;
+  color: #888;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+.modal-content .close:hover {
+  color: #e74c3c;
+}
+
+#editVendorForm .form-group {
+  margin-bottom: 1.2rem;
+}
+#editVendorForm label {
+  display: block;
+  margin-bottom: 0.4rem;
+  font-weight: 600;
+  color: #333;
+}
+#editVendorForm input[type="text"],
+#editVendorForm select {
+  width: 100%;
+  padding: 0.7rem 1rem;
+  border: 1.5px solid #e0e0e0;
+  border-radius: 7px;
+  font-size: 1rem;
+  background: #fafbfc;
+  transition: border 0.2s;
+}
+#editVendorForm input[type="text"]:focus,
+#editVendorForm select:focus {
+  border-color: #2ecc71;
+  outline: none;
+}
+#editVendorForm .form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.7rem;
+  margin-top: 1.2rem;
+}
+#editVendorForm .action-btn {
+  padding: 0.7rem 1.5rem;
+  border: none;
+  border-radius: 7px;
+  background: #2ecc71;
+  color: #fff;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+#editVendorForm .action-btn.cancel {
+  background: #e0e0e0;
+  color: #333;
+}
+#editVendorForm .action-btn.cancel:hover {
+  background: #bdbdbd;
+}
+#editVendorForm .action-btn.delete {
+  background: #e74c3c;
+}
+#editVendorForm .action-btn:hover {
+  background: #27ae60;
+}
+#editVendorForm .action-btn.delete:hover {
+  background: #c0392b;
+}
+
+@media (max-width: 600px) {
+  .modal-content {
+    min-width: 90vw;
+    padding: 1.2rem 0.7rem;
+  }
+  .modal-content h2 {
+    font-size: 1.3rem;
+  }
+} 

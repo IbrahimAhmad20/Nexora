@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us | Nexora</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .about-hero {
+            background: linear-gradient(120deg, var(--background-light) 0%, var(--primary-color) 100%);
+            color: #fff;
+            padding: 4rem 0 2.5rem 0;
+            text-align: center;
+            box-shadow: 0 4px 32px rgba(16,23,42,0.10);
+        }
+        .about-hero h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            letter-spacing: 0.5px;
+            background: linear-gradient(90deg, var(--light-blue), var(--primary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .about-hero p {
+            font-size: 1.2rem;
+            color: #c7d0e6;
+            margin-bottom: 0;
+        }
+        .about-section {
+            background: var(--background-light);
+            color: var(--text-color);
+            padding: 3rem 0 2.5rem 0;
+            text-align: center;
+        }
+        .about-section h2 {
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            color: var(--primary-color);
+        }
+        .about-story {
+            max-width: 700px;
+            margin: 0 auto 2.5rem auto;
+            font-size: 1.15rem;
+            color: #bfc9da;
+        }
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        .feature-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            box-shadow: 0 2px 12px rgba(16,23,42,0.10);
+            padding: 2rem 1.2rem 1.5rem 1.2rem;
+            text-align: center;
+            color: var(--text-color);
+            border: 1px solid var(--border-color);
+            transition: box-shadow 0.2s, transform 0.2s;
+        }
+        .feature-card i {
+            font-size: 2.2rem;
+            color: var(--primary-color);
+            margin-bottom: 0.7rem;
+            opacity: 0.85;
+        }
+        .feature-card h3 {
+            margin: 0.5rem 0 0.7rem 0;
+            font-size: 1.2rem;
+            font-weight: 700;
+        }
+        .feature-card:hover {
+            box-shadow: 0 6px 24px rgba(37,99,235,0.10);
+            transform: translateY(-4px) scale(1.03);
+        }
+        @media (max-width: 700px) {
+            .about-hero h1 { font-size: 2rem; }
+            .about-section h2 { font-size: 1.3rem; }
+            .features-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <header class="landing-header">
+        <div class="container">
+            <div class="logo">Nexora</div>
+            <nav class="landing-nav">
+                <a href="index.html">Home</a>
+                <a href="#why-nexora">Why Nexora</a>
+                <a href="#about">About Us</a>
+                <a href="#contact">Contact</a>
+            </nav>
+        </div>
+    </header>
+    <main>
+        <section class="about-hero">
+            <div class="container">
+                <h1>About Nexora</h1>
+                <p>Your trusted multi-vendor marketplace platform, built for the future of commerce.</p>
+            </div>
+        </section>
+        <section class="about-section" id="about">
+            <div class="container">
+                <h2>Our Story</h2>
+                <div class="about-story">
+                    Nexora was founded with a vision to empower both shoppers and vendors by creating a seamless, secure, and innovative online marketplace. We believe in making commerce accessible, transparent, and rewarding for everyone. Our platform brings together trusted vendors and enthusiastic customers, offering a wide range of products, exclusive deals, and a community-driven experience. At Nexora, we are committed to continuous improvement, leveraging technology to deliver the best possible service and value.
+                </div>
+                <h2 id="why-nexora">Why Nexora?</h2>
+                <div class="features-grid">
+                    <div class="feature-card"><i class="fas fa-shield-alt"></i><h3>Secure Shopping</h3><p>Shop with confidence. Your data and payments are always protected with industry-leading security.</p></div>
+                    <div class="feature-card"><i class="fas fa-tags"></i><h3>Best Deals</h3><p>Find exclusive offers and discounts from top vendors, updated daily for maximum savings.</p></div>
+                    <div class="feature-card"><i class="fas fa-truck"></i><h3>Fast Delivery</h3><p>Get your orders quickly with our reliable delivery partners and real-time tracking.</p></div>
+                    <div class="feature-card"><i class="fas fa-users"></i><h3>Trusted Vendors</h3><p>We partner only with verified, high-quality sellers to ensure a premium shopping experience.</p></div>
+                    <div class="feature-card"><i class="fas fa-star"></i><h3>Customer-Centric</h3><p>24/7 support, easy returns, and a platform designed around your needs and feedback.</p></div>
+                    <div class="feature-card"><i class="fas fa-lightbulb"></i><h3>Innovation</h3><p>We constantly evolve, bringing you new features and smarter ways to shop and sell.</p></div>
+                </div>
+            </div>
+        </section>
+    </main>
+    <footer class="footer" id="contact">
+        <div class="container footer-content">
+            <div>
+                <h3>Nexora</h3>
+                <p>Your trusted multi-vendor marketplace platform.</p>
+            </div>
+            <div>
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="#why-nexora">Why Nexora</a></li>
+                    <li><a href="#about">About Us</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+            </div>
+            <div>
+                <h3>Connect</h3>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-facebook"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-linkedin"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 Nexora. All rights reserved.</p>
+        </div>
+    </footer>
+</body>
+</html> 

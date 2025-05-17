@@ -548,6 +548,83 @@ router.put('/admin/vendors/:vendorId/status',
   }
 );
 
+// Delete vendor (admin only)
+router.delete('/admin/vendors/:vendorId',
+  verifyToken,
+  checkRole(['admin']),
+  async (req, res) => {
+    try {
+      const { vendorId } = req.params;
+      const [result] = await pool.query('DELETE FROM vendor_profiles WHERE id = ?', [vendorId]);
+      if (result.affectedRows === 0) {
+        return res.status(404).json({ success: false, message: 'Vendor not found' });
+      }
+      res.json({ success: true, message: 'Vendor deleted successfully' });
+    } catch (error) {
+      console.error('Error deleting vendor:', error);
+      res.status(500).json({ success: false, message: 'Failed to delete vendor' });
+    }
+  }
+);
+
+// Add vendor (admin only)
+router.post('/admin/vendors',
+  verifyToken,
+  checkRole(['admin']),
+  [
+    body('email').isEmail().withMessage('Valid email required'),
+    body('first_name').notEmpty().withMessage('First name required'),
+    body('last_name').notEmpty().withMessage('Last name required'),
+    body('business_name').notEmpty().withMessage('Business name required'),
+    body('password').isLength({ min: 6 }).withMessage('Password required (min 6 chars)')
+  ],
+  async (req, res) => {
+    try {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res.status(400).json({ success: false, errors: errors.array() });
+      }
+      const { email, first_name, last_name, business_name, password } = req.body;
+      // Check if user exists
+      const [users] = await pool.query('SELECT * FROM users WHERE email = ?', [email]);
+      if (users.length > 0) {
+        if (users[0].role === 'vendor') {
+          return res.status(400).json({ success: false, message: 'Vendor already exists for this email' });
+        } else {
+          return res.status(400).json({ success: false, message: 'User exists but is not a vendor' });
+        }
+      }
+      // Create user
+      const bcrypt = require('bcryptjs');
+      const hashedPassword = await bcrypt.hash(password, 10);
+      const [userResult] = await pool.query(
+        'INSERT INTO users (email, password, role, first_name, last_name) VALUES (?, ?, ?, ?, ?)',
+        [email, hashedPassword, 'vendor', first_name, last_name]
+      );
+      const userId = userResult.insertId;
+      // Create vendor profile
+      const [vendorResult] = await pool.query(
+        'INSERT INTO vendor_profiles (user_id, business_name, status, created_at) VALUES (?, ?, ?, NOW())',
+        [userId, business_name, 'pending']
+      );
+      res.json({
+        success: true,
+        vendor: {
+          id: vendorResult.insertId,
+          email,
+          first_name,
+          last_name,
+          business_name,
+          status: 'pending'
+        }
+      });
+    } catch (error) {
+      console.error('Error adding vendor:', error);
+      res.status(500).json({ success: false, message: 'Failed to add vendor' });
+    }
+  }
+);
+
 // Middleware to verify vendor
 function verifyVendor(req, res, next) {
     const authHeader = req.headers['authorization'];

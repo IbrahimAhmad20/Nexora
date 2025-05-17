@@ -86,7 +86,9 @@ document.addEventListener("DOMContentLoaded", function() {
         localStorage.setItem('token', response.token);
         localStorage.setItem('user', JSON.stringify(response.user));
         // Redirect based on user role
-        if (response.user.role === 'customer') {
+        if (response.user.role === 'admin') {
+          window.location.href = 'admin-dashboard.html';
+        } else if (response.user.role === 'customer') {
           window.location.href = 'shop.html';
         } else if (response.user.role === 'vendor') {
           window.location.href = 'vendor-dashboard.html';

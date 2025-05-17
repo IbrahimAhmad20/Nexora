@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - User Management | Nexora</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/admin-dashboard.css">
+    <link rel="stylesheet" href="css/admin-users.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar (reuse from admin-dashboard.html) -->
+        <aside class="sidebar">
+            <div class="sidebar-logo">Nexora</div>
+            <nav class="sidebar-nav">
+                <a href="admin-dashboard.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+                <a href="admin-users.html" class="active"><i class="fas fa-users"></i> Users</a>
+                <a href="#"><i class="fas fa-store"></i> Vendors</a>
+                <a href="#"><i class="fas fa-box"></i> Products</a>
+                <a href="#"><i class="fas fa-shopping-cart"></i> Orders</a>
+                <a href="#"><i class="fas fa-list"></i> Categories</a>
+                <a href="#"><i class="fas fa-chart-bar"></i> Reports</a>
+                <a href="#"><i class="fas fa-cog"></i> Settings</a>
+                <a href="#"><i class="fas fa-sign-out-alt"></i> Logout</a>
+            </nav>
+        </aside>
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="top-bar">
+                <input type="text" class="search-bar" placeholder="Search users...">
+                <div class="user-info">
+                    <span class="user-avatar">AD</span>
+                    <span class="user-name">Admin</span>
+                </div>
+            </header>
+            <section class="user-management" id="userManagementSection">
+                <div class="section-header">
+                    <h2>User Management</h2>
+                    <button class="add-user-btn"><i class="fas fa-user-plus"></i> Add User</button>
+                </div>
+                <div class="user-table-controls">
+                    <input type="text" class="user-search" placeholder="Search users...">
+                </div>
+                <table class="user-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Email</th>
+                            <th>Name</th>
+                            <th>Role</th>
+                            <th>Created</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="userTableBody">
+                        <!-- Users will be rendered here by JS -->
+                    </tbody>
+                </table>
+            </section>
+        </main>
+    </div>
+    <script src="js/api.js"></script>
+    <script src="js/admin-users.js"></script>
+</body>
+</html> 

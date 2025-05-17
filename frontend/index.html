@@ -13,16 +13,22 @@
         <div class="container">
             <div class="logo">Nexora</div>
             <nav class="landing-nav">
-                <a href="#features">Features</a>
                 <a href="#categories">Categories</a>
                 <a href="#vendors">Vendors</a>
+                <a href="about.html">About Us</a>
                 <a href="#contact">Contact</a>
                 <button class="btn btn-login" onclick="window.location.href='login.html'">Login</button>
+                <a href="admin.html" id="adminLink" style="display:none;">Admin Dashboard</a>
                 <span class="header-cart" style="display:none;cursor:pointer;margin-left:1.5rem;position:relative;" id="headerCartBtn">
                     <i class="fas fa-shopping-cart"></i>
                     <span id="cartCount" style="position:absolute;top:-7px;right:-10px;background:#e74c3c;color:#fff;font-size:0.8rem;border-radius:50%;padding:2px 6px;font-weight:bold;">0</span>
                 </span>
             </nav>
+            <div class="hamburger" id="hamburgerMenu" tabindex="0" aria-label="Open navigation" role="button">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
         </div>
     </header>
     <main>
@@ -33,19 +39,10 @@
                 <p>Your one-stop marketplace for quality products from trusted vendors.</p>
                 <a href="#" class="btn btn-primary" id="heroShopNow">Shop Now</a>
             </div>
+            <!-- SVG wave is now handled by CSS ::after -->
         </section>
         <!-- Features Section -->
-        <section class="features" id="features">
-            <div class="container">
-                <h2>Why Nexora?</h2>
-                <div class="features-grid">
-                    <div class="feature-card"><i class="fas fa-shield-alt"></i><h3>Secure Shopping</h3><p>Shop with confidence. Your data and payments are always protected.</p></div>
-                    <div class="feature-card"><i class="fas fa-tags"></i><h3>Best Deals</h3><p>Find exclusive offers and discounts from top vendors.</p></div>
-                    <div class="feature-card"><i class="fas fa-truck"></i><h3>Fast Delivery</h3><p>Get your orders quickly with our reliable delivery partners.</p></div>
-                    <div class="feature-card"><i class="fas fa-users"></i><h3>Trusted Vendors</h3><p>We partner only with verified, high-quality sellers.</p></div>
-                </div>
-            </div>
-        </section>
+        <!-- Removed Why Nexora section as requested -->
         <!-- Featured Products Section -->
         <section class="featured-products" id="featured-products">
             <div class="container">
@@ -88,7 +85,6 @@
             <div>
                 <h3>Quick Links</h3>
                 <ul>
-                    <li><a href="#features">Features</a></li>
                     <li><a href="#categories">Categories</a></li>
                     <li><a href="#vendors">Vendors</a></li>
                     <li><a href="#contact">Contact</a></li>
@@ -108,58 +104,6 @@
             <p>&copy; 2024 Nexora. All rights reserved.</p>
         </div>
     </footer>
-    <!-- Auth Modals (proper modal HTML, hidden by default) -->
-    <div class="modal" id="loginModal" style="display:none;">
-        <div class="modal-content">
-            <span class="close" id="closeLoginModal">&times;</span>
-            <h2>Login</h2>
-            <form id="loginForm">
-                <div class="form-group">
-                    <label for="loginEmail">Email</label>
-                    <input type="email" id="loginEmail" required>
-                </div>
-                <div class="form-group">
-                    <label for="loginPassword">Password</label>
-                    <input type="password" id="loginPassword" required>
-                </div>
-                <button type="submit" class="btn btn-primary">Login</button>
-            </form>
-            <p>Don't have an account? <a href="#" id="showRegister">Register</a></p>
-        </div>
-    </div>
-    <div class="modal" id="registerModal" style="display:none;">
-        <div class="modal-content">
-            <span class="close" id="closeRegisterModal">&times;</span>
-            <h2>Register</h2>
-            <form id="registerForm">
-                <div class="form-group">
-                    <label for="registerEmail">Email</label>
-                    <input type="email" id="registerEmail" required>
-                </div>
-                <div class="form-group">
-                    <label for="registerPassword">Password</label>
-                    <input type="password" id="registerPassword" required>
-                </div>
-                <div class="form-group">
-                    <label for="registerFirstName">First Name</label>
-                    <input type="text" id="registerFirstName" required>
-                </div>
-                <div class="form-group">
-                    <label for="registerLastName">Last Name</label>
-                    <input type="text" id="registerLastName" required>
-                </div>
-                <div class="form-group">
-                    <label for="registerRole">I want to</label>
-                    <select id="registerRole" required>
-                        <option value="customer">Shop</option>
-                        <option value="vendor">Sell</option>
-                    </select>
-                </div>
-                <button type="submit" class="btn btn-primary">Register</button>
-            </form>
-            <p>Already have an account? <a href="#" id="showLogin">Login</a></p>
-        </div>
-    </div>
     <div id="cartModal" class="cart-modal" style="display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.35);z-index:1000;align-items:center;justify-content:center;">
         <div class="cart-modal-content" style="background:#fff;border-radius:10px;width:90%;max-width:400px;margin:auto;padding:2rem 1.5rem 1.5rem 1.5rem;box-shadow:0 4px 24px rgba(44,62,80,0.13);position:relative;">
             <span class="close" onclick="cart.closeCart()" style="position:absolute;top:1rem;right:1rem;font-size:1.5rem;cursor:pointer;color:#888;">&times;</span>
@@ -171,46 +115,51 @@
             </div>
         </div>
     </div>
-    <div class="modal" id="totpLoginModal" style="display:none;z-index:2000;">
-        <div class="modal-content">
-            <span class="close" id="closeTotpLoginModal">&times;</span>
-            <h2>Two-Factor Authentication</h2>
-            <form id="totpLoginForm">
-                <div class="form-group">
-                    <label for="totpLoginCode">Enter 6-digit code from your authenticator app</label>
-                    <input type="text" id="totpLoginCode" maxlength="6" required autocomplete="one-time-code">
-                </div>
-                <button type="submit" class="btn btn-primary">Verify</button>
-                <div id="totpLoginMsg" style="color:#c00;margin-top:8px;"></div>
-            </form>
-        </div>
-    </div>
     <script src="js/api.js"></script>
     <script src="js/cart.js"></script>
     <script src="js/main.js"></script>
     <script>
-    // Redirect logged-in customers to shop.html
+    // Responsive hamburger menu logic
     document.addEventListener('DOMContentLoaded', function() {
+        const nav = document.querySelector('.landing-nav');
+        const hamburger = document.getElementById('hamburgerMenu');
+        hamburger.addEventListener('click', function() {
+            nav.classList.toggle('open');
+        });
+        hamburger.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter' || e.key === ' ') nav.classList.toggle('open');
+        });
+
+        // Highlight active nav link
+        const links = document.querySelectorAll('.landing-nav a');
+        const current = window.location.pathname.split('/').pop();
+        links.forEach(link => {
+            if (link.getAttribute('href') === current || (current === '' && link.getAttribute('href') === 'index.html')) {
+                link.classList.add('active');
+            }
+        });
+
+        // Existing logic for shop now and vendor
         const token = localStorage.getItem('token');
         const user = JSON.parse(localStorage.getItem('user') || '{}');
         if (token && user && user.role === 'customer') {
             window.location.href = 'shop.html';
         }
-        // Shop Now button logic
         document.getElementById('heroShopNow').onclick = function(e) {
             e.preventDefault();
-            // If not logged in, redirect to login page
             if (!token) {
                 window.location.href = 'login.html';
             } else {
                 window.location.href = 'shop.html';
             }
         };
-        // Become Vendor logic
-        document.getElementById('becomeVendor').onclick = function(e) {
-            e.preventDefault();
-            window.location.href = 'login.html';
-        };
+        const becomeVendor = document.getElementById('becomeVendor');
+        if (becomeVendor) {
+            becomeVendor.onclick = function(e) {
+                e.preventDefault();
+                window.location.href = 'login.html';
+            };
+        }
     });
     </script>
 </body>

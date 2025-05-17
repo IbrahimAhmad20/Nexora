@@ -6,7 +6,8 @@ const path = require('path');
 const db = require('./config/db');
 const session = require('express-session');
 const passport = require('./config/passport');
-
+const { checkMaintenanceMode } = require('./middleware/admin.middleware');
+console.log('=== Nexora backend started ===');
 // Load environment variables
 dotenv.config();
 
@@ -35,12 +36,16 @@ app.use(express.urlencoded({ extended: true })); // Parse URL-encoded bodies
 // Serve static files from uploads directory
 app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 
+// Apply maintenance mode check before routes
+app.use(checkMaintenanceMode);
+
 // Routes
 app.use('/api/auth', require('./routes/auth.routes'));
 app.use('/api/users', require('./routes/user.routes'));
 app.use('/api/products', require('./routes/product.routes'));
 app.use('/api', require('./routes/order.routes'));
 app.use('/api/vendor', require('./routes/vendor.routes'));
+app.use('/api/admin', require('./routes/admin.routes'));
 
 app.use(express.static(path.join(__dirname, '../frontend')));
 app.use('/css', express.static(path.join(__dirname, '../frontend/css')));

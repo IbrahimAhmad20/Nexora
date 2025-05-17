@@ -138,6 +138,10 @@ router.put('/change-password',
 // Admin routes for user management
 // Get all users (admin only)
 router.get('/admin/users',
+  (req, res, next) => {
+    console.log('[admin-users route] hit');
+    next();
+  },
   verifyToken,
   checkRole(['admin']),
   async (req, res) => {

@@ -246,4 +246,30 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // Export product manager instance
-window.productManager = productManager; 
+window.productManager = productManager;
+
+function renderProducts(products) {
+    const tbody = document.getElementById('productsTableBody');
+    if (!tbody) return;
+    if (!products.length) {
+        tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:#e74c3c;">No products found</td></tr>';
+        return;
+    }
+    tbody.innerHTML = products.map(product => `
+        <tr>
+            <td>${product.name}</td>
+            <td>${product.category || ''}</td>
+            <td>$${product.price}</td>
+            <td>${product.stock_quantity}</td>
+            <td>
+                <span class="product-status ${product.stock_quantity > 10 ? 'status-instock' : product.stock_quantity > 0 ? 'status-low' : 'status-out'}">
+                    ${product.stock_quantity > 10 ? 'In Stock' : product.stock_quantity > 0 ? 'Low Stock' : 'Out of Stock'}
+                </span>
+            </td>
+            <td>
+                <button class="action-btn edit" title="Edit"><i class="fas fa-edit"></i></button>
+                <button class="action-btn delete" title="Delete"><i class="fas fa-trash"></i></button>
+            </td>
+        </tr>
+    `).join('');
+} 

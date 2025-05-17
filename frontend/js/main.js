@@ -189,7 +189,9 @@ function setupEventListeners() {
                     localStorage.setItem('token', data.token);
                     localStorage.setItem('user', JSON.stringify(data.user));
                     closeModal(loginModal);
-                    if (data.user && data.user.role === 'vendor') {
+                    if (data.user && data.user.role === 'admin') {
+                        window.location.href = 'admin.html';
+                    } else if (data.user && data.user.role === 'vendor') {
                         window.location.href = 'vendor-dashboard.html';
                     } else if (data.user && data.user.role === 'customer') {
                         window.location.href = 'shop.html';
@@ -493,52 +495,6 @@ async function afterLoginSuccess(user) {
         pendingAddToCartProductId = null;
     }
 }
-// Patch loginForm submit to call afterLoginSuccess
-if (typeof document !== 'undefined') {
-    document.addEventListener('DOMContentLoaded', function() {
-        if (loginForm) {
-            const origLoginHandler = loginForm.onsubmit;
-            loginForm.onsubmit = async function(e) {
-                e.preventDefault();
-                const email = document.getElementById('loginEmail').value;
-                const password = document.getElementById('loginPassword').value;
-                try {
-                    const response = await fetch(`${API_BASE_URL}/auth/login`, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({ email, password })
-                    });
-                    if (response.ok) {
-                        const data = await response.json();
-                        let canLogin = true;
-                        if (data.user && data.user.two_factor_enabled) {
-                            canLogin = await showTotpLogin(data.user, data.token);
-                        }
-                        if (!canLogin) return;
-                        localStorage.setItem('token', data.token);
-                        localStorage.setItem('user', JSON.stringify(data.user));
-                        closeModal(loginModal);
-                        await afterLoginSuccess(data.user);
-                        if (data.user && data.user.role === 'vendor') {
-                            window.location.href = 'vendor-dashboard.html';
-                        } else if (data.user && data.user.role === 'customer') {
-                            window.location.href = 'shop.html';
-                        } else {
-                            checkAuth();
-                        }
-                    } else {
-                        const error = await response.json();
-                        alert(error.message || 'Login failed');
-                    }
-                } catch (error) {
-                    alert('Login failed. Please try again.');
-                }
-            };
-        }
-    });
-}
 // Load featured products on DOMContentLoaded
 if (typeof document !== 'undefined') {
     document.addEventListener('DOMContentLoaded', loadFeaturedProducts);
@@ -551,4 +507,52 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
-document.getElementById('checkoutBtn').onclick = placeOrderFromCart; 
+document.getElementById('checkoutBtn').onclick = placeOrderFromCart;
+
+document.addEventListener('DOMContentLoaded', function() {
+    const nav = document.querySelector('.landing-nav');
+    const hamburger = document.getElementById('hamburgerMenu');
+    hamburger.addEventListener('click', function() {
+        nav.classList.toggle('open');
+    });
+    hamburger.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter' || e.key === ' ') nav.classList.toggle('open');
+    });
+
+    // Highlight active nav link
+    const links = document.querySelectorAll('.landing-nav a');
+    const current = window.location.pathname.split('/').pop();
+    links.forEach(link => {
+        if (link.getAttribute('href') === current || (current === '' && link.getAttribute('href') === 'index.html')) {
+            link.classList.add('active');
+        }
+    });
+
+    // Existing logic for shop now and vendor
+    const token = localStorage.getItem('token');
+    const user = JSON.parse(localStorage.getItem('user') || '{}');
+    if (token && user && user.role === 'customer') {
+        window.location.href = 'shop.html';
+    }
+    document.getElementById('heroShopNow').onclick = function(e) {
+        e.preventDefault();
+        if (!token) {
+            window.location.href = 'login.html';
+        } else {
+            window.location.href = 'shop.html';
+        }
+    };
+    const becomeVendor = document.getElementById('becomeVendor');
+    if (becomeVendor) {
+        becomeVendor.onclick = function(e) {
+            e.preventDefault();
+            window.location.href = 'login.html';
+        };
+    }
+
+    // Show admin dashboard link if user is an admin
+    const adminLink = document.getElementById('adminLink');
+    if (adminLink && user && user.role === 'admin') {
+        adminLink.style.display = '';
+    }
+}); 
