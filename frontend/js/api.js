@@ -233,7 +233,9 @@ class ApiService {
     async getAllVendors() {
         return this.request('/vendor/admin/vendors');
     }
-
+    async getAllProducts() {
+        return this.request('/admin/products');
+    }
     async updateVendorStatus(vendorId, status) {
         const body = { status };
         const url = `/vendor/admin/vendors/${vendorId}/status`;

@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Product Management | Nexora</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/admin-dashboard.css">
+    <link rel="stylesheet" href="css/admin-products.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-logo">Nexora</div>
+            <nav class="sidebar-nav">
+                <a href="admin-dashboard.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+                <a href="admin-users.html"><i class="fas fa-users"></i> Users</a>
+                <a href="admin-vendors.html"><i class="fas fa-store"></i> Vendors</a>
+                <a href="admin-products.html" class="active"><i class="fas fa-box"></i> Products</a>
+                <a href="#"><i class="fas fa-shopping-cart"></i> Orders</a>
+                <a href="#"><i class="fas fa-list"></i> Categories</a>
+                <a href="#"><i class="fas fa-chart-bar"></i> Reports</a>
+                <a href="#"><i class="fas fa-cog"></i> Settings</a>
+                <a href="#"><i class="fas fa-sign-out-alt"></i> Logout</a>
+            </nav>
+        </aside>
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="top-bar">
+                <input type="text" class="search-bar product-search" placeholder="Search products...">
+                <div class="user-info">
+                    <span class="user-avatar">AD</span>
+                    <span class="user-name">Admin</span>
+                </div>
+            </header>
+            <section class="product-management" id="productManagementSection">
+                <div class="section-header">
+                    <h2>Product Management</h2>
+                    <button class="add-product-btn"><i class="fas fa-plus"></i> Add Product</button>
+                </div>
+                <div class="product-table-controls">
+                    <input type="text" class="product-search" placeholder="Search products...">
+                </div>
+                <table id="productTable" class="product-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Vendor</th>
+                            <th>Category</th>
+                            <th>Price</th>
+                            <th>Stock</th>
+                            <th>Status</th>
+                            <th>Created</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="productTableBody">
+                        <!-- Products will be rendered here by JS -->
+                    </tbody>
+                </table>
+            </section>
+        </main>
+    </div>
+    <!-- Add/Edit Product Modal will go here -->
+     <!-- Edit Product Modal -->
+<div id="editProductModal" class="modal">
+    <div class="modal-content">
+      <span class="close" id="closeEditModal">&times;</span>
+      <h2>Edit Product</h2>
+      <form id="editProductForm">
+        <input type="hidden" id="editProductId" />
+        <label>Name</label>
+        <input type="text" id="editProductName" required />
+  
+        <label>Description</label>
+        <textarea id="editProductDescription" required></textarea>
+  
+        <label>Price</label>
+        <input type="number" id="editProductPrice" min="0" step="0.01" required />
+  
+        <label>Stock Quantity</label>
+        <input type="number" id="editProductStock" min="0" required />
+  
+        <label>Status</label>
+        <select id="editProductStatus" required>
+          <option value="active">Active</option>
+          <option value="inactive">Inactive</option>
+          <option value="deleted">Deleted</option>
+        </select>
+  
+        <label>Category</label>
+        <select id="editProductCategory" required>
+          <!-- Categories will be loaded here -->
+        </select>
+  
+        <button type="submit">Save Changes</button>
+      </form>
+    </div>
+  </div>
+    <script src="js/api.js"></script>
+    <script src="js/admin-products.js"></script>
+</body>
+</html> 

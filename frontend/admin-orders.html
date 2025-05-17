@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin - Orders | Nexora</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/admin-dashboard.css">
+    <link rel="stylesheet" href="css/admin-orders.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+<div class="dashboard-container">
+    <aside class="sidebar">
+        <div class="sidebar-logo">Nexora</div>
+        <nav class="sidebar-nav">
+            <a href="admin-dashboard.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+            <a href="admin-users.html"><i class="fas fa-users"></i> Users</a>
+            <a href="admin-vendors.html"><i class="fas fa-store"></i> Vendors</a>
+            <a href="admin-products.html"><i class="fas fa-box"></i> Products</a>
+            <a href="admin-orders.html" class="active"><i class="fas fa-shopping-cart"></i> Orders</a>
+            <a href="#"><i class="fas fa-list"></i> Categories</a>
+            <a href="#"><i class="fas fa-chart-bar"></i> Reports</a>
+            <a href="#"><i class="fas fa-cog"></i> Settings</a>
+            <a href="#"><i class="fas fa-sign-out-alt"></i> Logout</a>
+        </nav>
+    </aside>
+    <main class="main-content">
+        <header class="top-bar">
+            <input type="text" class="search-bar order-search" placeholder="Search orders...">
+            <div class="user-info">
+                <span class="user-avatar">AD</span>
+                <span class="user-name">Admin</span>
+            </div>
+        </header>
+        <section class="order-management" id="orderManagementSection">
+            <div class="section-header">
+                <h2>Order Management</h2>
+            </div>
+            <table class="order-table">
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Customer</th>
+                    <th>Total</th>
+                    <th>Status</th>
+                    <th>Created</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody id="orderTableBody">
+                <!-- Orders will be rendered here by JS -->
+                </tbody>
+            </table>
+        </section>
+    </main>
+</div>
+<div id="orderModal" class="modal" style="display:none;">
+  <div class="modal-content">
+    <span id="closeOrderModal" style="float:right;cursor:pointer;">&times;</span>
+    <h3>Order Details</h3>
+    <div id="orderModalBody"></div>
+  </div>
+</div>
+<script src="js/api.js"></script>
+<script src="js/admin-orders.js"></script>
+</body>
+</html>

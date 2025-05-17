@@ -72,56 +72,31 @@ router.delete('/users/:id', async (req, res) => {
 });
 
 // Product Management Routes (with pagination)
-router.get('/products', async (req, res) => {
+// Get all products (admin, paginated)
+router.get('/products', verifyToken, checkRole(['admin']), async (req, res) => {
     try {
         const page = parseInt(req.query.page) || 1;
-        const limit = 10; // Or make this configurable
+        const limit = parseInt(req.query.limit) || 20;
         const offset = (page - 1) * limit;
 
-        // Optional: support search and category filter
-        const q = req.query.q ? `%${req.query.q}%` : null;
-        const category = req.query.category || null;
-
-        let where = 'WHERE 1=1';
-        let params = [];
-
-        if (q) {
-            where += ' AND p.name LIKE ?';
-            params.push(q);
-        }
-        if (category) {
-            where += ' AND p.category = ?';
-            params.push(category);
-        }
-
-        // Get total count for pagination
-        const [[{ count }]] = await db.query(
-            `SELECT COUNT(*) as count FROM products p ${where}`,
-            params
-        );
+        // Get total count
+        const [[{ count }]] = await pool.query('SELECT COUNT(*) as count FROM products');
         const totalPages = Math.max(1, Math.ceil(count / limit));
 
         // Get paginated products
-        const [products] = await db.query(
-            `
-            SELECT p.*, 
-                   COUNT(DISTINCT o.id) as order_count,
-                   COALESCE(AVG(r.rating), 0) as avg_rating
+        const [products] = await pool.query(`
+            SELECT p.id, p.name, p.description, v.business_name AS vendor_name, c.name AS category, p.price, p.stock_quantity AS stock_quantity, p.status, p.created_at, p.category_id
             FROM products p
-            LEFT JOIN order_items oi ON p.id = oi.product_id
-            LEFT JOIN orders o ON oi.order_id = o.id
-            LEFT JOIN reviews r ON p.id = r.product_id
-            ${where}
-            GROUP BY p.id
+            LEFT JOIN vendor_profiles v ON p.vendor_id = v.id
+            LEFT JOIN categories c ON p.category_id = c.id
             ORDER BY p.created_at DESC
             LIMIT ? OFFSET ?
-            `,
-            [...params, limit, offset]
-        );
+        `, [limit, offset]);
 
         res.json({
             success: true,
             products,
+            total: count,
             totalPages,
             currentPage: page
         });
@@ -130,13 +105,12 @@ router.get('/products', async (req, res) => {
         res.status(500).json({ success: false, message: 'Failed to fetch products' });
     }
 });
-
 router.put('/products/:id', async (req, res) => {
     try {
-        const { name, description, price, stock, status } = req.body;
+        const { name, description, price, stock_quantity, status, category_id } = req.body;
         const [result] = await db.query(
-            'UPDATE products SET name = ?, description = ?, price = ?, stock = ?, status = ? WHERE id = ?',
-            [name, description, price, stock, status, req.params.id]
+            'UPDATE products SET name = ?, description = ?, price = ?, stock_quantity = ?, status = ?, category_id = ? WHERE id = ?',
+            [name, description, price, stock_quantity, status, category_id, req.params.id]
         );
         
         if (result.affectedRows === 0) {
@@ -182,44 +156,67 @@ router.get('/products/featured', async (req, res) => {
 });
 
 // Order Management Routes
-router.get('/orders', async (req, res) => {
+router.get('/orders', verifyToken, checkRole(['admin']), async (req, res) => {
     try {
+        const page = Number.isInteger(Number(req.query.page)) ? Number(req.query.page) : 1;
+        const limit = Number.isInteger(Number(req.query.limit)) ? Number(req.query.limit) : 20;
+        const offset = (page - 1) * limit;
+        console.log('limit:', limit, 'offset:', offset); // Debug log
+
+        const [[{ count }]] = await db.query('SELECT COUNT(*) as count FROM orders');
+        const totalPages = Math.max(1, Math.ceil(count / limit));
         const [orders] = await db.query(`
-            SELECT o.*, 
-                   u.email as user_email,
-                   u.first_name,
-                   u.last_name,
-                   COUNT(DISTINCT oi.id) as item_count,
-                   COALESCE(SUM(oi.quantity * oi.price), 0) as total_amount
+            SELECT o.*, u.email as customer_email, u.first_name, u.last_name
             FROM orders o
-            JOIN users u ON o.user_id = u.id
-            LEFT JOIN order_items oi ON o.id = oi.order_id
-            GROUP BY o.id, u.email, u.first_name, u.last_name
+            JOIN users u ON o.customer_id = u.id
             ORDER BY o.created_at DESC
+            LIMIT ${Number(limit)} OFFSET ${Number(offset)}
         `);
-        res.json({ success: true, orders });
+        res.json({ success: true, orders, total: count, totalPages, currentPage: page });
     } catch (error) {
         console.error('Error fetching orders:', error);
         res.status(500).json({ success: false, message: 'Failed to fetch orders' });
     }
 });
 
-router.put('/orders/:id/status', async (req, res) => {
+router.put('/orders/:id/status', verifyToken, checkRole(['admin']), async (req, res) => {
     try {
         const { status } = req.body;
         const [result] = await db.query(
             'UPDATE orders SET status = ? WHERE id = ?',
             [status, req.params.id]
         );
-        
         if (result.affectedRows === 0) {
             return res.status(404).json({ success: false, message: 'Order not found' });
         }
-        
-        res.json({ success: true, message: 'Order status updated successfully' });
+        res.json({ success: true, message: 'Order status updated' });
     } catch (error) {
         console.error('Error updating order status:', error);
         res.status(500).json({ success: false, message: 'Failed to update order status' });
+    }
+});
+
+router.get('/orders/:id', verifyToken, checkRole(['admin']), async (req, res) => {
+    try {
+        const [orders] = await db.query(`
+            SELECT o.*, u.email as customer_email, u.first_name, u.last_name
+            FROM orders o
+            JOIN users u ON o.customer_id = u.id
+            WHERE o.id = ?
+        `, [req.params.id]);
+        if (!orders.length) {
+            return res.status(404).json({ success: false, message: 'Order not found' });
+        }
+        const [items] = await db.query(`
+            SELECT oi.*, p.name as product_name
+            FROM order_items oi
+            JOIN products p ON oi.product_id = p.id
+            WHERE oi.order_id = ?
+        `, [req.params.id]);
+        res.json({ success: true, order: orders[0], items });
+    } catch (error) {
+        console.error('Error fetching order details:', error);
+        res.status(500).json({ success: false, message: 'Failed to fetch order details' });
     }
 });
 
@@ -626,6 +623,101 @@ router.delete('/content/:id', async (req, res) => {
         console.error('Error deleting content:', error);
         res.status(500).json({ success: false, message: 'Failed to delete content' });
     }
+});
+// Delete a product (admin)
+router.delete('/products/:id', verifyToken, checkRole(['admin']), async (req, res) => {
+    const productId = req.params.id;
+    try {
+        // Delete from all dependent tables
+        await db.query('DELETE FROM product_qa WHERE product_id = ?', [productId]);
+        await db.query('DELETE FROM wishlist WHERE product_id = ?', [productId]);
+        await db.query('DELETE FROM shopping_cart WHERE product_id = ?', [productId]);
+        await db.query('DELETE FROM order_items WHERE product_id = ?', [productId]);
+        await db.query('DELETE FROM reviews WHERE product_id = ?', [productId]);
+        await db.query('DELETE FROM product_images WHERE product_id = ?', [productId]);
+        await db.query('DELETE FROM product_specifications WHERE product_id = ?', [productId]);
+        await db.query('DELETE FROM product_variants WHERE product_id = ?', [productId]);
+        // Add more as needed for your schema
+
+        // Now delete the product
+        const [result] = await db.query('DELETE FROM products WHERE id = ?', [productId]);
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ success: false, message: 'Product not found' });
+        }
+        res.json({ success: true, message: 'Product deleted successfully' });
+    } catch (error) {
+        console.error('Error deleting product:', error);
+        res.status(500).json({ success: false, message: 'Failed to delete product' });
+    }
+});
+// Vendors endpoint
+router.get('/vendors', async (req, res) => {
+    try {
+        const [vendors] = await db.query('SELECT * FROM vendors');
+        res.json({ success: true, vendors });
+    } catch (error) {
+        console.error('Error fetching vendors:', error);
+        res.status(500).json({ success: false, message: 'Failed to fetch vendors' });
+    }
+});
+
+// Get all categories
+router.get('/categories', verifyToken, async (req, res) => {
+    console.log('User in /categories:', req.user);
+    try {
+        const [categories] = await db.query('SELECT id, name FROM categories ORDER BY name');
+        res.json({ success: true, categories });
+    } catch (error) {
+        res.status(500).json({ success: false, message: 'Failed to fetch categories' });
+    }
+});
+// ... existing code ...
+// Category Management (Admin)
+router.post('/categories', verifyToken, checkRole(['admin']), async (req, res) => {
+    const { name } = req.body;
+    if (!name || !name.trim()) {
+        return res.status(400).json({ success: false, message: 'Category name is required' });
+    }
+    try {
+        await db.query('INSERT INTO categories (name) VALUES (?)', [name.trim()]);
+        res.json({ success: true, message: 'Category added successfully' });
+    } catch (error) {
+        console.error('Error adding category:', error);
+        res.status(500).json({ success: false, message: 'Failed to add category' });
+    }
+});
+
+router.put('/categories/:id', verifyToken, checkRole(['admin']), async (req, res) => {
+    const { name } = req.body;
+    if (!name || !name.trim()) {
+        return res.status(400).json({ success: false, message: 'Category name is required' });
+    }
+    try {
+        const [result] = await db.query('UPDATE categories SET name = ? WHERE id = ?', [name.trim(), req.params.id]);
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ success: false, message: 'Category not found' });
+        }
+        res.json({ success: true, message: 'Category updated successfully' });
+    } catch (error) {
+        console.error('Error updating category:', error);
+        res.status(500).json({ success: false, message: 'Failed to update category' });
+    }
+});
+
+router.delete('/categories/:id', verifyToken, checkRole(['admin']), async (req, res) => {
+    try {
+        const [result] = await db.query('DELETE FROM categories WHERE id = ?', [req.params.id]);
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ success: false, message: 'Category not found' });
+        }
+        res.json({ success: true, message: 'Category deleted successfully' });
+    } catch (error) {
+        console.error('Error deleting category:', error);
+        res.status(500).json({ success: false, message: 'Failed to delete category' });
+    }
+});
+router.get('/test', (req, res) => {
+  res.json({ success: true, message: 'Test route works' });
 });
 
 module.exports = router; 

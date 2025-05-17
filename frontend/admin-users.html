@@ -11,14 +11,14 @@
 </head>
 <body>
     <div class="dashboard-container">
-        <!-- Sidebar (reuse from admin-dashboard.html) -->
+        <!-- Sidebar -->
         <aside class="sidebar">
             <div class="sidebar-logo">Nexora</div>
             <nav class="sidebar-nav">
                 <a href="admin-dashboard.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
                 <a href="admin-users.html" class="active"><i class="fas fa-users"></i> Users</a>
-                <a href="#"><i class="fas fa-store"></i> Vendors</a>
-                <a href="#"><i class="fas fa-box"></i> Products</a>
+                <a href="admin-vendors.html"><i class="fas fa-store"></i> Vendors</a>
+                <a href="admin-products.html"><i class="fas fa-box"></i> Products</a>
                 <a href="#"><i class="fas fa-shopping-cart"></i> Orders</a>
                 <a href="#"><i class="fas fa-list"></i> Categories</a>
                 <a href="#"><i class="fas fa-chart-bar"></i> Reports</a>
@@ -29,7 +29,7 @@
         <!-- Main Content -->
         <main class="main-content">
             <header class="top-bar">
-                <input type="text" class="search-bar" placeholder="Search users...">
+                <input type="text" class="search-bar user-search" placeholder="Search users...">
                 <div class="user-info">
                     <span class="user-avatar">AD</span>
                     <span class="user-name">Admin</span>
@@ -38,10 +38,7 @@
             <section class="user-management" id="userManagementSection">
                 <div class="section-header">
                     <h2>User Management</h2>
-                    <button class="add-user-btn"><i class="fas fa-user-plus"></i> Add User</button>
-                </div>
-                <div class="user-table-controls">
-                    <input type="text" class="user-search" placeholder="Search users...">
+                    <button class="add-user-btn"><i class="fas fa-plus"></i> Add User</button>
                 </div>
                 <table class="user-table">
                     <thead>

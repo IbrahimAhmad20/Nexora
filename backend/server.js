@@ -115,6 +115,11 @@ app.get('/api/products/:id/related', async (req, res) => {
   }
 });
 
+// Catch-all (should be last!):
+app.use((req, res) => {
+  res.status(404).json({ success: false, message: 'Not found' });
+});
+
 // Error handling middleware
 app.use((err, req, res, next) => {
   console.error(err.stack);

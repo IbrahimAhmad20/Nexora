@@ -36,44 +36,93 @@ A modern e-commerce platform that connects vendors with customers, providing a s
 nexora/
 ├── backend/
 │   ├── config/
-│   │   └── database.js
+│   │   ├── db.js                  # DB connection logic
+│   │   └── db.config.js           # DB config (host, user, pass, etc)
 │   ├── controllers/
-│   │   ├── auth.controller.js
-│   │   ├── product.controller.js
-│   │   ├── vendor.controller.js
-│   │   └── user.controller.js
+│   │   ├── admin.controller.js    # Admin logic
+│   │   ├── auth.controller.js     # Auth logic
+│   │   ├── product.controller.js  # Product logic
+│   │   ├── user.controller.js     # User logic
+│   │   ├── vendor.controller.js   # Vendor logic
+│   │   └── order.controller.js    # Order logic
 │   ├── middleware/
-│   │   ├── auth.middleware.js
+│   │   ├── auth.middleware.js     # JWT, role checks
+│   │   ├── admin.middleware.js    # Admin-specific checks
 │   │   └── validation.middleware.js
 │   ├── models/
 │   │   ├── user.model.js
 │   │   ├── product.model.js
 │   │   ├── vendor.model.js
-│   │   └── order.model.js
+│   │   ├── order.model.js
+│   │   └── category.model.js
 │   ├── routes/
-│   │   ├── auth.routes.js
-│   │   ├── product.routes.js
-│   │   ├── vendor.routes.js
-│   │   └── user.routes.js
+│   │   ├── admin.routes.js        # /api/admin/*
+│   │   ├── auth.routes.js         # /api/auth/*
+│   │   ├── product.routes.js      # /api/products/*
+│   │   ├── user.routes.js         # /api/users/*
+│   │   ├── vendor.routes.js       # /api/vendor/*
+│   │   └── order.routes.js        # /api/orders/*
 │   ├── utils/
-│   │   └── error.js
-│   ├── .env
+│   │   ├── error.js
+│   │   └── helpers.js
+│   ├── database/
+│   │   └── schema.sql             # MySQL schema
+│   ├── .env                       # Environment variables
 │   ├── package.json
-│   └── server.js
+│   └── server.js                  # Express app entry point
 ├── frontend/
 │   ├── css/
-│   │   └── style.css
+│   │   ├── style.css              # Shared styles
+│   │   ├── admin-dashboard.css
+│   │   ├── admin-products.css
+│   │   ├── admin-users.css
+│   │   ├── admin-vendors.css
+│   │   ├── vendor-dashboard.css
+│   │   ├── user-dashboard.css
+│   │   └── ...
 │   ├── js/
-│   │   ├── api.js
+│   │   ├── api.js                 # API utility
+│   │   ├── admin-products.js      # Admin product logic
+│   │   ├── admin-dashboard.js
+│   │   ├── admin-users.js
+│   │   ├── admin-vendors.js
+│   │   ├── vendor-dashboard.js
+│   │   ├── user-dashboard.js
 │   │   ├── auth.js
 │   │   ├── cart.js
 │   │   ├── products.js
 │   │   ├── vendor.js
-│   │   ├── admin.js
-│   │   └── main.js
-│   └── index.html
+│   │   ├── user.js
+│   │   └── main.js                # Shared JS
+│   ├── admin-products.html        # Admin product management UI
+│   ├── admin-dashboard.html       # Admin dashboard UI
+│   ├── admin-users.html           # Admin user management UI
+│   ├── admin-vendors.html         # Admin vendor management UI
+│   ├── vendor-dashboard.html      # Vendor dashboard UI
+│   ├── user-dashboard.html        # User dashboard UI
+│   ├── index.html                 # Main landing page
+│   ├── login.html                 # Login page
+│   ├── register.html              # Registration page
+│   ├── product-details.html       # Product details
+│   ├── cart.html                  # Shopping cart
+│   ├── orders.html                # Orders page
+│   └── ...
 └── README.md
 ```
+
+- **backend/**: All server-side code, API routes, database, and business logic.
+  - **controllers/**: Route handler logic for each resource.
+  - **middleware/**: Auth, validation, and admin checks.
+  - **models/**: DB models (if using ORM or for structure).
+  - **routes/**: Express route definitions.
+  - **utils/**: Helper functions, error handling.
+  - **database/**: SQL schema and migrations.
+- **frontend/**: All static files, HTML, CSS, and JS for admin, vendor, and user UIs.
+  - **css/**: Styles for each major page/role.
+  - **js/**: Scripts for each major page/role and shared utilities.
+  - **admin-***, **vendor-***, **user-***: HTML pages for each role's dashboard and management.
+  - **index.html**: Main landing page.
+  - **login.html**, **register.html**: Auth pages.
 
 ## Setup Instructions
 
@@ -195,3 +244,76 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 Your Name - your.email@example.com
 Project Link: https://github.com/yourusername/nexora 
+
+# Nexora Marketplace Admin Panel
+
+## Overview
+This project is a full-stack admin/vendor/user management system for the Nexora marketplace, built with:
+- **Backend:** Node.js/Express, MySQL
+- **Frontend:** Vanilla JS, HTML, CSS
+
+## Features
+- Admin dashboard with stats and navigation
+- User, vendor, product, and category management
+- Add, edit, delete, and search for products, users, and vendors
+- Category assignment for products
+- JWT-based authentication
+
+## API Endpoints
+- **Products (Admin):**
+  - `GET    /api/admin/products` (list, paginated)
+  - `PUT    /api/admin/products/:id` (update)
+- **Categories (Admin):**
+  - `GET    /api/admin/categories` (list)
+- **Users, Vendors, Orders:** See respective routes in backend
+
+## Local Development Setup
+
+### 1. **Backend**
+- Start the backend server (default: `http://localhost:5000`).
+- Ensure your `.env` has the correct `JWT_SECRET` and DB credentials.
+
+### 2. **Frontend**
+- Open `frontend/admin-products.html` in your browser (served via a dev server or directly).
+- **API calls must point to the backend on port 5000.**
+- If you use vanilla JS/HTML, you must use the full backend URL in fetch requests (e.g., `http://localhost:5000/api/admin/products`).
+- If you use React or another framework, set up a proxy (see below).
+
+### 3. **Proxy Setup (for React or Vite projects)**
+- **React (Create React App):** Add this to `package.json`:
+  ```json
+  "proxy": "http://localhost:5000"
+  ```
+- **Vite:** In `vite.config.js`:
+  ```js
+  server: { proxy: { '/api': 'http://localhost:5000' } }
+  ```
+- **Vanilla JS/HTML:** Use the full backend URL in fetch requests.
+
+## Troubleshooting
+
+### 404 Not Found
+- Check that your frontend is calling the correct endpoint (e.g., `/api/admin/products` not `/api/products` if using admin routes).
+- Make sure the backend server is running on port 5000.
+
+### 403 Forbidden / Insufficient Permissions
+- Ensure you are sending the JWT token in the `Authorization` header: `Bearer <token>`.
+- Make sure you are logged in as an admin for admin routes.
+
+### CORS Issues
+- The backend enables CORS for `http://localhost:3000` by default. Adjust as needed in `server.js`.
+
+### Product List Not Updating
+- After editing a product, the frontend should call `loadProducts()` to refresh the table.
+
+### Category Dropdown Not Populating
+- Make sure the frontend fetches from `/api/admin/categories` and sends the JWT token.
+- Ensure categories exist in the database.
+
+## Deployment
+- In production, use **relative URLs** (e.g., `/api/admin/products`) in your frontend code.
+- Set up a reverse proxy (Nginx, Apache, or cloud provider) to forward `/api` requests to your backend server.
+- Ensure environment variables and CORS settings are production-ready.
+
+## Contact
+For help, open an issue or contact the Nexora dev team. 

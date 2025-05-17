@@ -1,0 +1,109 @@
+/* Order Management Styles */
+.order-management {
+    padding: 20px;
+}
+
+.order-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    background: white;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.order-table th,
+.order-table td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid #eee;
+}
+
+.order-table th {
+    background-color: #f8f9fa;
+    font-weight: 600;
+    color: #333;
+}
+
+.order-table tr:hover {
+    background-color: #f8f9fa;
+}
+
+.order-table select {
+    padding: 6px 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background-color: white;
+}
+
+.order-table button {
+    padding: 6px 12px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.order-table button:hover {
+    background-color: #0056b3;
+}
+
+/* Search bar styles */
+.order-search {
+    padding: 8px 15px;
+    width: 300px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    margin-right: 15px;
+}
+
+/* Status colors */
+.status-pending { color: #ffc107; }
+.status-processing { color: #17a2b8; }
+.status-shipped { color: #007bff; }
+.status-delivered { color: #28a745; }
+.status-cancelled { color: #dc3545; }
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .order-table {
+        display: block;
+        overflow-x: auto;
+    }
+    
+    .order-search {
+        width: 100%;
+        margin-bottom: 15px;
+    }
+}
+
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1000;
+  left: 0; top: 0; width: 100vw; height: 100vh;
+  background: rgba(0,0,0,0.3);
+  justify-content: center;
+  align-items: center;
+}
+.modal[style*="display: block"] {
+  display: flex !important;
+}
+.modal-content {
+  background: #fff;
+  color: #222;
+  border-radius: 12px;
+  padding: 2rem;
+  min-width: 350px;
+  max-width: 500px;
+  box-shadow: 0 2px 16px #0002;
+  position: relative;
+}
+#closeOrderModal {
+  color: #991b1b;
+  font-size: 1.5rem;
+  position: absolute;
+  top: 1rem;
+  right: 1.5rem;
+  cursor: pointer;
+} 

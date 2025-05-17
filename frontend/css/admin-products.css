@@ -1,0 +1,93 @@
+/* Admin Product Management Styles */
+.product-management {
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(44,62,80,0.06);
+    padding: 2rem;
+    margin-bottom: 2rem;
+}
+.product-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+}
+.product-table th, .product-table td {
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid #e9ecef;
+    text-align: left;
+}
+.product-table th {
+    background: #f8f9fa;
+    color: #343a40;
+    font-weight: 700;
+}
+.product-table tr:last-child td {
+    border-bottom: none;
+}
+.product-table tr:hover {
+    background: #f1f3f6;
+}
+.product-table .action-btn {
+    background: var(--primary-color, #007bff);
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 0.4rem 0.9rem;
+    margin-right: 0.5rem;
+    cursor: pointer;
+    font-size: 0.95rem;
+    transition: background 0.2s;
+}
+.product-table .action-btn.delete {
+    background: #e74c3c;
+}
+.product-table .action-btn:hover {
+    opacity: 0.85;
+}
+.product-table-controls {
+    margin-bottom: 1rem;
+    display: flex;
+    gap: 1rem;
+}
+.product-search {
+    padding: 0.5rem 1rem;
+    border: 1px solid #e9ecef;
+    border-radius: 5px;
+    font-size: 1rem;
+    width: 250px;
+}
+.add-product-btn {
+    background: var(--primary-color, #007bff);
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 0.5rem 1.2rem;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+.add-product-btn:hover {
+    opacity: 0.9;
+}
+
+/* Modal Styles */
+.modal {
+  display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100vw; height: 100vh;
+  background: rgba(0,0,0,0.5); justify-content: center; align-items: center;
+}
+.modal-content {
+  background: #222a3a; color: #fff; padding: 2rem; border-radius: 10px; width: 400px; position: relative;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.25);
+}
+.close {
+  position: absolute; right: 1rem; top: 1rem; font-size: 1.5rem; cursor: pointer; color: #3b82f6;
+}
+label { display: block; margin-top: 1rem; }
+input, textarea, select {
+  width: 100%; padding: 0.5rem; margin-top: 0.25rem; border-radius: 5px; border: none; background: #1a2233; color: #fff;
+}
+button[type="submit"] {
+  margin-top: 1.5rem; width: 100%; padding: 0.75rem; background: #3b82f6; color: #fff; border: none; border-radius: 5px; font-size: 1rem; cursor: pointer;
+  transition: background 0.2s;
+}
+button[type="submit"]:hover { background: #2563eb; } 
