@@ -4,6 +4,8 @@ const helmet = require('helmet');
 const dotenv = require('dotenv');
 const path = require('path');
 const db = require('./config/db');
+const session = require('express-session');
+const passport = require('./config/passport');
 
 // Load environment variables
 dotenv.config();
@@ -120,6 +122,11 @@ app.use((err, req, res, next) => {
 
 // Start server
 const PORT = process.env.PORT || 3000;
+
+app.use(session({ secret: 'your_secret', resave: false, saveUninitialized: false }));
+app.use(passport.initialize());
+app.use(passport.session());
+
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 }); 

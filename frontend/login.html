@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Marketplace | Login & Sign Up</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/login.css">
+</head>
+<body>
+    <div class="container">
+        <div class="login-section">
+            <div class="content">
+                <div class="logo">
+                    <i class="fas fa-store"></i>
+                    <span>Nexora</span>
+                </div>
+                <h1>Welcome Back</h1>
+                <p>Login to access your account and start exploring</p>
+                
+                <div class="social-login">
+                    <button class="social-btn facebook"><i class="fab fa-facebook-f"></i></button>
+                    <button class="social-btn google"><i class="fab fa-google"></i></button>
+                    <button class="social-btn linkedin"><i class="fab fa-linkedin-in"></i></button>
+                </div>
+                
+                <div class="divider">or continue with email</div>
+                
+                <form id="loginForm">
+                    <div class="form-group">
+                        <label for="email">Email Address</label>
+                        <input type="email" id="email" placeholder="your@email.com" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <div class="password-container">
+                            <input type="password" id="password" placeholder="••••••••" required>
+                            <i class="fas fa-eye toggle-password" onclick="togglePassword()"></i>
+                        </div>
+                        <a href="#" class="forgot-password">Forgot password?</a>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-sign-in-alt"></i> Sign In
+                    </button>
+                </form>
+                
+                <p class="footer-text">
+                    Don't have an account? <a href="#" onclick="showSignup()">Sign up here</a>
+                </p>
+            </div>
+        </div>
+        
+        <div class="signup-section">
+            <div class="content">
+                <h2>Join Our Marketplace</h2>
+                <p>Create an account to start shopping or selling products</p>
+                
+                <div class="signup-features">
+                    <div class="feature">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Shop from thousands of products</span>
+                    </div>
+                    <div class="feature">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Sell your products to millions</span>
+                    </div>
+                    <div class="feature">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Secure payment processing</span>
+                    </div>
+                    <div class="feature">
+                        <i class="fas fa-check-circle"></i>
+                        <span>24/7 customer support</span>
+                    </div>
+                </div>
+                
+                <form id="signupForm" style="display: none;">
+                    <div class="form-group">
+                        <label for="signupEmail">Email Address</label>
+                        <input type="email" id="signupEmail" placeholder="your@email.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="signupPassword">Password</label>
+                        <div class="password-container">
+                            <input type="password" id="signupPassword" placeholder="••••••••" required>
+                            <i class="fas fa-eye toggle-password" onclick="toggleSignupPassword()"></i>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="signupFirstName">First Name</label>
+                        <input type="text" id="signupFirstName" placeholder="First Name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="signupLastName">Last Name</label>
+                        <input type="text" id="signupLastName" placeholder="Last Name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="signupUserType">I want to:</label>
+                        <div class="user-type-selector">
+                            <input type="radio" id="signupCustomer" name="signupUserType" value="customer" checked>
+                            <label for="signupCustomer">Shop</label>
+                            <input type="radio" id="signupVendor" name="signupUserType" value="vendor">
+                            <label for="signupVendor">Sell</label>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-user-plus"></i> Create Account
+                    </button>
+                    <p class="footer-text">
+                        Already have an account? <a href="#" onclick="showLogin()">Login here</a>
+                    </p>
+                </form>
+                
+                <button id="signupBtn" class="btn btn-secondary" onclick="showSignupForm()">
+                    <i class="fas fa-user-plus"></i> Create Account
+                </button>
+                
+                <p class="footer-text" id="signupFooterText">
+                    Already have an account? <a href="#" onclick="showLogin()">Login here</a>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- TOTP 2FA Modal -->
+    <div class="modal" id="totpLoginModal" style="display:none;z-index:2000;">
+      <div class="modal-content">
+        <span class="close" id="closeTotpLoginModal">&times;</span>
+        <h2>Two-Factor Authentication</h2>
+        <form id="totpLoginForm">
+          <div class="form-group">
+            <label for="totpLoginCode">Enter 6-digit code from your authenticator app</label>
+            <input type="text" id="totpLoginCode" maxlength="6" required autocomplete="one-time-code">
+          </div>
+          <button type="submit" class="btn btn-primary">Verify</button>
+          <div id="totpLoginMsg" style="color:#c00;margin-top:8px;"></div>
+        </form>
+      </div>
+    </div>
+
+    <script src="js/api.js"></script>
+    <script src="js/login.js"></script>
+</body>
+</html> 

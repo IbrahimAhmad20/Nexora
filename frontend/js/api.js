@@ -14,8 +14,9 @@ class ApiService {
             };
 
             // Add auth token if available
-            if (auth.token) {
-                headers['Authorization'] = `Bearer ${auth.token}`;
+            const token = localStorage.getItem('token');
+            if (token) {
+                headers['Authorization'] = `Bearer ${token}`;
             }
 
             const response = await fetch(url, {
@@ -220,6 +221,21 @@ class ApiService {
 
     async getCategoryProducts(id) {
         return this.request(`/categories/${id}/products`);
+    }
+
+    // Auth endpoints
+    async login(email, password) {
+        return this.request('/auth/login', {
+            method: 'POST',
+            body: JSON.stringify({ email, password })
+        });
+    }
+
+    async register(email, password, role) {
+        return this.request('/auth/register', {
+            method: 'POST',
+            body: JSON.stringify({ email, password, role })
+        });
     }
 }
 

@@ -17,8 +17,7 @@
                 <a href="#categories">Categories</a>
                 <a href="#vendors">Vendors</a>
                 <a href="#contact">Contact</a>
-                <button class="btn btn-login" id="openLogin">Login</button>
-                <button class="btn btn-register" id="openRegister">Register</button>
+                <button class="btn btn-login" onclick="window.location.href='login.html'">Login</button>
                 <span class="header-cart" style="display:none;cursor:pointer;margin-left:1.5rem;position:relative;" id="headerCartBtn">
                     <i class="fas fa-shopping-cart"></i>
                     <span id="cartCount" style="position:absolute;top:-7px;right:-10px;background:#e74c3c;color:#fff;font-size:0.8rem;border-radius:50%;padding:2px 6px;font-weight:bold;">0</span>
@@ -172,6 +171,20 @@
             </div>
         </div>
     </div>
+    <div class="modal" id="totpLoginModal" style="display:none;z-index:2000;">
+        <div class="modal-content">
+            <span class="close" id="closeTotpLoginModal">&times;</span>
+            <h2>Two-Factor Authentication</h2>
+            <form id="totpLoginForm">
+                <div class="form-group">
+                    <label for="totpLoginCode">Enter 6-digit code from your authenticator app</label>
+                    <input type="text" id="totpLoginCode" maxlength="6" required autocomplete="one-time-code">
+                </div>
+                <button type="submit" class="btn btn-primary">Verify</button>
+                <div id="totpLoginMsg" style="color:#c00;margin-top:8px;"></div>
+            </form>
+        </div>
+    </div>
     <script src="js/api.js"></script>
     <script src="js/cart.js"></script>
     <script src="js/main.js"></script>
@@ -186,24 +199,17 @@
         // Shop Now button logic
         document.getElementById('heroShopNow').onclick = function(e) {
             e.preventDefault();
-            // If not logged in, open login modal
+            // If not logged in, redirect to login page
             if (!token) {
-                document.getElementById('loginModal').style.display = 'block';
+                window.location.href = 'login.html';
             } else {
                 window.location.href = 'shop.html';
             }
         };
-        // Login/Register modal logic
-        document.getElementById('openLogin').onclick = function() {
-            document.getElementById('loginModal').style.display = 'block';
-        };
-        document.getElementById('openRegister').onclick = function() {
-            document.getElementById('registerModal').style.display = 'block';
-        };
-        // Become Vendor logic (optional: open vendor registration or info)
+        // Become Vendor logic
         document.getElementById('becomeVendor').onclick = function(e) {
             e.preventDefault();
-            alert('Vendor registration coming soon!');
+            window.location.href = 'login.html';
         };
     });
     </script>

@@ -8,6 +8,7 @@ const { verifyToken } = require('../middleware/auth.middleware');
 const cors = require('cors');
 const speakeasy = require('speakeasy');
 const qrcode = require('qrcode');
+const passport = require('../config/passport');
 
 // Register new user
 router.post('/register',
@@ -281,5 +282,40 @@ router.post('/2fa/disable', verifyToken, async (req, res) => {
   await pool.query('UPDATE users SET two_factor_enabled = 0, totp_secret = NULL WHERE id = ?', [req.user.id]);
   res.json({ success: true });
 });
+
+// Google OAuth
+router.get('/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
+
+router.get('/google/callback', passport.authenticate('google', { session: false, failureRedirect: '/login.html' }),
+  (req, res) => {
+    // Issue JWT and redirect to frontend with token and user info
+    const token = jwt.sign({ userId: req.user.id, role: req.user.role }, process.env.JWT_SECRET, { expiresIn: '24h' });
+    const user = encodeURIComponent(JSON.stringify({
+      id: req.user.id,
+      email: req.user.email,
+      role: req.user.role,
+      first_name: req.user.first_name,
+      last_name: req.user.last_name
+    }));
+    res.redirect(`http://localhost:3000/login.html?token=${token}&user=${user}`);
+  }
+);
+
+// Facebook OAuth
+router.get('/facebook', passport.authenticate('facebook', { scope: ['email'] }));
+
+router.get('/facebook/callback', passport.authenticate('facebook', { session: false, failureRedirect: '/login.html' }),
+  (req, res) => {
+    const token = jwt.sign({ userId: req.user.id, role: req.user.role }, process.env.JWT_SECRET, { expiresIn: '24h' });
+    const user = encodeURIComponent(JSON.stringify({
+      id: req.user.id,
+      email: req.user.email,
+      role: req.user.role,
+      first_name: req.user.first_name,
+      last_name: req.user.last_name
+    }));
+    res.redirect(`http://localhost:3000/login.html?token=${token}&user=${user}`);
+  }
+);
 
 module.exports = router; 

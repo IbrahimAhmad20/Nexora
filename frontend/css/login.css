@@ -1,0 +1,415 @@
+:root {
+    --primary-blue: #2563eb;
+    --dark-blue: #1e40af;
+    --darker-blue: #1e3a8a;
+    --light-blue: #3b82f6;
+    --lighter-blue: #60a5fa;
+    --background-dark: #0f172a;
+    --background-light: #f8fafc;
+    --text-light: #f1f5f9;
+    --text-dark: #1e293b;
+    --success-green: #10b981;
+    --error-red: #ef4444;
+    --border-radius: 12px;
+    --box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    --transition: all 0.3s ease;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: var(--background-dark);
+    color: var(--text-light);
+    line-height: 1.6;
+}
+
+.container {
+    display: flex;
+    min-height: 100vh;
+    width: 100%;
+    overflow: hidden;
+}
+
+.login-section, .signup-section {
+    flex: 1;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    transition: var(--transition);
+}
+
+.login-section {
+    background: var(--background-dark);
+    position: relative;
+    overflow: hidden;
+}
+
+.login-section::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -50%;
+    width: 100%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(37, 99, 235, 0.1) 0%, transparent 70%);
+    z-index: 0;
+}
+
+.signup-section {
+    background: linear-gradient(135deg, var(--dark-blue), var(--darker-blue));
+    position: relative;
+}
+
+.signup-section::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: url('https://images.unsplash.com/photo-1551434678-e076c223a692?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80') no-repeat center center;
+    background-size: cover;
+    opacity: 0.1;
+    z-index: 0;
+}
+
+.content {
+    max-width: 400px;
+    width: 100%;
+    z-index: 1;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    margin-bottom: 2rem;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--white);
+}
+
+.logo i {
+    margin-right: 0.5rem;
+    font-size: 2rem;
+}
+
+h1, h2 {
+    margin-bottom: 1.5rem;
+    font-weight: 700;
+}
+
+h1 {
+    font-size: 2.5rem;
+    background: linear-gradient(to right, var(--light-blue), var(--lighter-blue));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: white;
+}
+
+h2 {
+    font-size: 1.8rem;
+}
+
+p {
+    margin-bottom: 1.5rem;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.social-login {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.social-btn {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: var(--transition);
+    border: none;
+}
+
+.social-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--box-shadow);
+}
+
+.facebook { background: #1877f2; }
+.google { background: #db4437; }
+.linkedin { background: #0a66c2; }
+
+.divider {
+    display: flex;
+    align-items: center;
+    margin: 1.5rem 0;
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.divider::before, .divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: rgba(255, 255, 255, 0.2);
+    margin: 0 1rem;
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+    position: relative;
+}
+
+label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+input, select {
+    width: 100%;
+    padding: 1rem;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: var(--border-radius);
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--text-light);
+    font-size: 1rem;
+    transition: var(--transition);
+}
+
+input:focus, select:focus {
+    outline: none;
+    border-color: var(--light-blue);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
+}
+
+.password-container {
+    position: relative;
+}
+
+.toggle-password {
+    position: absolute;
+    right: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: rgba(255, 255, 255, 0.6);
+    transition: var(--transition);
+}
+
+.toggle-password:hover {
+    color: var(--light-blue);
+}
+
+.forgot-password {
+    display: block;
+    text-align: right;
+    margin-top: 0.5rem;
+    color: var(--lighter-blue);
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: var(--transition);
+}
+
+.forgot-password:hover {
+    text-decoration: underline;
+}
+
+.btn {
+    width: 100%;
+    padding: 1rem;
+    border: none;
+    border-radius: var(--border-radius);
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.btn-primary {
+    background: var(--primary-blue);
+    color: white;
+}
+
+.btn-primary:hover {
+    background: var(--dark-blue);
+    box-shadow: var(--box-shadow);
+}
+
+.btn-secondary {
+    background: transparent;
+    color: white;
+    border: 2px solid white;
+}
+
+.btn-secondary:hover {
+    background: white;
+    color: var(--dark-blue);
+    box-shadow: var(--box-shadow);
+}
+
+.signup-features {
+    margin: 2rem 0;
+}
+
+.feature {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.feature i {
+    margin-right: 1rem;
+    color: var(--light-blue);
+    font-size: 1.2rem;
+}
+
+.footer-text {
+    margin-top: 2rem;
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.6);
+    text-align: center;
+}
+
+.footer-text a {
+    color: white;
+    text-decoration: none;
+    transition: var(--transition);
+}
+
+.footer-text a:hover {
+    color: var(--light-blue);
+    text-decoration: underline;
+}
+
+.user-type-selector {
+    display: flex;
+    margin-bottom: 1.5rem;
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.user-type-selector input[type="radio"] {
+    display: none;
+}
+
+.user-type-selector label {
+    flex: 1;
+    padding: 0.75rem;
+    text-align: center;
+    cursor: pointer;
+    transition: var(--transition);
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.user-type-selector input[type="radio"]:checked + label {
+    background: var(--primary-blue);
+    color: white;
+    font-weight: 600;
+}
+
+@media (max-width: 768px) {
+    .container {
+        flex-direction: column;
+    }
+    
+    .login-section, .signup-section {
+        padding: 2rem 1rem;
+    }
+    
+    .content {
+        max-width: 100%;
+    }
+}
+
+/* TOTP 2FA Modal Styles */
+#totpLoginModal {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; width: 100vw; height: 100vh;
+    background: rgba(0,0,0,0.45);
+    z-index: 2000;
+    align-items: center;
+    justify-content: center;
+}
+
+#totpLoginModal .modal-content {
+    background: var(--background-dark, #181f2a);
+    color: var(--text-light, #f1f5f9);
+    border-radius: 16px;
+    max-width: 400px;
+    width: 90%;
+    margin: auto;
+    padding: 2rem 1.5rem 1.5rem 1.5rem;
+    box-shadow: 0 4px 24px rgba(44,62,80,0.13);
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#totpLoginModal h2 {
+    margin-bottom: 1.2rem;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--light-blue, #3b82f6);
+    text-align: center;
+}
+
+#totpLoginModal .close {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: #888;
+}
+
+#totpLoginForm {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#totpLoginForm .form-group {
+    width: 100%;
+    margin-bottom: 1.2rem;
+}
+
+#totpLoginCode {
+    width: 100%;
+    padding: 0.8rem 1rem;
+    font-size: 1.2rem;
+    border-radius: var(--border-radius, 12px);
+    border: 1px solid var(--light-blue, #3b82f6);
+    background: rgba(255,255,255,0.05);
+    color: var(--text-light, #f1f5f9);
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+    text-align: center;
+}
+
+#totpLoginForm .btn-primary {
+    width: 100%;
+    margin-top: 0.5rem;
+    font-size: 1.1rem;
+} 
