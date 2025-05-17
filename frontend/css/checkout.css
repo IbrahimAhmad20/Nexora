@@ -1,0 +1,255 @@
+body {
+  background: #151e2e;
+  color: #e6eaf3;
+  font-family: 'Segoe UI', Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+.container {
+  max-width: 1200px;
+  margin: 40px auto;
+  padding: 20px;
+}
+.checkout-main {
+  display: flex;
+  gap: 32px;
+  align-items: flex-start;
+}
+.checkout-left {
+  flex: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+.checkout-right {
+  flex: 1;
+}
+section {
+  background: #202b40;
+  border-radius: 12px;
+  padding: 24px;
+  margin-bottom: 0;
+  box-shadow: 0 2px 12px #0002;
+}
+section h2 {
+  margin-top: 0;
+  color: #c7d0e0;
+  font-size: 1.2rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.icon {
+  font-size: 1.2em;
+}
+.address-list {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 12px;
+}
+.address-card {
+  background: #232f47;
+  border-radius: 8px;
+  padding: 14px 18px;
+  min-width: 180px;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: border 0.2s;
+}
+.address-card.selected {
+  border: 2px solid #2ee6a8;
+  background: #1a2233;
+}
+.address-title {
+  font-weight: 600;
+  color: #e6eaf3;
+  margin-bottom: 4px;
+}
+.address-details {
+  font-size: 0.95rem;
+  color: #b0b8c9;
+}
+.add-address {
+  background: none;
+  border: 1px solid #2ee6a8;
+  color: #2ee6a8;
+  border-radius: 8px;
+  padding: 8px 16px;
+  font-size: 1rem;
+  cursor: pointer;
+  margin-top: 8px;
+  transition: background 0.2s, color 0.2s;
+}
+.add-address:hover {
+  background: #2ee6a8;
+  color: #151e2e;
+}
+.payment-options {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+.payment-option {
+  background: #232f47;
+  border-radius: 8px;
+  padding: 12px 18px;
+  cursor: pointer;
+  color: #b0b8c9;
+  border: 2px solid transparent;
+  transition: border 0.2s, background 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.payment-option.selected {
+  border: 2px solid #2ee6a8;
+  background: #1a2233;
+  color: #e6eaf3;
+}
+.card-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.card-form input[type="text"] {
+  background: #1a2233;
+  color: #e6eaf3;
+  border: none;
+  border-radius: 6px;
+  padding: 10px 12px;
+  font-size: 1rem;
+}
+.card-form-row {
+  display: flex;
+  gap: 10px;
+}
+.save-card {
+  color: #8fa2c7;
+  font-size: 0.97rem;
+  margin-top: 2px;
+}
+.order-summary-card {
+  background: #202b40;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 2px 12px #0002;
+}
+.order-summary-card h2 {
+  margin-top: 0;
+  color: #c7d0e0;
+  font-size: 1.2rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.order-items-list {
+  max-height: 120px;
+  overflow-y: auto;
+  margin-bottom: 12px;
+}
+.order-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+.order-item-img {
+  width: 40px;
+  height: 40px;
+  border-radius: 6px;
+  object-fit: cover;
+  background: #1a2233;
+}
+.order-item-info {
+  flex: 1;
+}
+.order-item-title {
+  font-size: 1rem;
+  color: #e6eaf3;
+  font-weight: 500;
+}
+.order-item-details {
+  font-size: 0.9rem;
+  color: #8fa2c7;
+}
+.summary-details {
+  margin-bottom: 14px;
+}
+.summary-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 6px;
+  color: #b0b8c9;
+}
+.summary-row.total {
+  font-weight: bold;
+  color: #7fffd4;
+  font-size: 1.1rem;
+}
+.promo-row {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+.promo-input {
+  flex: 1;
+  background: #1a2233;
+  color: #e6eaf3;
+  border: none;
+  border-radius: 6px;
+  padding: 8px 10px;
+  font-size: 1rem;
+}
+.promo-apply {
+  background: #2ee6a8;
+  color: #151e2e;
+  border: none;
+  border-radius: 6px;
+  padding: 8px 16px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.promo-apply:hover {
+  background: #1fd6a0;
+}
+.add-giftcard {
+  background: none;
+  border: 1px solid #2ee6a8;
+  color: #2ee6a8;
+  border-radius: 8px;
+  padding: 8px 16px;
+  font-size: 1rem;
+  cursor: pointer;
+  margin-bottom: 10px;
+  transition: background 0.2s, color 0.2s;
+}
+.add-giftcard:hover {
+  background: #2ee6a8;
+  color: #151e2e;
+}
+.complete-order-btn {
+  width: 100%;
+  background: #2ee6a8;
+  color: #151e2e;
+  border: none;
+  border-radius: 8px;
+  padding: 12px 0;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 8px;
+  transition: background 0.2s;
+}
+.complete-order-btn:hover {
+  background: #1fd6a0;
+}
+@media (max-width: 1000px) {
+  .checkout-main {
+    flex-direction: column;
+  }
+  .checkout-right {
+    margin-top: 32px;
+  }
+} 

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nexora Shop</title>
+    <link rel="stylesheet" href="css/shop.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <header class="shop-header">
+        <div class="logo">Nexora</div>
+        <form class="shop-search" id="shopSearchForm">
+            <input type="text" id="shopSearchInput" placeholder="Search products...">
+            <button type="submit"><i class="fas fa-search"></i></button>
+        </form>
+        <nav class="shop-nav">
+            <a href="#" class="nav-link active">Shop</a>
+            <a href="#" class="nav-link">Categories</a>
+            <a href="#" class="nav-link">Deals</a>
+            <a href="#" class="nav-link">About</a>
+        </nav>
+        <div class="shop-actions">
+            <button class="cart-btn" id="headerCartBtn" type="button">
+                <i class="fas fa-shopping-cart"></i>
+                <span class="cart-count" id="cartCount">0</span>
+            </button>
+            <div class="profile-menu">
+                <button class="profile-btn" id="profileBtn">
+                    <span class="profile-initials" id="profileInitials">CU</span>
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+                <div class="profile-dropdown" id="profileDropdown">
+                    <a href="#">Profile</a>
+                    <a href="#">Orders</a>
+                    <a href="#">Logout</a>
+                </div>
+            </div>
+        </div>
+    </header>
+    <main class="shop-main">
+        <div class="category-filters" id="categoryFilters">
+            <button class="filter-btn active" data-category="all">All</button>
+            <button class="filter-btn" data-category="electronics">Electronics</button>
+            <button class="filter-btn" data-category="clothing">Clothing</button>
+            <button class="filter-btn" data-category="home">Home & Garden</button>
+            <button class="filter-btn" data-category="books">Books</button>
+            <button class="filter-btn" data-category="toys">Toys</button>
+            <button class="filter-btn" data-category="beauty">Beauty</button>
+            <button class="filter-btn" data-category="sports">Sports</button>
+        </div>
+        <div class="product-grid" id="shopProductGrid">
+            <!-- Products will be loaded here -->
+        </div>
+    </main>
+    <script src="js/api.js"></script>
+    <script src="js/shop.js"></script>
+    <script src="js/cart.js"></script>
+</body>
+</html> 

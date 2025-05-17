@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Vendor Profile & Settings - Nexora</title>
+    <link rel="stylesheet" href="css/vendor-products.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .user-avatar {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #6366F1;
+            color: white;
+            border-radius: 50%;
+            width: 90px;
+            height: 90px;
+            font-size: 2.5rem;
+            background-size: cover;
+            background-position: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+        .modern-card {
+            background: #fff;
+            border-radius: 18px;
+            box-shadow: 0 2px 16px rgba(0,0,0,0.07);
+            padding: 32px 32px 24px 32px;
+            margin-bottom: 32px;
+        }
+        .modern-section-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 18px;
+            color: #222;
+        }
+        .profile-section-modern {
+            display: flex;
+            align-items: center;
+            gap: 32px;
+            margin-bottom: 32px;
+        }
+        .profile-info-modern {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+        .profile-info-modern .profile-name {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #222;
+        }
+        .profile-info-modern .profile-email {
+            color: #888;
+            font-size: 1rem;
+        }
+        .modern-btn {
+            background: #2c3e50;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            padding: 10px 22px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .modern-btn:hover {
+            background: #34495e;
+        }
+        .modern-form label {
+            font-weight: 500;
+            color: #333;
+            margin-bottom: 4px;
+        }
+        .modern-form input, .modern-form textarea, .modern-form select {
+            width: 100%;
+            padding: 8px 10px;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            font-size: 1rem;
+            margin-bottom: 12px;
+            background: #f9fafb;
+            transition: border 0.2s;
+        }
+        .modern-form input:focus, .modern-form textarea:focus, .modern-form select:focus {
+            border-color: #6366F1;
+            outline: none;
+        }
+        .modern-form button {
+            margin-top: 8px;
+        }
+        .modern-divider {
+            height: 1px;
+            background: #e5e7eb;
+            margin: 32px 0 24px 0;
+            border: none;
+        }
+        .modern-form input[type="checkbox"] {
+            accent-color: #2c3e50;
+            width: 20px;
+            height: 20px;
+            border-radius: 6px;
+            margin-right: 8px;
+            vertical-align: middle;
+            cursor: pointer;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+        }
+        .modern-form label.checkbox-label {
+            display: flex;
+            align-items: center;
+            font-weight: 500;
+            color: #333;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <aside class="sidebar">
+            <div class="sidebar-logo">Nexora</div>
+            <nav class="sidebar-nav">
+                <a href="vendor-dashboard.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+                <a href="vendor-products.html"><i class="fas fa-box"></i> Products</a>
+                <a href="vendor-orders.html"><i class="fas fa-shopping-cart"></i> Orders</a>
+                <a href="#" class="active"><i class="fas fa-cog"></i> Store Settings</a>
+                <a href="vendor-profile.html"><i class="fas fa-user"></i> Profile</a>
+                <a href="#"><i class="fas fa-shield-alt"></i> Security</a>
+                <a href="#"><i class="fas fa-sign-out-alt"></i> Logout</a>
+            </nav>
+        </aside>
+        <main class="main-content">
+            <div class="modern-card">
+                <div class="modern-section-title">Store Settings</div>
+                <div class="profile-section-modern">
+                    <div class="user-avatar" id="profileAvatar">VU</div>
+                    <div class="profile-info-modern">
+                        <div class="profile-name" id="profileName">Vendor User</div>
+                        <div class="profile-email" id="profileEmail">vendor@nexora.com</div>
+                    </div>
+                    <button class="modern-btn" style="margin-left:auto;" id="viewStoreBtn">View Store</button>
+                </div>
+                <form id="profileForm" class="modern-form" style="display:grid;grid-template-columns:1fr 1fr;gap:24px;">
+                    <div style="grid-column:1/3;">
+                        <label>Store Logo<br><input type="file" id="storeLogo" accept="image/*"><button type="button" class="modern-btn" id="uploadLogoBtn">Upload Logo</button></label>
+                    </div>
+                    <label>Store Name: <input type="text" id="businessName" required></label>
+                    <label>Store Category:
+                        <select id="storeCategory">
+                            <option value="">Select a category</option>
+                            <option value="Electronics">Electronics</option>
+                            <option value="Fashion">Fashion</option>
+                            <option value="Home">Home & Living</option>
+                            <option value="Beauty">Beauty & Health</option>
+                            <option value="Sports">Sports & Outdoors</option>
+                            <option value="Books">Books & Stationery</option>
+                            <option value="Food">Food & Grocery</option>
+                            <option value="Toys">Toys & Games</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </label>
+                    <label>Store Description: <textarea id="businessDescription"></textarea></label>
+                    <label>Contact Email: <input type="email" id="email" disabled></label>
+                    <label>Contact Phone: <input type="text" id="phone"></label>
+                    <label>Address: <input type="text" id="address" required></label>
+                    <label>Tax ID: <input type="text" id="taxId"></label>
+                    <button type="submit" class="modern-btn" style="grid-column:1/3;">Save Store Information</button>
+                </form>
+            </div>
+            <div class="modern-card">
+                <div class="modern-section-title">Store Policies</div>
+                <form id="policyForm" class="modern-form" style="display:grid;gap:16px;">
+                    <label>Shipping Policy:<textarea id="shippingPolicy"></textarea></label>
+                    <label>Return Policy:<textarea id="returnPolicy"></textarea></label>
+                    <label>Privacy Policy:<textarea id="privacyPolicy"></textarea></label>
+                    <button type="submit" class="modern-btn">Save Policy Changes</button>
+                </form>
+            </div>
+            <div class="modern-card">
+                <div class="modern-section-title">Store Availability</div>
+                <form id="availabilityForm" class="modern-form" style="display:grid;gap:16px;">
+                    <label>Store Status:
+                        <select id="storeStatus">
+                            <option value="open">Open - Accepting orders</option>
+                            <option value="closed">Closed</option>
+                        </select>
+                    </label>
+                    <label>Vacation Message (if applicable):<textarea id="vacationMessage"></textarea></label>
+                    <label class="checkbox-label"><input type="checkbox" id="notifyOnReturn"> Notify customers when I'm back</label>
+                    <button type="submit" class="modern-btn">Save Availability Settings</button>
+                </form>
+            </div>
+            <div class="modern-card">
+                <div class="modern-section-title">Vendor Profile</div>
+                <form id="vendorProfileForm" class="modern-form" style="display:grid;grid-template-columns:1fr 1fr;gap:24px;">
+                    <label>First Name: <input type="text" id="firstName"></label>
+                    <label>Last Name: <input type="text" id="lastName"></label>
+                    <label>Email Address: <input type="email" id="profileEmailInput" disabled></label>
+                    <label>Phone Number: <input type="text" id="profilePhone"></label>
+                    <button type="submit" class="modern-btn" style="grid-column:1/3;">Save Profile Changes</button>
+                </form>
+            </div>
+            <div class="modern-card">
+                <div class="modern-section-title">Security</div>
+                <form id="securityForm" class="modern-form" style="display:grid;grid-template-columns:1fr 1fr;gap:24px;">
+                    <label>Current Password: <input type="password" id="currentPassword"></label>
+                    <label>New Password: <input type="password" id="newPassword"></label>
+                    <label>Confirm Password: <input type="password" id="confirmPassword"></label>
+                    <label class="checkbox-label" style="grid-column:1/3;"><input type="checkbox" id="twoFactor"> Enable two-factor authentication</label>
+                    <button type="submit" class="modern-btn" style="grid-column:1/3;">Update Security Settings</button>
+                </form>
+            </div>
+            <div id="profileMsg" style="margin-top:16px;"></div>
+        </main>
+    </div>
+    <script src="js/vendor-profile.js"></script>
+</body>
+</html>

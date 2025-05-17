@@ -1,0 +1,322 @@
+/* Nexora Shop - Modern Customer Page Styles */
+body {
+    background: #182132;
+    color: #f5f6fa;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    margin: 0;
+    min-height: 100vh;
+}
+.shop-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #232c43;
+    padding: 1.2rem 2rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+.logo {
+    font-size: 1.7rem;
+    font-weight: bold;
+    color: #2ecc71;
+    letter-spacing: 1px;
+}
+.shop-search {
+    flex: 1;
+    display: flex;
+    margin: 0 2rem;
+    max-width: 420px;
+}
+.shop-search input {
+    flex: 1;
+    padding: 0.7rem 1rem;
+    border: none;
+    border-radius: 6px 0 0 6px;
+    font-size: 1rem;
+    background: #202a3c;
+    color: #f5f6fa;
+}
+.shop-search button {
+    background: #3498db;
+    color: #fff;
+    border: none;
+    border-radius: 0 6px 6px 0;
+    padding: 0 1.1rem;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+.shop-search button:hover {
+    background: #217dbb;
+}
+.shop-nav {
+    display: flex;
+    gap: 1.2rem;
+}
+.nav-link {
+    color: #bfc9da;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 1rem;
+    padding: 0.3rem 0.7rem;
+    border-radius: 4px;
+    transition: background 0.2s, color 0.2s;
+}
+.nav-link.active, .nav-link:hover {
+    background: #2ecc71;
+    color: #fff;
+}
+.shop-actions {
+    display: flex;
+    align-items: center;
+    gap: 1.2rem;
+}
+.cart-btn {
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 1.3rem;
+    position: relative;
+    cursor: pointer;
+}
+.cart-count {
+    position: absolute;
+    top: -7px;
+    right: -10px;
+    background: #e74c3c;
+    color: #fff;
+    font-size: 0.8rem;
+    border-radius: 50%;
+    padding: 2px 6px;
+    font-weight: bold;
+}
+.profile-menu {
+    position: relative;
+}
+.profile-btn {
+    background: #202a3c;
+    color: #fff;
+    border: none;
+    border-radius: 20px;
+    padding: 0.4rem 1rem;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+}
+.profile-initials {
+    background: #3498db;
+    color: #fff;
+    border-radius: 50%;
+    width: 2rem;
+    height: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 1rem;
+}
+.profile-dropdown {
+    display: none;
+    position: absolute;
+    right: 0;
+    top: 110%;
+    background: #232c43;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    min-width: 140px;
+    z-index: 20;
+}
+.profile-menu.open .profile-dropdown {
+    display: block;
+}
+.profile-dropdown a {
+    display: block;
+    color: #bfc9da;
+    text-decoration: none;
+    padding: 0.8rem 1.2rem;
+    border-radius: 8px;
+    transition: background 0.2s, color 0.2s;
+}
+.profile-dropdown a:hover {
+    background: #2ecc71;
+    color: #fff;
+}
+.shop-main {
+    max-width: 1200px;
+    margin: 2.5rem auto 0 auto;
+    padding: 0 1.5rem 2rem 1.5rem;
+}
+.category-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.7rem;
+    margin-bottom: 2rem;
+    justify-content: flex-start;
+}
+.filter-btn {
+    background: #232c43;
+    color: #bfc9da;
+    border: none;
+    border-radius: 20px;
+    padding: 0.5rem 1.3rem;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+}
+.filter-btn.active, .filter-btn:hover {
+    background: #2ecc71;
+    color: #fff;
+}
+.product-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+    gap: 2rem;
+}
+.product-card {
+    background: #232c43;
+    border-radius: 16px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.18s, box-shadow 0.18s;
+    position: relative;
+}
+.product-card:hover {
+    transform: translateY(-6px) scale(1.02);
+    box-shadow: 0 6px 24px rgba(44, 62, 80, 0.18);
+}
+.product-card img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+    background: #202a3c;
+}
+.product-card .badge {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: #e74c3c;
+    color: #fff;
+    font-size: 0.85rem;
+    font-weight: bold;
+    border-radius: 8px;
+    padding: 0.3rem 0.7rem;
+    z-index: 2;
+}
+.product-card .badge.blue {
+    background: #3498db;
+}
+.product-card .badge.green {
+    background: #2ecc71;
+}
+.product-info {
+    padding: 1.2rem 1.2rem 0.7rem 1.2rem;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+.product-category {
+    color: #2ecc71;
+    font-size: 0.9rem;
+    font-weight: bold;
+    letter-spacing: 1px;
+    margin-bottom: 0.2rem;
+}
+.product-title {
+    font-size: 1.1rem;
+    font-weight: bold;
+    color: #fff;
+    margin-bottom: 0.2rem;
+}
+.product-rating {
+    color: #f1c40f;
+    font-size: 0.95rem;
+    margin-bottom: 0.2rem;
+}
+.product-price {
+    color: #2ecc71;
+    font-size: 1.1rem;
+    font-weight: bold;
+}
+.product-old-price {
+    color: #bfc9da;
+    font-size: 0.95rem;
+    text-decoration: line-through;
+    margin-left: 0.7rem;
+}
+.product-discount {
+    color: #e74c3c;
+    font-size: 0.95rem;
+    font-weight: bold;
+    margin-left: 0.7rem;
+}
+.product-actions {
+    margin-top: 0.7rem;
+    display: flex;
+    gap: 0.7rem;
+    align-items: center;
+}
+.add-cart-btn {
+    flex: 1;
+    background: #2ecc71;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 0.6rem 0;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+.add-cart-btn:hover {
+    background: #27ae60;
+}
+.wishlist-btn {
+    background: #202a3c;
+    color: #bfc9da;
+    border: none;
+    border-radius: 8px;
+    padding: 0.6rem 0.8rem;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+}
+.wishlist-btn:hover {
+    background: #3498db;
+    color: #fff;
+}
+@media (max-width: 900px) {
+    .shop-main {
+        padding: 0 0.5rem 2rem 0.5rem;
+    }
+    .product-grid {
+        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    }
+}
+@media (max-width: 600px) {
+    .shop-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+        padding: 1rem 0.5rem;
+    }
+    .shop-search {
+        margin: 1rem 0 0.5rem 0;
+        width: 100%;
+        max-width: 100%;
+    }
+    .shop-main {
+        margin-top: 1.2rem;
+    }
+    .category-filters {
+        gap: 0.4rem;
+        margin-bottom: 1.2rem;
+    }
+} 

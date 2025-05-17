@@ -1,0 +1,219 @@
+/* Light theme base to match product page */
+body, .dashboard-container {
+  background: #f4f6fa;
+  color: #222;
+  font-family: 'Segoe UI', Arial, sans-serif;
+}
+.sidebar {
+  position: fixed;
+  left: 0;
+  top: 0;
+  height: 100vh;
+  background: #253047;
+  color: #fff;
+  width: 220px;
+  min-height: 100vh;
+  padding: 0;
+  border-right: 1px solid #232c3d;
+  z-index: 100;
+}
+.sidebar-logo {
+  font-size: 1.5rem;
+  font-weight: bold;
+  text-align: center;
+  padding: 1.5rem 0 1rem 0;
+  color: #6ee7b7;
+}
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 0 1rem;
+}
+.sidebar-nav a {
+  color: #bfc9da;
+  text-decoration: none;
+  padding: 0.75rem 1rem;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  transition: background 0.2s, color 0.2s;
+}
+.sidebar-nav a.active, .sidebar-nav a:hover {
+  background: #e6f4ff;
+  color: #2563eb;
+}
+.main-content {
+  flex: 1;
+  padding: 2rem;
+  background: #f4f6fa;
+  min-height: 100vh;
+}
+.order-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+.order-header h2 {
+  color: #222;
+  font-size: 2rem;
+}
+.export-btn {
+  background: #2563eb;
+  color: #fff;
+  border: none;
+  padding: 0.5rem 1.25rem;
+  border-radius: 6px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.export-btn:hover {
+  background: #174ea6;
+}
+.order-card {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 12px #0001;
+  padding: 2rem 1.5rem 1.5rem 1.5rem;
+}
+.order-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+.order-filters {
+  display: flex;
+  gap: 1rem;
+}
+.order-search, .order-status-filter {
+  background: #f4f6fa;
+  color: #222;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+}
+.orders-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  margin-bottom: 1rem;
+  background: #fff;
+}
+.orders-table th, .orders-table td {
+  padding: 1rem 0.75rem;
+  text-align: left;
+}
+.orders-table th {
+  color: #2563eb;
+  font-size: 1rem;
+  font-weight: 600;
+  background: #f4f6fa;
+  border-bottom: 2px solid #e5e7eb;
+}
+.orders-table tr {
+  transition: background 0.2s;
+}
+.orders-table tr:hover {
+  background: #f1f5f9;
+}
+.customer-avatar {
+  display: inline-block;
+  width: 32px;
+  height: 32px;
+  background: #e0e7ef;
+  color: #2563eb;
+  border-radius: 50%;
+  text-align: center;
+  line-height: 32px;
+  font-weight: bold;
+  margin-right: 0.5rem;
+  font-size: 1rem;
+}
+.status-badge {
+  display: inline-block;
+  padding: 0.4em 1em;
+  border-radius: 16px;
+  font-size: 0.95em;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+.status-badge.pending { background: #fde68a; color: #b45309; }
+.status-badge.processing { background: #bae6fd; color: #0369a1; }
+.status-badge.shipped { background: #c7d2fe; color: #3730a3; }
+.status-badge.delivered { background: #bbf7d0; color: #166534; }
+.status-badge.canceled { background: #fecaca; color: #991b1b; }
+.action-btn {
+  background: none;
+  border: none;
+  color: #2563eb;
+  font-size: 1.1rem;
+  margin: 0 0.2rem;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+.action-btn:hover {
+  color: #22c55e;
+}
+.pagination {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+.page-btn {
+  background: #f4f6fa;
+  color: #2563eb;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  padding: 0.4rem 1rem;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+.page-btn.active, .page-btn:hover {
+  background: #2563eb;
+  color: #fff;
+}
+.modal {
+  display: none;
+  position: fixed;
+  top: 0; left: 0; width: 100vw; height: 100vh;
+  background: rgba(0,0,0,0.3);
+  z-index: 1000;
+  justify-content: center;
+  align-items: center;
+}
+.modal[style*="display: block"] {
+  display: flex !important;
+}
+.modal-content {
+  background: #fff;
+  color: #222;
+  border-radius: 12px;
+  padding: 2rem;
+  min-width: 350px;
+  max-width: 500px;
+  box-shadow: 0 2px 16px #0002;
+  position: relative;
+}
+#closeOrderModal {
+  color: #991b1b;
+  font-size: 1.5rem;
+  position: absolute;
+  top: 1rem;
+  right: 1.5rem;
+  cursor: pointer;
+}
+@media (max-width: 900px) {
+  .main-content { padding: 1rem; }
+  .order-card { padding: 1rem; }
+  .orders-table th, .orders-table td { padding: 0.5rem; }
+}
+.dashboard-container {
+  margin-left: 220px;
+} 

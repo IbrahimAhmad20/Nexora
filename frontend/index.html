@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nexora - Multi-Vendor Marketplace</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="landing-header">
+        <div class="container">
+            <div class="logo">Nexora</div>
+            <nav class="landing-nav">
+                <a href="#features">Features</a>
+                <a href="#categories">Categories</a>
+                <a href="#vendors">Vendors</a>
+                <a href="#contact">Contact</a>
+                <button class="btn btn-login" id="openLogin">Login</button>
+                <button class="btn btn-register" id="openRegister">Register</button>
+                <span class="header-cart" style="display:none;cursor:pointer;margin-left:1.5rem;position:relative;" id="headerCartBtn">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span id="cartCount" style="position:absolute;top:-7px;right:-10px;background:#e74c3c;color:#fff;font-size:0.8rem;border-radius:50%;padding:2px 6px;font-weight:bold;">0</span>
+                </span>
+            </nav>
+        </div>
+    </header>
+    <main>
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="container hero-content">
+                <h1>Discover. Shop. Thrive.</h1>
+                <p>Your one-stop marketplace for quality products from trusted vendors.</p>
+                <a href="#" class="btn btn-primary" id="heroShopNow">Shop Now</a>
+            </div>
+        </section>
+        <!-- Features Section -->
+        <section class="features" id="features">
+            <div class="container">
+                <h2>Why Nexora?</h2>
+                <div class="features-grid">
+                    <div class="feature-card"><i class="fas fa-shield-alt"></i><h3>Secure Shopping</h3><p>Shop with confidence. Your data and payments are always protected.</p></div>
+                    <div class="feature-card"><i class="fas fa-tags"></i><h3>Best Deals</h3><p>Find exclusive offers and discounts from top vendors.</p></div>
+                    <div class="feature-card"><i class="fas fa-truck"></i><h3>Fast Delivery</h3><p>Get your orders quickly with our reliable delivery partners.</p></div>
+                    <div class="feature-card"><i class="fas fa-users"></i><h3>Trusted Vendors</h3><p>We partner only with verified, high-quality sellers.</p></div>
+                </div>
+            </div>
+        </section>
+        <!-- Featured Products Section -->
+        <section class="featured-products" id="featured-products">
+            <div class="container">
+                <h2>Featured Products</h2>
+                <div class="product-grid" id="landingFeaturedProducts">
+                    <!-- Product cards will be loaded here by JS -->
+                </div>
+            </div>
+        </section>
+        <!-- Categories Section -->
+        <section class="categories" id="categories">
+            <div class="container">
+                <h2>Shop by Category</h2>
+                <div class="category-grid">
+                    <div class="category-card"><i class="fas fa-laptop"></i><span>Electronics</span></div>
+                    <div class="category-card"><i class="fas fa-tshirt"></i><span>Fashion</span></div>
+                    <div class="category-card"><i class="fas fa-home"></i><span>Home & Living</span></div>
+                    <div class="category-card"><i class="fas fa-spa"></i><span>Beauty</span></div>
+                    <div class="category-card"><i class="fas fa-basketball-ball"></i><span>Sports</span></div>
+                    <div class="category-card"><i class="fas fa-book"></i><span>Books</span></div>
+                </div>
+            </div>
+        </section>
+        <!-- Vendor CTA -->
+        <section class="vendor-cta" id="vendors">
+            <div class="container">
+                <h2>Become a Vendor</h2>
+                <p>Grow your business by selling on Nexora. Reach thousands of customers today.</p>
+                <a href="#" class="btn btn-secondary" id="becomeVendor">Start Selling</a>
+            </div>
+        </section>
+    </main>
+    <!-- Footer -->
+    <footer class="footer" id="contact">
+        <div class="container footer-content">
+            <div>
+                <h3>Nexora</h3>
+                <p>Your trusted multi-vendor marketplace platform.</p>
+            </div>
+            <div>
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="#features">Features</a></li>
+                    <li><a href="#categories">Categories</a></li>
+                    <li><a href="#vendors">Vendors</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+            </div>
+            <div>
+                <h3>Connect</h3>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-facebook"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-linkedin"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 Nexora. All rights reserved.</p>
+        </div>
+    </footer>
+    <!-- Auth Modals (proper modal HTML, hidden by default) -->
+    <div class="modal" id="loginModal" style="display:none;">
+        <div class="modal-content">
+            <span class="close" id="closeLoginModal">&times;</span>
+            <h2>Login</h2>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="loginEmail">Email</label>
+                    <input type="email" id="loginEmail" required>
+                </div>
+                <div class="form-group">
+                    <label for="loginPassword">Password</label>
+                    <input type="password" id="loginPassword" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Login</button>
+            </form>
+            <p>Don't have an account? <a href="#" id="showRegister">Register</a></p>
+        </div>
+    </div>
+    <div class="modal" id="registerModal" style="display:none;">
+        <div class="modal-content">
+            <span class="close" id="closeRegisterModal">&times;</span>
+            <h2>Register</h2>
+            <form id="registerForm">
+                <div class="form-group">
+                    <label for="registerEmail">Email</label>
+                    <input type="email" id="registerEmail" required>
+                </div>
+                <div class="form-group">
+                    <label for="registerPassword">Password</label>
+                    <input type="password" id="registerPassword" required>
+                </div>
+                <div class="form-group">
+                    <label for="registerFirstName">First Name</label>
+                    <input type="text" id="registerFirstName" required>
+                </div>
+                <div class="form-group">
+                    <label for="registerLastName">Last Name</label>
+                    <input type="text" id="registerLastName" required>
+                </div>
+                <div class="form-group">
+                    <label for="registerRole">I want to</label>
+                    <select id="registerRole" required>
+                        <option value="customer">Shop</option>
+                        <option value="vendor">Sell</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary">Register</button>
+            </form>
+            <p>Already have an account? <a href="#" id="showLogin">Login</a></p>
+        </div>
+    </div>
+    <div id="cartModal" class="cart-modal" style="display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.35);z-index:1000;align-items:center;justify-content:center;">
+        <div class="cart-modal-content" style="background:#fff;border-radius:10px;width:90%;max-width:400px;margin:auto;padding:2rem 1.5rem 1.5rem 1.5rem;box-shadow:0 4px 24px rgba(44,62,80,0.13);position:relative;">
+            <span class="close" onclick="cart.closeCart()" style="position:absolute;top:1rem;right:1rem;font-size:1.5rem;cursor:pointer;color:#888;">&times;</span>
+            <h2 style="color:#2ecc71;text-align:center;">Your Cart</h2>
+            <div id="cartItems"></div>
+            <div class="cart-modal-footer" style="margin-top:1.5rem;display:flex;justify-content:space-between;align-items:center;">
+                <span>Total: <span id="cartTotal">$0.00</span></span>
+                <button id="checkoutBtn" onclick="placeOrderFromCart()" class="btn btn-primary">Checkout</button>
+            </div>
+        </div>
+    </div>
+    <script src="js/api.js"></script>
+    <script src="js/cart.js"></script>
+    <script src="js/main.js"></script>
+    <script>
+    // Redirect logged-in customers to shop.html
+    document.addEventListener('DOMContentLoaded', function() {
+        const token = localStorage.getItem('token');
+        const user = JSON.parse(localStorage.getItem('user') || '{}');
+        if (token && user && user.role === 'customer') {
+            window.location.href = 'shop.html';
+        }
+        // Shop Now button logic
+        document.getElementById('heroShopNow').onclick = function(e) {
+            e.preventDefault();
+            // If not logged in, open login modal
+            if (!token) {
+                document.getElementById('loginModal').style.display = 'block';
+            } else {
+                window.location.href = 'shop.html';
+            }
+        };
+        // Login/Register modal logic
+        document.getElementById('openLogin').onclick = function() {
+            document.getElementById('loginModal').style.display = 'block';
+        };
+        document.getElementById('openRegister').onclick = function() {
+            document.getElementById('registerModal').style.display = 'block';
+        };
+        // Become Vendor logic (optional: open vendor registration or info)
+        document.getElementById('becomeVendor').onclick = function(e) {
+            e.preventDefault();
+            alert('Vendor registration coming soon!');
+        };
+    });
+    </script>
+</body>
+</html> 

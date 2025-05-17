@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Your Shopping Cart</title>
+  <link rel="stylesheet" href="css/cart.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Your Shopping Cart</h1>
+    <div class="cart-main">
+      <div class="cart-items-card">
+        <div class="cart-header">
+          <span class="cart-count"></span>
+          <button class="clear-cart">🗑️ Clear Cart</button>
+        </div>
+        <div class="cart-items-list"></div>
+      </div>
+      <div class="cart-summary-card">
+        <h2>Order Summary</h2>
+        <div class="summary-details">
+          <div class="summary-row"><span>Subtotal</span><span class="summary-subtotal"></span></div>
+          <div class="summary-row"><span>Shipping</span><span class="summary-shipping"></span></div>
+          <div class="summary-row"><span>Tax</span><span class="summary-tax"></span></div>
+          <div class="summary-row total"><span>Total</span><span class="summary-total"></span></div>
+        </div>
+        <button class="checkout-btn">Proceed to Checkout</button>
+        <a href="index.html" class="continue-shopping">&lt; Continue Shopping</a>
+      </div>
+    </div>
+  </div>
+  <script src="js/cart.js"></script>
+</body>
+</html> 

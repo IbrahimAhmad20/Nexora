@@ -1,0 +1,223 @@
+body {
+    margin: 0;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background: #f4f6fa;
+    color: #222;
+}
+
+.dashboard-container {
+    display: flex;
+    min-height: 100vh;
+}
+
+.sidebar {
+    width: 220px;
+    background: #fff;
+    border-right: 1px solid #e0e0e0;
+    display: flex;
+    flex-direction: column;
+    padding: 1.5rem 0;
+}
+.sidebar-logo {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #4a90e2;
+    text-align: center;
+    margin-bottom: 2rem;
+}
+.sidebar-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+.sidebar-nav a {
+    text-decoration: none;
+    color: #333;
+    padding: 0.75rem 2rem;
+    border-left: 4px solid transparent;
+    transition: background 0.2s, border-color 0.2s;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+.sidebar-nav a.active, .sidebar-nav a:hover {
+    background: #eaf3fb;
+    border-left: 4px solid #4a90e2;
+    color: #4a90e2;
+}
+
+.main-content {
+    flex: 1;
+    padding: 2rem 3rem;
+}
+.top-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+.search-bar {
+    width: 300px;
+    padding: 0.5rem 1rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 1rem;
+}
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+.user-avatar {
+    background: #4a90e2;
+    color: #fff;
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 1.1rem;
+}
+.user-name {
+    font-weight: 500;
+}
+
+.dashboard-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2.5rem;
+}
+.stat-card {
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    padding: 1.5rem 1.2rem;
+    display: flex;
+    gap: 1.2rem;
+    align-items: center;
+}
+.stat-icon {
+    font-size: 2rem;
+    color: #4a90e2;
+    background: #eaf3fb;
+    border-radius: 8px;
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.stat-info {
+    flex: 1;
+}
+.stat-title {
+    font-size: 1.1rem;
+    font-weight: 500;
+    margin-bottom: 0.2rem;
+}
+.stat-value {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #222;
+    margin-bottom: 0.2rem;
+}
+.stat-desc {
+    font-size: 0.95rem;
+    color: #666;
+    margin-bottom: 0.5rem;
+}
+.stat-btn {
+    background: #4a90e2;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    padding: 0.4rem 1.1rem;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+.stat-btn:hover {
+    background: #357abd;
+}
+
+.recent-orders {
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    padding: 1.5rem 1.2rem;
+}
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+.section-header h2 {
+    font-size: 1.2rem;
+    font-weight: 600;
+}
+.view-all {
+    color: #4a90e2;
+    text-decoration: none;
+    font-size: 0.98rem;
+}
+.orders-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+.order-item {
+    padding: 0.8rem 0;
+    border-bottom: 1px solid #f0f0f0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+}
+.order-item:last-child {
+    border-bottom: none;
+}
+.order-status {
+    font-size: 1.1rem;
+    margin-right: 0.5rem;
+}
+.order-status.pending {
+    color: #f1c40f;
+}
+.order-status.shipped {
+    color: #2ecc71;
+}
+.order-status.alert {
+    color: #e67e22;
+}
+.order-status.review {
+    color: #4a90e2;
+}
+.order-label {
+    background: #f1c40f;
+    color: #fff;
+    border-radius: 4px;
+    padding: 0.1rem 0.5rem;
+    font-size: 0.85rem;
+    margin-left: 0.5rem;
+}
+.order-label.shipped {
+    background: #2ecc71;
+}
+.order-meta {
+    color: #888;
+    font-size: 0.95rem;
+    margin-left: 1.7rem;
+}
+
+@media (max-width: 900px) {
+    .main-content {
+        padding: 1rem;
+    }
+    .dashboard-stats {
+        grid-template-columns: 1fr;
+    }
+} 

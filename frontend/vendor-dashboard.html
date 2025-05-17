@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vendor Dashboard - Nexora</title>
+    <link rel="stylesheet" href="css/vendor-dashboard.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-logo">Nexora</div>
+            <nav class="sidebar-nav">
+                <a href="vendor-dashboard.html" class="active"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+                <a href="vendor-profile.html"><i class="fas fa-user"></i> Profile</a>
+                <a href="vendor-orders.html"><i class="fas fa-shopping-cart"></i> Orders</a>
+                <a href="vendor-products.html"><i class="fas fa-box"></i> Products</a>
+                <a href="#"><i class="fas fa-chart-line"></i> Analytics</a>
+                <a href="#"><i class="fas fa-star"></i> Reviews</a>
+                <a href="#"><i class="fas fa-cog"></i> Settings</a>
+                <a href="#"><i class="fas fa-sign-out-alt"></i> Logout</a>
+            </nav>
+        </aside>
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Top Bar -->
+            <header class="top-bar">
+                <input type="text" class="search-bar" placeholder="Search products, orders...">
+                <div class="user-info">
+                    <span class="user-avatar">VU</span>
+                    <span class="user-name">Vendor User</span>
+                </div>
+            </header>
+            <!-- Dashboard Stats -->
+            <section class="dashboard-stats">
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fas fa-box"></i></div>
+                    <div class="stat-info">
+                        <div class="stat-title">Products</div>
+                        <div class="stat-value" id="statProducts">1,248</div>
+                        <div class="stat-desc">Total products in your inventory</div>
+                        <button class="stat-btn">Manage</button>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fas fa-shopping-cart"></i></div>
+                    <div class="stat-info">
+                        <div class="stat-title">Orders</div>
+                        <div class="stat-value" id="statOrders">56</div>
+                        <div class="stat-desc">New orders this week</div>
+                        <button class="stat-btn">View All</button>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fas fa-chart-line"></i></div>
+                    <div class="stat-info">
+                        <div class="stat-title">Revenue</div>
+                        <div class="stat-value" id="statRevenue">$12,489</div>
+                        <div class="stat-desc">30% increase from last month</div>
+                        <button class="stat-btn">View Report</button>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fas fa-star"></i></div>
+                    <div class="stat-info">
+                        <div class="stat-title">Product Reviews</div>
+                        <div class="stat-value" id="statReviews">4.8/5</div>
+                        <div class="stat-desc">Average rating across all products</div>
+                        <button class="stat-btn">View Reviews</button>
+                    </div>
+                </div>
+            </section>
+            <!-- Recent Orders -->
+            <section class="recent-orders">
+                <div class="section-header">
+                    <h2>Recent Orders</h2>
+                    <a href="#" class="view-all">View All</a>
+                </div>
+                <ul class="orders-list">
+                    <li class="order-item">
+                        <span class="order-status pending">●</span>
+                        New Order #ORD-7842 <span class="order-label">Pending</span>
+                        <span class="order-meta">3 items · $249.99 · John Smith · 10 min ago</span>
+                    </li>
+                    <li class="order-item">
+                        <span class="order-status shipped">●</span>
+                        Order #ORD-7839 <span class="order-label shipped">Shipped</span>
+                        <span class="order-meta">Wireless Headphones · UPS 123245 · 2 hours ago</span>
+                    </li>
+                    <li class="order-item">
+                        <span class="order-status alert">●</span>
+                        Low Stock Alert
+                        <span class="order-meta">Bluetooth Speaker · Only 3 units remaining · 5 hours ago</span>
+                    </li>
+                    <li class="order-item">
+                        <span class="order-status review">●</span>
+                        New Product Review
+                        <span class="order-meta">"Excellent quality" · 1 day ago</span>
+                    </li>
+                </ul>
+            </section>
+        </main>
+    </div>
+    <script src="js/vendor-dashboard.js"></script>
+</body>
+</html>
