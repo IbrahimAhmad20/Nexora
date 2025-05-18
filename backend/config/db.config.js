@@ -12,7 +12,7 @@ const pool = mysql.createPool({
   connectionLimit: 5,
   queueLimit: 0,
   connectTimeout: 20000,
-  acquireTimeout: 20000
+ 
 });
 
 // Test database connection
