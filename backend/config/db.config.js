@@ -9,8 +9,10 @@ const pool = mysql.createPool({
   password: process.env.DB_PASSWORD || '',
   database: process.env.DB_NAME || 'railway',
   waitForConnections: true,
-  connectionLimit: 10,
-  queueLimit: 0
+  connectionLimit: 5,
+  queueLimit: 0,
+  connectTimeout: 20000,
+  acquireTimeout: 20000
 });
 
 // Test database connection
