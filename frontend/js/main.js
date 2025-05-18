@@ -38,10 +38,6 @@ let userMenu;
 let authButtons;
 let cartCount;
 
-// API Base URL
-const BASE_API_URL = window.BASE_API_URL;
-const API_BASE_URL = window.API_BASE_URL;
-
 // Initialize DOM Elements
 function initializeElements() {
     loginModal = document.getElementById('loginModal');
@@ -69,7 +65,7 @@ async function checkAuth() {
             return;
         }
 
-        const response = await fetch(`${API_BASE_URL}/auth/verify`, {
+        const response = await fetch(`${window.API_BASE_URL}/auth/verify`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
@@ -170,7 +166,7 @@ function setupEventListeners() {
             const password = document.getElementById('loginPassword').value;
 
             try {
-                const response = await fetch(`${API_BASE_URL}/auth/login`, {
+                const response = await fetch(`${window.API_BASE_URL}/auth/login`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -224,7 +220,7 @@ function setupEventListeners() {
             };
 
             try {
-                const response = await fetch(`${API_BASE_URL}/auth/register`, {
+                const response = await fetch(`${window.API_BASE_URL}/auth/register`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -257,7 +253,7 @@ if (searchForm) {
         if (!query) return;
 
         try {
-            const response = await fetch(`${API_BASE_URL}/products/search?q=${encodeURIComponent(query)}`);
+            const response = await fetch(`${window.API_BASE_URL}/products/search?q=${encodeURIComponent(query)}`);
             if (response.ok) {
                 const products = await response.json();
                 displayProducts(products);
@@ -293,7 +289,7 @@ async function addToCart(productId) {
             return;
         }
 
-        const response = await fetch(`${API_BASE_URL}/users/cart/count`, {
+        const response = await fetch(`${window.API_BASE_URL}/users/cart/count`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -335,7 +331,7 @@ async function showTotpLogin(user, token) {
         totpLoginMsg.textContent = 'Enter the 6-digit code.';
         return;
       }
-      const res = await fetch(`${API_BASE_URL}/auth/2fa/verify`, {
+      const res = await fetch(`${window.API_BASE_URL}/auth/2fa/verify`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ userId: user.id, code })
@@ -399,20 +395,20 @@ async function loadFeaturedProducts() {
     if (!landingFeaturedProductsGrid) return;
     try {
         // Try to fetch featured products, fallback to first 6 products
-        let res = await fetch(`${API_BASE_URL}/api/products/featured`);
+        let res = await fetch(`${window.API_BASE_URL}/api/products/featured`);
         let products = [];
         if (res.ok) {
             const data = await res.json();
             products = data.products || [];
         } else {
             // fallback
-            res = await fetch(`${API_BASE_URL}/products`);
+            res = await fetch(`${window.API_BASE_URL}/products`);
             const data = await res.json();
             products = (data.products || data).slice(0, 6);
         }
         landingFeaturedProductsGrid.innerHTML = products.map(product => {
             let imageUrl = product.image
-                ? (product.image.startsWith('http') ? product.image : BASE_API_URL + product.image)
+                ? (product.image.startsWith('http') ? product.image : window.BASE_API_URL + product.image)
                 : 'https://via.placeholder.com/180x160?text=No+Image';
             return `
                 <div class="product-card">
@@ -450,7 +446,7 @@ async function addToCartLanding(productId) {
     try {
         const token = localStorage.getItem('token');
         if (!token) return;
-        const res = await fetch(`${API_BASE_URL}/cart/add`, {
+        const res = await fetch(`${window.API_BASE_URL}/cart/add`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

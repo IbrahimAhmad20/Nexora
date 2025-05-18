@@ -3,7 +3,7 @@ const token = localStorage.getItem('token');
 if (!token) {
     wishlistGrid.innerHTML = '<p style="color:#e57373;">Please log in to view your wishlist.</p>';
 } else {
-    fetch(`${API_BASE_URL}/users/wishlist`, {
+    fetch(`${window.API_BASE_URL}/users/wishlist`, {
         headers: { 'Authorization': `Bearer ${token}` }
     })
     .then(res => res.json())
@@ -12,7 +12,7 @@ if (!token) {
             wishlistGrid.innerHTML = data.products.map(product => {
                 let imageUrl = product.primary_image?.startsWith('http')
                     ? product.primary_image
-                    : BASE_API_URL + product.primary_image;
+                    : window.BASE_API_URL + product.primary_image;
                 if (!product.primary_image) imageUrl = 'https://upload.wikimedia.org/wikipedia/commons/d/d1/Image_not_available.png';
                 return `
                     <div class="product-card" data-product-id="${product.id}">

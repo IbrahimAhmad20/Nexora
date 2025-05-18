@@ -2,7 +2,6 @@
 const CART_KEY = 'cart_items';
 const SHIPPING = 5.99;
 const TAX_RATE = 0.08;
-const BASE_API_URL = window.BASE_API_URL;
 
 async function getCart() {
   const token = localStorage.getItem('token');
@@ -38,7 +37,7 @@ async function renderOrderSummary() {
     const itemDiv = document.createElement('div');
     itemDiv.className = 'order-item';
     itemDiv.innerHTML = `
-      <img src="${item.image && !item.image.startsWith('http') ? BASE_API_URL + item.image : item.image}" class="order-item-img" alt="${item.name}">
+      <img src="${item.image && !item.image.startsWith('http') ? window.BASE_API_URL + item.image : item.image}" class="order-item-img" alt="${item.name}">
       <div class="order-item-info">
         <div class="order-item-title">${item.name}</div>
         <div class="order-item-details">Qty: ${item.quantity}</div>
@@ -170,7 +169,7 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
     const token = localStorage.getItem('token');
-    const res = await fetch(BASE_API_URL + '/users/save-card', {
+    const res = await fetch(window.BASE_API_URL + '/users/save-card', {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${token}`,
@@ -192,7 +191,7 @@ async function hasCreditCardInfo() {
     const token = localStorage.getItem('token');
     if (!token) return false;
     try {
-        const res = await fetch(BASE_API_URL + '/api/users/profile', {
+        const res = await fetch(window.BASE_API_URL + '/api/users/profile', {
             headers: { 'Authorization': `Bearer ${token}` }
         });
         if (!res.ok) return false;

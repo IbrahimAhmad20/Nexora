@@ -1,5 +1,4 @@
 // Nexora Shop Page JS
-const API_BASE_URL = window.API_BASE_URL;
 const productGrid = document.getElementById('shopProductGrid');
 const categoryFilters = document.getElementById('categoryFilters');
 const searchForm = document.getElementById('shopSearchForm');
@@ -17,7 +16,7 @@ let currentCategory = 'all';
 // Fetch products from API
 async function fetchProducts() {
     try {
-        const res = await fetch(`${API_BASE_URL}/products`);
+        const res = await fetch(window.API_BASE_URL + '/products');
         if (!res.ok) throw new Error('Network response was not ok');
         const data = await res.json();
         if (Array.isArray(data.products) && data.products.length > 0) {
@@ -79,17 +78,19 @@ function renderProducts(products) {
 
     // Make the entire card clickable except for action buttons
     document.querySelectorAll('.product-card').forEach(card => {
-        card.addEventListener('click', function(e) {
-            if (e.target.closest('.product-actions')) return;
-            const id = card.getAttribute('data-product-id');
-            window.location.href = `product.html?id=${id}`;
-        });
-        card.addEventListener('keypress', function(e) {
-            if ((e.key === 'Enter' || e.key === ' ') && !e.target.closest('.product-actions')) {
+        if (card.classList.contains('product-card')) {
+            card.addEventListener('click', function(e) {
+                if (e.target.closest('.product-actions')) return;
                 const id = card.getAttribute('data-product-id');
                 window.location.href = `product.html?id=${id}`;
-            }
-        });
+            });
+            card.addEventListener('keypress', function(e) {
+                if ((e.key === 'Enter' || e.key === ' ') && !e.target.closest('.product-actions')) {
+                    const id = card.getAttribute('data-product-id');
+                    window.location.href = `product.html?id=${id}`;
+                }
+            });
+        }
     });
 
     markWishlistProducts();
@@ -139,7 +140,7 @@ window.addToCart = async function(productId) {
         return;
     }
     try {
-        const res = await fetch(`${API_BASE_URL}/cart/add`, {
+        const res = await fetch(window.API_BASE_URL + '/cart/add', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -166,7 +167,7 @@ async function updateCartCount() {
         return;
     }
     try {
-        const res = await fetch(`${API_BASE_URL}/users/cart/count`, {
+        const res = await fetch(window.API_BASE_URL + '/users/cart/count', {
             headers: { 'Authorization': `Bearer ${token}` }
         });
         if (res.ok) {
@@ -207,7 +208,7 @@ async function markWishlistProducts() {
     const token = localStorage.getItem('token');
     if (!token) return;
     try {
-        const res = await fetch(`${API_BASE_URL}/users/wishlist`, {
+        const res = await fetch(window.API_BASE_URL + '/users/wishlist', {
             headers: { 'Authorization': `Bearer ${token}` }
         });
         if (!res.ok) return;
@@ -255,7 +256,7 @@ window.addToWishlist = async function(productId) {
     const isActive = btn && btn.classList.contains('active');
     const method = isActive ? 'DELETE' : 'POST';
     try {
-        const res = await fetch(`${API_BASE_URL}/products/${productId}/wishlist`, {
+        const res = await fetch(window.API_BASE_URL + '/products/' + productId + '/wishlist', {
             method,
             headers: { 'Authorization': `Bearer ${token}` }
         });

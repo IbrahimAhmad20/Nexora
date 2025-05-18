@@ -3,8 +3,7 @@ const CART_KEY = 'cart_items';
 const SHIPPING = 5.99;
 const TAX_RATE = 0.08;
 
-// Set the base API URL for images (change for production as needed)
-const BASE_API_URL = window.BASE_API_URL;
+// Use: window.BASE_API_URL and window.API_BASE_URL directly everywhere
 
 async function getCart() {
   const token = localStorage.getItem('token');
@@ -47,7 +46,7 @@ async function renderCart() {
     const itemDiv = document.createElement('div');
     itemDiv.className = 'cart-item';
     itemDiv.innerHTML = `
-      <img src="${item.image && !item.image.startsWith('http') ? BASE_API_URL + item.image : item.image}" class="cart-item-img" alt="${item.name}">
+      <img src="${item.image && !item.image.startsWith('http') ? window.BASE_API_URL + item.image : item.image}" class="cart-item-img" alt="${item.name}">
       <div class="cart-item-info">
         <div class="cart-item-title">${item.name}</div>
         <div class="cart-item-category"></div>
@@ -151,49 +150,5 @@ async function hasCreditCardInfo() {
         return !!(data.data && data.data.credit_card);
     } catch {
         return false;
-    }
-}
-
-async function placeOrderFromCart() {
-    const token = localStorage.getItem('token');
-    if (!token) {
-        alert('You must be logged in to place an order.');
-        return;
-    }
-    // Check for empty cart
-    const cart = await getCart();
-    if (!cart.length) {
-        alert('Your cart is empty.');
-        return;
-    }
-    // Check for credit card info
-    if (!(await hasCreditCardInfo())) {
-        alert('Please add your credit card information before checking out.');
-        return;
-    }
-    // You may want to prompt for or select a shipping address here
-    const shipping_address = prompt('Enter your shipping address:');
-    if (!shipping_address) {
-        alert('Shipping address is required.');
-        return;
-    }
-    try {
-        const res = await fetch(window.API_BASE_URL + '/api/checkout', {
-            method: 'POST',
-            headers: {
-                'Authorization': `Bearer ${token}`,
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ shipping_address })
-        });
-        const data = await res.json();
-        if (data.success) {
-            alert('Order completed! Thank you for your purchase.');
-            window.location.href = 'index.html';
-        } else {
-            alert(data.message || 'Order failed.');
-        }
-    } catch (err) {
-        alert('Order failed. Please try again.');
     }
 } 

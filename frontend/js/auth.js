@@ -19,7 +19,7 @@ class Auth {
     // Verify token with backend
     async verifyToken() {
         try {
-            const response = await fetch(`${API_BASE_URL}/auth/verify`, {
+            const response = await fetch(`${window.API_BASE_URL}/auth/verify`, {
                 headers: {
                     'Authorization': `Bearer ${this.token}`
                 }
@@ -40,7 +40,7 @@ class Auth {
     // Login user
     async login(email, password) {
         try {
-            const response = await fetch(`${API_BASE_URL}/auth/login`, {
+            const response = await fetch(`${window.API_BASE_URL}/auth/login`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -69,7 +69,7 @@ class Auth {
     // Register new user
     async register(userData) {
         try {
-            const response = await fetch(`${API_BASE_URL}/auth/register`, {
+            const response = await fetch(`${window.API_BASE_URL}/auth/register`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'

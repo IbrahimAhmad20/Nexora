@@ -24,7 +24,7 @@ class ProductManager {
     // Load categories
     async loadCategories() {
         try {
-            this.categories = await api.getCategories();
+            this.categories = await window.API.getCategories();
             this.renderCategories();
         } catch (error) {
             console.error('Failed to load categories:', error);
@@ -40,7 +40,7 @@ class ProductManager {
                 ...this.filters
             };
 
-            const data = await api.getProducts(params);
+            const data = await window.API.getProducts(params);
             this.products = data.products;
             this.totalPages = data.totalPages;
             this.renderProducts();
@@ -213,7 +213,7 @@ class ProductManager {
     // Search products
     async searchProducts(query) {
         try {
-            const products = await api.searchProducts(query);
+            const products = await window.API.searchProducts(query);
             this.products = products;
             this.currentPage = 1;
             this.totalPages = 1;
@@ -274,38 +274,6 @@ function renderProducts(products) {
     `).join('');
 }
 
-async function fetchRelatedProducts(productId) {
-    try {
-        const res = await fetch(`${API_BASE_URL}/products/${productId}/related`);
-        const data = await res.json();
-        if (data.success && Array.isArray(data.products)) {
-            renderRelatedProducts(data.products);
-        }
-    } catch (err) {
-        // Optionally handle error
-        renderRelatedProducts([]);
-    }
-}
 
-function renderRelatedProducts(products) {
-    const container = document.getElementById('relatedProductsContainer');
-    if (!container) return;
-    if (!products.length) {
-        container.innerHTML = '<p>No related products found.</p>';
-        return;
-    }
-    container.innerHTML = products.map(product => {
-        // Use the primary_image or fallback to placeholder
-        const imageUrl = product.primary_image
-            ? (product.primary_image.startsWith('http') ? product.primary_image : BASE_API_URL + product.primary_image)
-            : 'https://upload.wikimedia.org/wikipedia/commons/d/d1/Image_not_available.png';
-        return `
-            <div class="related-product-card">
-                <img src="${imageUrl}" alt="${product.name}" class="related-product-img">
-                <div class="related-product-title">${product.name}</div>
-                <div class="related-product-price">$${Number(product.price).toFixed(2)}</div>
-                <a href="product.html?id=${product.id}" class="related-product-link">View Details</a>
-            </div>
-        `;
-    }).join('');
-} 
+
+
