@@ -21,6 +21,14 @@
     "jsonwebtoken": "^9.0.2",
     "multer": "^1.4.5-lts.2",
     "mysql2": "^3.14.1",
-    "pg": "^8.15.6"
+    "pg": "^8.15.6",
+    "express-session": "^1.17.3",
+    "passport": "^0.7.0",
+    "passport-google-oauth20": "^2.0.0",
+    "passport-facebook": "^3.0.0",
+    "speakeasy": "^2.0.0",
+    "qrcode": "^1.5.1",
+    "json2csv": "^7.0.0",
+    "fs": "0.0.1-security"
   }
 }
