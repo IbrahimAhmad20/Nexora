@@ -1,4 +1,5 @@
 // Nexora Shop Page JS
+(function() {
 const productGrid = document.getElementById('shopProductGrid');
 const categoryFilters = document.getElementById('categoryFilters');
 const searchForm = document.getElementById('shopSearchForm');
@@ -16,7 +17,7 @@ let currentCategory = 'all';
 // Fetch products from API
 async function fetchProducts() {
     try {
-        const res = await fetch(window.API_BASE_URL + '/products');
+        const res = await fetch(window.API_BASE_URL + '/api/products');
         if (!res.ok) throw new Error('Network response was not ok');
         const data = await res.json();
         if (Array.isArray(data.products) && data.products.length > 0) {
@@ -140,7 +141,7 @@ window.addToCart = async function(productId) {
         return;
     }
     try {
-        const res = await fetch(window.API_BASE_URL + '/cart/add', {
+        const res = await fetch(window.API_BASE_URL + '/api/cart/add', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -167,7 +168,7 @@ async function updateCartCount() {
         return;
     }
     try {
-        const res = await fetch(window.API_BASE_URL + '/users/cart/count', {
+        const res = await fetch(window.API_BASE_URL + '/api/users/cart/count', {
             headers: { 'Authorization': `Bearer ${token}` }
         });
         if (res.ok) {
@@ -208,7 +209,7 @@ async function markWishlistProducts() {
     const token = localStorage.getItem('token');
     if (!token) return;
     try {
-        const res = await fetch(window.API_BASE_URL + '/users/wishlist', {
+        const res = await fetch(window.API_BASE_URL + '/api/users/wishlist', {
             headers: { 'Authorization': `Bearer ${token}` }
         });
         if (!res.ok) return;
@@ -256,7 +257,7 @@ window.addToWishlist = async function(productId) {
     const isActive = btn && btn.classList.contains('active');
     const method = isActive ? 'DELETE' : 'POST';
     try {
-        const res = await fetch(window.API_BASE_URL + '/products/' + productId + '/wishlist', {
+        const res = await fetch(window.API_BASE_URL + '/api/products/' + productId + '/wishlist', {
             method,
             headers: { 'Authorization': `Bearer ${token}` }
         });
@@ -270,4 +271,5 @@ window.addToWishlist = async function(productId) {
     } catch (err) {
         alert('Failed to update wishlist');
     }
-}; 
+};
+})(); 

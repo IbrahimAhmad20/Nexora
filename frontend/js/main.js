@@ -1,3 +1,4 @@
+(function() {
 // Add TOTP modal HTML and variable initialization at the very top
 const totpLoginModalHtml = `
 <div class="modal" id="totpLoginModal" style="display:none;z-index:2000;">
@@ -511,7 +512,8 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
-document.getElementById('checkoutBtn').onclick = placeOrderFromCart;
+// Remove or comment out this line:
+// document.getElementById('checkoutBtn').onclick = placeOrderFromCart;
 
 document.addEventListener('DOMContentLoaded', function() {
     const nav = document.querySelector('.landing-nav');
@@ -559,4 +561,5 @@ document.addEventListener('DOMContentLoaded', function() {
     if (adminLink && user && user.role === 'admin') {
         adminLink.style.display = '';
     }
-}); 
+});
+})(); 
