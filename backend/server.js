@@ -19,9 +19,9 @@ app.use(helmet({
   crossOriginResourcePolicy: { policy: "cross-origin" }
 }));
 
-//app.use(cors()); // Enable CORS
+const allowedOrigins = process.env.CORS_ORIGIN ? process.env.CORS_ORIGIN.split(',') : ['http://localhost:3000'];
 app.use(cors({
-  origin: 'http://localhost:3000', // Or whatever your frontend URL is
+  origin: allowedOrigins,
   credentials: true
 }));
 app.use('/uploads', express.static('uploads', {
