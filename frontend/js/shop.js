@@ -109,7 +109,7 @@ if (categoryFilters) {
     });
 }
 function showFailedToLoadProducts() {
-    productGrid.innerHTML = '<p style="color: #e57373;">Failed to load products. Please try again later.</p>';
+    productGrid.innerHTML = '<p style="color: #e57373; font-size:1.1rem;">Sorry, we are having trouble loading products. Please try again later.</p>';
 }
 function showNoProductsFound() {
     productGrid.innerHTML = '<p style="color: #e57373;">No products found.</p>';
