@@ -98,14 +98,16 @@ function renderProducts(products) {
 }
 
 // Category filter
-categoryFilters.addEventListener('click', e => {
-    if (e.target.classList.contains('filter-btn')) {
-        document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
-        e.target.classList.add('active');
-        currentCategory = e.target.dataset.category;
-        filterProducts();
-    }
-});
+if (categoryFilters) {
+    categoryFilters.addEventListener('click', e => {
+        if (e.target.classList.contains('filter-btn')) {
+            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+            e.target.classList.add('active');
+            currentCategory = e.target.dataset.category;
+            filterProducts();
+        }
+    });
+}
 function showFailedToLoadProducts() {
     productGrid.innerHTML = '<p style="color: #e57373;">Failed to load products. Please try again later.</p>';
 }
@@ -122,16 +124,18 @@ function filterProducts() {
 }
 
 // Search
-searchForm.addEventListener('submit', e => {
-    e.preventDefault();
-    const q = searchInput.value.trim().toLowerCase();
-    if (!q) {
-        filterProducts();
-        return;
-    }
-    const results = filteredProducts.filter(p => p.name.toLowerCase().includes(q));
-    renderProducts(results);
-});
+if (searchForm) {
+    searchForm.addEventListener('submit', e => {
+        e.preventDefault();
+        const q = searchInput.value.trim().toLowerCase();
+        if (!q) {
+            filterProducts();
+            return;
+        }
+        const results = filteredProducts.filter(p => p.name.toLowerCase().includes(q));
+        renderProducts(results);
+    });
+}
 
 // Add to cart
 window.addToCart = async function(productId) {
@@ -179,12 +183,16 @@ async function updateCartCount() {
 }
 
 // Profile dropdown
-profileBtn.addEventListener('click', e => {
-    e.stopPropagation();
-    profileMenu.classList.toggle('open');
-});
+if (profileBtn) {
+    profileBtn.addEventListener('click', e => {
+        e.stopPropagation();
+        profileMenu.classList.toggle('open');
+    });
+}
 document.addEventListener('click', () => {
-    profileMenu.classList.remove('open');
+    if (profileMenu) {
+        profileMenu.classList.remove('open');
+    }
 });
 
 // Set profile initials from user (if available)

@@ -518,12 +518,14 @@ document.addEventListener('DOMContentLoaded', function() {
 document.addEventListener('DOMContentLoaded', function() {
     const nav = document.querySelector('.landing-nav');
     const hamburger = document.getElementById('hamburgerMenu');
-    hamburger.addEventListener('click', function() {
-        nav.classList.toggle('open');
-    });
-    hamburger.addEventListener('keypress', function(e) {
-        if (e.key === 'Enter' || e.key === ' ') nav.classList.toggle('open');
-    });
+    if (hamburger && nav) {
+        hamburger.addEventListener('click', function() {
+            nav.classList.toggle('open');
+        });
+        hamburger.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter' || e.key === ' ') nav.classList.toggle('open');
+        });
+    }
 
     // Highlight active nav link
     const links = document.querySelectorAll('.landing-nav a');
@@ -540,14 +542,17 @@ document.addEventListener('DOMContentLoaded', function() {
     if (token && user && user.role === 'customer') {
         window.location.href = 'shop.html';
     }
-    document.getElementById('heroShopNow').onclick = function(e) {
-        e.preventDefault();
-        if (!token) {
-            window.location.href = 'login.html';
-        } else {
-            window.location.href = 'shop.html';
-        }
-    };
+    const heroShopNow = document.getElementById('heroShopNow');
+    if (heroShopNow) {
+        heroShopNow.onclick = function(e) {
+            e.preventDefault();
+            if (!token) {
+                window.location.href = 'login.html';
+            } else {
+                window.location.href = 'shop.html';
+            }
+        };
+    }
     const becomeVendor = document.getElementById('becomeVendor');
     if (becomeVendor) {
         becomeVendor.onclick = function(e) {
