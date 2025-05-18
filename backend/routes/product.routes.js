@@ -703,4 +703,17 @@ router.get('/:id/related', async (req, res) => {
   }
 });
 
+// Get products/featured
+router.get('/products/featured', async (req, res) => {
+  try {
+    const [rows] = await pool.query('SELECT * FROM products WHERE featured = 1 LIMIT 6');
+    if (!rows.length) {
+      return res.json({ success: false, message: 'No featured products found' });
+    }
+    res.json({ success: true, products: rows });
+  } catch (err) {
+    res.status(500).json({ success: false, message: 'Server error' });
+  }
+});
+
 module.exports = router; 
