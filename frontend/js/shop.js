@@ -168,7 +168,7 @@ window.addToCart = async function(productId) {
 async function updateCartCount() {
     const token = localStorage.getItem('token');
     if (!token) {
-        cartCount.textContent = '0';
+        if (cartCount) cartCount.textContent = '0';
         return;
     }
     try {
@@ -177,7 +177,7 @@ async function updateCartCount() {
         });
         if (res.ok) {
             const data = await res.json();
-            cartCount.textContent = data.count;
+            if (cartCount) cartCount.textContent = data.count;
         }
     } catch {}
 }
@@ -199,9 +199,9 @@ document.addEventListener('click', () => {
 function setProfileInitials() {
     const user = JSON.parse(localStorage.getItem('user') || '{}');
     if (user && user.first_name && user.last_name) {
-        profileInitials.textContent = (user.first_name[0] + user.last_name[0]).toUpperCase();
+        if (profileInitials) profileInitials.textContent = (user.first_name[0] + user.last_name[0]).toUpperCase();
     } else {
-        profileInitials.textContent = 'CU';
+        if (profileInitials) profileInitials.textContent = 'CU';
     }
 }
 
