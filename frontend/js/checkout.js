@@ -2,12 +2,12 @@
 const CART_KEY = 'cart_items';
 const SHIPPING = 5.99;
 const TAX_RATE = 0.08;
-const BASE_API_URL = window.BASE_API_URL || 'http://localhost:5000';
+const BASE_API_URL = window.BASE_API_URL;
 
 async function getCart() {
   const token = localStorage.getItem('token');
   if (!token) return [];
-  const res = await fetch('http://localhost:5000/api/cart', {
+  const res = await fetch(window.API_BASE_URL + '/api/cart', {
     headers: { 'Authorization': `Bearer ${token}` }
   });
   const data = await res.json();
@@ -140,7 +140,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     try {
-        const res = await fetch('http://localhost:5000/api/checkout', {
+        const res = await fetch(window.API_BASE_URL + '/api/checkout', {
             method: 'POST',
             headers: {
                 'Authorization': `Bearer ${token}`,
@@ -170,7 +170,7 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
     const token = localStorage.getItem('token');
-    const res = await fetch(`${BASE_API_URL}/users/save-card`, {
+    const res = await fetch(BASE_API_URL + '/users/save-card', {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${token}`,
@@ -192,7 +192,7 @@ async function hasCreditCardInfo() {
     const token = localStorage.getItem('token');
     if (!token) return false;
     try {
-        const res = await fetch(`${BASE_API_URL}/api/users/profile`, {
+        const res = await fetch(BASE_API_URL + '/api/users/profile', {
             headers: { 'Authorization': `Bearer ${token}` }
         });
         if (!res.ok) return false;

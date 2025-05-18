@@ -47,7 +47,7 @@ async function showTotpLogin(user, token) {
         totpLoginMsg.textContent = 'Enter the 6-digit code.';
         return;
       }
-      const res = await fetch('http://localhost:5000/api/auth/2fa/verify', {
+      const res = await fetch(window.API_BASE_URL + '/api/auth/2fa/verify', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ userId: user.id, code })
@@ -129,10 +129,10 @@ document.addEventListener("DOMContentLoaded", function() {
   }
 
   document.querySelector('.social-btn.google').onclick = function() {
-    window.location.href = 'http://localhost:5000/api/auth/google';
+    window.location.href = window.API_BASE_URL + '/api/auth/google';
   };
   document.querySelector('.social-btn.facebook').onclick = function() {
-    window.location.href = 'http://localhost:5000/api/auth/facebook';
+    window.location.href = window.API_BASE_URL + '/api/auth/facebook';
   };
 
   // Handle redirect after OAuth

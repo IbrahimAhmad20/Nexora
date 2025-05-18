@@ -1,7 +1,7 @@
 // API Service
 class ApiService {
     constructor() {
-        this.baseUrl = 'http://localhost:5000/api';
+        this.baseUrl = window.API_BASE_URL + '/api';
     }
 
     // Generic request method
@@ -110,7 +110,7 @@ class ApiService {
     // Cart endpoints
     async getCart() {
         const token = localStorage.getItem('token');
-        const res = await fetch('http://localhost:5000/api/cart', {
+        const res = await fetch(window.API_BASE_URL + '/api/cart', {
             headers: { 'Authorization': `Bearer ${token}` }
         });
         return await res.json();

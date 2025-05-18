@@ -55,7 +55,7 @@ async function fetchSpecs(productId) {
 
 function renderGallery(images, mainImage) {
   const gallery = document.getElementById('productGallery');
-  const BASE_API_URL = 'http://localhost:5000';
+  const BASE_API_URL = window.BASE_API_URL;
   let mainImgUrl = mainImage?.startsWith('http') ? mainImage : BASE_API_URL + mainImage;
   if (!mainImage) mainImgUrl = 'https://upload.wikimedia.org/wikipedia/commons/d/d1/Image_not_available.png';
   gallery.innerHTML = `
@@ -378,7 +378,7 @@ async function toggleWishlist(productId) {
 
 function renderRelated(related) {
   const section = document.getElementById('relatedProducts');
-  const BASE_API_URL = 'http://localhost:5000';
+  const BASE_API_URL = window.BASE_API_URL;
   if (!related.length) {
     section.innerHTML = '';
     return;

@@ -22,7 +22,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Fetch and populate profile info
     async function fetchProfile() {
-        const res = await fetch('http://localhost:5000/api/vendor/profile', {
+        const res = await fetch(window.API_BASE_URL + '/api/vendor/profile', {
             headers: { 'Authorization': `Bearer ${token}` }
         });
         const data = await res.json();
@@ -52,7 +52,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Fetch the vendor logo
     async function fetchLogo() {
         try {
-            const res = await fetch('http://localhost:5000/api/vendor/logo', {
+            const res = await fetch(window.API_BASE_URL + '/api/vendor/logo', {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             const data = await res.json();
@@ -78,7 +78,7 @@ document.addEventListener('DOMContentLoaded', () => {
             address: form.address.value,
             tax_id: form.taxId.value
         };
-        const res = await fetch('http://localhost:5000/api/vendor/profile', {
+        const res = await fetch(window.API_BASE_URL + '/api/vendor/profile', {
             method: 'PUT',
             headers: {
                 'Authorization': `Bearer ${token}`,
@@ -105,7 +105,7 @@ document.addEventListener('DOMContentLoaded', () => {
         formData.append('logo', storeLogo.files[0]);
         
         try {
-            const res = await fetch('http://localhost:5000/api/vendor/logo', {
+            const res = await fetch(window.API_BASE_URL + '/api/vendor/logo', {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${token}`
@@ -141,7 +141,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Fetch and populate policies
     async function fetchPolicies() {
-        const res = await fetch('http://localhost:5000/api/vendor/policies', {
+        const res = await fetch(window.API_BASE_URL + '/api/vendor/policies', {
             headers: { 'Authorization': `Bearer ${token}` }
         });
         const data = await res.json();
@@ -158,7 +158,7 @@ document.addEventListener('DOMContentLoaded', () => {
             return_policy: policyForm.returnPolicy.value,
             privacy_policy: policyForm.privacyPolicy.value
         };
-        const res = await fetch('http://localhost:5000/api/vendor/policies', {
+        const res = await fetch(window.API_BASE_URL + '/api/vendor/policies', {
             method: 'PUT',
             headers: {
                 'Authorization': `Bearer ${token}`,
@@ -173,7 +173,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Fetch and populate availability
     async function fetchAvailability() {
-        const res = await fetch('http://localhost:5000/api/vendor/availability', {
+        const res = await fetch(window.API_BASE_URL + '/api/vendor/availability', {
             headers: { 'Authorization': `Bearer ${token}` }
         });
         const data = await res.json();
@@ -190,7 +190,7 @@ document.addEventListener('DOMContentLoaded', () => {
             vacation_message: availabilityForm.vacationMessage.value,
             notify_on_return: availabilityForm.notifyOnReturn.checked
         };
-        const res = await fetch('http://localhost:5000/api/vendor/availability', {
+        const res = await fetch(window.API_BASE_URL + '/api/vendor/availability', {
             method: 'PUT',
             headers: {
                 'Authorization': `Bearer ${token}`,
@@ -211,7 +211,7 @@ document.addEventListener('DOMContentLoaded', () => {
             last_name: vendorProfileForm.lastName.value,
             phone: vendorProfileForm.profilePhone.value
         };
-        const res = await fetch('http://localhost:5000/api/vendor/profile-info', {
+        const res = await fetch(window.API_BASE_URL + '/api/vendor/profile-info', {
             method: 'PUT',
             headers: {
                 'Authorization': `Bearer ${token}`,
@@ -228,7 +228,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Fetch and populate two-factor authentication status
     async function fetchTwoFactorStatus() {
         try {
-            const res = await fetch('http://localhost:5000/api/auth/2fa-status', {
+            const res = await fetch(window.API_BASE_URL + '/api/auth/2fa-status', {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             const data = await res.json();
@@ -268,7 +268,7 @@ document.addEventListener('DOMContentLoaded', () => {
       totpCodeInput.value = '';
       totpSetupMsg.textContent = '';
       totpSetupModal.style.display = 'flex';
-      const res = await fetch('http://localhost:5000/api/auth/2fa/setup', {
+      const res = await fetch(window.API_BASE_URL + '/api/auth/2fa/setup', {
         method: 'POST',
         headers: { 'Authorization': `Bearer ${token}` }
       });
@@ -286,7 +286,7 @@ document.addEventListener('DOMContentLoaded', () => {
         totpSetupMsg.textContent = 'Enter the 6-digit code.';
         return;
       }
-      const res = await fetch('http://localhost:5000/api/auth/2fa/verify-setup', {
+      const res = await fetch(window.API_BASE_URL + '/api/auth/2fa/verify-setup', {
         method: 'POST',
         headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
         body: JSON.stringify({ code })
@@ -308,7 +308,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Disable 2FA
     async function disable2FA() {
-      await fetch('http://localhost:5000/api/auth/2fa/disable', {
+      await fetch(window.API_BASE_URL + '/api/auth/2fa/disable', {
         method: 'POST',
         headers: { 'Authorization': `Bearer ${token}` }
       });

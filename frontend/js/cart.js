@@ -4,12 +4,12 @@ const SHIPPING = 5.99;
 const TAX_RATE = 0.08;
 
 // Set the base API URL for images (change for production as needed)
-const BASE_API_URL = window.BASE_API_URL || 'http://localhost:5000';
+const BASE_API_URL = window.BASE_API_URL;
 
 async function getCart() {
   const token = localStorage.getItem('token');
   if (!token) return [];
-  const res = await fetch('http://localhost:5000/api/cart', {
+  const res = await fetch(window.API_BASE_URL + '/api/cart', {
     headers: { 'Authorization': `Bearer ${token}` }
   });
   const data = await res.json();
@@ -21,7 +21,7 @@ function setCart(cart) {
 function clearCartBackend() {
   const token = localStorage.getItem('token');
   if (!token) return Promise.resolve();
-  return fetch('http://localhost:5000/api/cart', {
+  return fetch(window.API_BASE_URL + '/api/cart', {
     method: 'DELETE',
     headers: { 'Authorization': `Bearer ${token}` }
   });
@@ -113,7 +113,7 @@ async function updateCartQuantity(productId, quantity) {
   const token = localStorage.getItem('token');
   if (!token) return;
   try {
-    await fetch(`http://localhost:5000/api/cart/${productId}`, {
+    await fetch(window.API_BASE_URL + '/api/cart/' + productId, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -130,7 +130,7 @@ async function removeCartItem(productId) {
   const token = localStorage.getItem('token');
   if (!token) return;
   try {
-    await fetch(`http://localhost:5000/api/cart/${productId}`, {
+    await fetch(window.API_BASE_URL + '/api/cart/' + productId, {
       method: 'DELETE',
       headers: { 'Authorization': `Bearer ${token}` }
     });
@@ -143,7 +143,7 @@ async function hasCreditCardInfo() {
     const token = localStorage.getItem('token');
     if (!token) return false;
     try {
-        const res = await fetch(`${BASE_API_URL}/api/users/profile`, {
+        const res = await fetch(window.API_BASE_URL + '/api/users/profile', {
             headers: { 'Authorization': `Bearer ${token}` }
         });
         if (!res.ok) return false;
@@ -178,7 +178,7 @@ async function placeOrderFromCart() {
         return;
     }
     try {
-        const res = await fetch('http://localhost:5000/api/checkout', {
+        const res = await fetch(window.API_BASE_URL + '/api/checkout', {
             method: 'POST',
             headers: {
                 'Authorization': `Bearer ${token}`,

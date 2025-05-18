@@ -63,7 +63,7 @@ function renderProducts(products) {
             const productId = this.getAttribute('data-id');
             const featured = this.checked ? 1 : 0;
             const token = localStorage.getItem('token');
-            const res = await fetch(`http://localhost:5000/api/admin/products/${productId}/featured`, {
+            const res = await fetch(window.API_BASE_URL + '/api/admin/products/' + productId + '/featured', {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -115,7 +115,7 @@ function openEditProductModal(product) {
   function loadCategories(selectedId) {
     // Get the token from localStorage (or wherever you store it)
     const token = localStorage.getItem('token');
-    fetch('http://localhost:5000/api/admin/categories', {
+    fetch(window.API_BASE_URL + '/api/admin/categories', {
       headers: {
         'Authorization': 'Bearer ' + token
       }
@@ -158,7 +158,7 @@ function openEditProductModal(product) {
       status: document.getElementById('editProductStatus').value,
       category_id: parseInt(document.getElementById('editProductCategory').value)
     };
-    const res = await fetch('http://localhost:5000/api/admin/products/' + id, {
+    const res = await fetch(window.API_BASE_URL + '/api/admin/products/' + id, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -190,7 +190,7 @@ window.editProduct = function(productId) {
 async function deleteProduct(productId) {
     if (!confirm('Are you sure you want to delete this product?')) return;
     const token = localStorage.getItem('token');
-    const res = await fetch(`http://localhost:5000/api/admin/products/${productId}`, {
+    const res = await fetch(window.API_BASE_URL + '/api/admin/products/' + productId, {
         method: 'DELETE',
         headers: {
             'Authorization': 'Bearer ' + token

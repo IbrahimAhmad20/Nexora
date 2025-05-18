@@ -12,7 +12,7 @@ let allCategories = [];
 
 async function loadCategories() {
     const token = localStorage.getItem('token');
-    const res = await fetch('http://localhost:5000/api/admin/categories', {
+    const res = await fetch(window.API_BASE_URL + '/api/admin/categories', {
         headers: { 'Authorization': 'Bearer ' + token }
     });
     const data = await res.json();
@@ -78,7 +78,7 @@ async function saveCategory(e) {
     const id = document.getElementById('categoryId').value;
     const name = document.getElementById('categoryName').value.trim();
     if (!name) return alert('Name is required');
-    let url = 'http://localhost:5000/api/admin/categories';
+    let url = window.API_BASE_URL + '/api/admin/categories';
     let method = 'POST';
     let body = JSON.stringify({ name });
     if (id) {
@@ -105,7 +105,7 @@ async function saveCategory(e) {
 window.deleteCategory = async function(id) {
     if (!confirm('Are you sure you want to delete this category?')) return;
     const token = localStorage.getItem('token');
-    const res = await fetch(`http://localhost:5000/api/admin/categories/${id}`, {
+    const res = await fetch(window.API_BASE_URL + '/api/admin/categories/' + id, {
         method: 'DELETE',
         headers: { 'Authorization': 'Bearer ' + token }
     });

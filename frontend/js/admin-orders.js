@@ -9,7 +9,7 @@ let allOrders = [];
 
 async function loadOrders() {
     const token = localStorage.getItem('token');
-    const res = await fetch('http://localhost:5000/api/admin/orders', {
+    const res = await fetch(window.API_BASE_URL + '/api/admin/orders', {
         headers: { 'Authorization': 'Bearer ' + token }
     });
     const data = await res.json();
@@ -59,7 +59,7 @@ function filterOrders(query) {
 
 window.updateOrderStatus = async function(orderId, status) {
     const token = localStorage.getItem('token');
-    const res = await fetch(`http://localhost:5000/api/admin/orders/${orderId}/status`, {
+    const res = await fetch(window.API_BASE_URL + '/api/admin/orders/' + orderId + '/status', {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json',
@@ -78,7 +78,7 @@ window.updateOrderStatus = async function(orderId, status) {
 
 window.viewOrder = async function(orderId) {
     const token = localStorage.getItem('token');
-    const res = await fetch(`http://localhost:5000/api/admin/orders/${orderId}`, {
+    const res = await fetch(window.API_BASE_URL + '/api/admin/orders/' + orderId, {
         headers: { 'Authorization': 'Bearer ' + token }
     });
     const data = await res.json();

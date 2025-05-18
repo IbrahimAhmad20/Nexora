@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     try {
-        const res = await fetch('http://localhost:5000/api/vendor/dashboard', {
+        const res = await fetch(window.API_BASE_URL + '/api/vendor/dashboard', {
             headers: { 'Authorization': `Bearer ${token}` }
         });
         if (!res.ok) {
