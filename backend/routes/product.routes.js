@@ -663,4 +663,44 @@ router.get('/:id/specs', async (req, res) => {
   }
 });
 
+// Get related products (with primary image, fallback to same category)
+router.get('/:id/related', async (req, res) => {
+  try {
+    const productId = req.params.id;
+    // Try explicit related products first
+    const [relatedRows] = await pool.query(
+      'SELECT related_product_id FROM related_products WHERE product_id = ?',
+      [productId]
+    );
+    let products = [];
+    if (relatedRows.length) {
+      const relatedIds = relatedRows.map(r => r.related_product_id);
+      [products] = await pool.query(
+        `SELECT p.*, 
+          (SELECT image_url FROM product_images WHERE product_id = p.id AND is_primary = 1 LIMIT 1) as primary_image
+         FROM products p
+         WHERE p.id IN (?) AND p.status = 'active'`,
+        [relatedIds]
+      );
+    } else {
+      // Fallback: get products from the same category
+      const [[product]] = await pool.query('SELECT category_id FROM products WHERE id = ?', [productId]);
+      if (product) {
+        [products] = await pool.query(
+          `SELECT p.*, 
+            (SELECT image_url FROM product_images WHERE product_id = p.id AND is_primary = 1 LIMIT 1) as primary_image
+           FROM products p
+           WHERE p.category_id = ? AND p.id != ? AND p.status = 'active'
+           LIMIT 4`,
+          [product.category_id, productId]
+        );
+      }
+    }
+    res.json({ success: true, products });
+  } catch (error) {
+    console.error('Error fetching related products:', error);
+    res.status(500).json({ success: false, message: 'Failed to fetch related products' });
+  }
+});
+
 module.exports = router; 

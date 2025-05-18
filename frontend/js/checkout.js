@@ -104,6 +104,12 @@ document.addEventListener('DOMContentLoaded', () => {
         alert('You must be logged in to place an order.');
         return;
     }
+    // Check for empty cart
+    const cart = await getCart();
+    if (!cart.length) {
+        alert('Your cart is empty.');
+        return;
+    }
     // Get selected address (update this as needed for your UI)
     const selectedAddress = document.querySelector('.address-card.selected .address-details');
     if (!selectedAddress) {
@@ -112,6 +118,27 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     const shipping_address = selectedAddress.innerText.trim();
 
+    let card = null;
+    const cardOptionSelected = document.querySelector('.payment-option.selected').dataset.method === 'card';
+    const cardFields = {
+      card_number: document.querySelector('.card-number-input').value.trim(),
+      card_expiry: document.querySelector('.card-expiry-input').value.trim(),
+      card_cvc: document.querySelector('.card-cvc-input').value.trim(),
+      card_name: document.querySelector('.card-name-input').value.trim()
+    };
+    const cardFormFilled = cardFields.card_number && cardFields.card_expiry && cardFields.card_cvc && cardFields.card_name;
+
+    if (cardOptionSelected) {
+      if (await hasCreditCardInfo()) {
+        // Use saved card (card = null)
+      } else if (cardFormFilled) {
+        card = cardFields; // Use form card for this order only
+      } else {
+        alert('Please fill out all card fields before checking out.');
+        return;
+      }
+    }
+
     try {
         const res = await fetch('http://localhost:5000/api/checkout', {
             method: 'POST',
@@ -119,7 +146,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 'Authorization': `Bearer ${token}`,
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ shipping_address })
+            body: JSON.stringify({ shipping_address, card })
         });
         const data = await res.json();
         if (data.success) {
@@ -132,4 +159,46 @@ document.addEventListener('DOMContentLoaded', () => {
         alert('Order failed. Please try again.');
     }
   });
-}); 
+  // Save card
+  document.querySelector('.save-card-btn').addEventListener('click', async () => {
+    const card_number = document.querySelector('.card-number-input').value.trim();
+    const card_expiry = document.querySelector('.card-expiry-input').value.trim();
+    const card_cvc = document.querySelector('.card-cvc-input').value.trim();
+    const card_name = document.querySelector('.card-name-input').value.trim();
+    if (!card_number || !card_expiry || !card_cvc || !card_name) {
+      alert('Please fill out all card fields.');
+      return;
+    }
+    const token = localStorage.getItem('token');
+    const res = await fetch(`${BASE_API_URL}/users/save-card`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ card_number, card_expiry, card_cvc, card_name })
+    });
+    const data = await res.json();
+    if (data.success) {
+      alert('Card saved!');
+    } else {
+      alert(data.message || 'Failed to save card.');
+    }
+  });
+});
+
+// Utility to check if user has credit card info
+async function hasCreditCardInfo() {
+    const token = localStorage.getItem('token');
+    if (!token) return false;
+    try {
+        const res = await fetch(`${BASE_API_URL}/api/users/profile`, {
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
+        if (!res.ok) return false;
+        const data = await res.json();
+        return !!(data.data && data.data.credit_card);
+    } catch {
+        return false;
+    }
+} 

@@ -171,8 +171,8 @@ body {
   padding: 2rem 2rem 1.5rem 2rem;
 }
 
-.section-card h3 {
-  color: var(--accent);
+.section-card h3, .related-products-title {
+  color: #fff;
   margin-bottom: 1.5rem;
   font-size: 1.4rem;
 }
@@ -220,71 +220,59 @@ body {
 }
 
 .related-products {
-  margin-top: 2.5rem;
-  max-width: 1100px;
-  margin-left: auto;
-  margin-right: auto;
-  padding: 0 1rem;
+  margin-top: 2rem;
 }
 
-.related-products h3 {
-  color: var(--accent);
-  margin-bottom: 1.5rem;
-  font-size: 1.4rem;
+#relatedProductsContainer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
+  margin-top: 1rem;
+  justify-content: center;
 }
 
-.related-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 1.5rem;
-}
-
-.related-card {
-  background: var(--bg-card);
-  border-radius: 12px;
+.related-product-card {
+  background: #232c43;
+  border-radius: 16px;
   padding: 1rem;
+  width: 200px;
   text-align: center;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(44,62,80,0.10);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
-.related-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 4px 16px rgba(79, 140, 255, 0.2);
-}
-
-.related-card img {
+.related-product-img {
   width: 100%;
-  height: 160px;
+  height: 140px;
   object-fit: cover;
-  border-radius: 8px;
-  background: var(--bg-hover);
-  margin-bottom: 1rem;
+  border-radius: 12px;
+  background: #202a3c;
+  margin-bottom: 0.7rem;
 }
 
-.related-card h4 {
-  color: var(--text-main);
-  margin: 0.7rem 0 0.3rem 0;
-  font-size: 1.1rem;
+.related-product-title {
+  font-weight: bold;
+  margin: 0.5rem 0 0.2rem 0;
+  color: #fff;
 }
 
-.related-card .product-price {
-  font-size: 1.1rem;
-  color: var(--success);
-  margin: 0.5rem 0;
+.related-product-price {
+  color: #2ecc71;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
 }
 
-.related-card a {
-  color: var(--accent);
+.related-product-link {
+  color: #2563eb;
   text-decoration: none;
-  font-size: 0.97rem;
-  display: inline-block;
+  font-weight: 600;
   margin-top: 0.5rem;
-  transition: color 0.2s;
 }
 
-.related-card a:hover {
-  color: var(--accent-hover);
+.related-product-link:hover {
+  text-decoration: underline;
 }
 
 .variants-grid {
@@ -382,4 +370,28 @@ body {
     width: 100%;
     margin: 0.5rem 0;
   }
+}
+
+.back-to-shop {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--bg-header);
+  color: var(--accent);
+  border-radius: 8px;
+  padding: 0.6rem 1.2rem;
+  font-size: 1.08rem;
+  font-weight: 600;
+  text-decoration: none;
+  margin: 2rem auto 0 3vw;
+  box-shadow: 0 2px 8px rgba(44,62,80,0.10);
+  transition: background 0.18s, color 0.18s, box-shadow 0.18s;
+}
+.back-to-shop i {
+  font-size: 1.1rem;
+}
+.back-to-shop:hover {
+  background: var(--accent);
+  color: #fff;
+  box-shadow: 0 4px 16px rgba(44,62,80,0.13);
 } 

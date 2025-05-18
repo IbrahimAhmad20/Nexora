@@ -192,7 +192,8 @@ router.post('/checkout',
   verifyToken,
   checkRole(['customer']),
   [
-    body('shipping_address').notEmpty().withMessage('Shipping address is required')
+    body('shipping_address').notEmpty().withMessage('Shipping address is required'),
+    body('card').isObject().optional()
   ],
   async (req, res) => {
     try {
@@ -203,7 +204,7 @@ router.post('/checkout',
         return res.status(400).json({ success: false, errors: errors.array() });
       }
 
-      const { shipping_address } = req.body;
+      const { shipping_address, card } = req.body;
       console.log('Shipping address:', shipping_address);
 
       // Get cart items
@@ -233,6 +234,21 @@ router.post('/checkout',
       console.log('Transaction started');
 
       try {
+        // If card is provided, use it for payment (do NOT save to profile)
+        // If not, use saved card from user profile
+        let cardToUse = card;
+        if (!cardToUse) {
+          // Fetch from user profile
+          const [users] = await connection.query('SELECT credit_card, credit_card_expiry FROM users WHERE id = ?', [req.user.id]);
+          if (!users.length || !users[0].credit_card) {
+            return res.status(400).json({ success: false, message: 'No card info found.' });
+          }
+          cardToUse = {
+            last4: users[0].credit_card,
+            expiry: users[0].credit_card_expiry
+          };
+        }
+
         // Create order
         const [orderResult] = await connection.query(
           'INSERT INTO orders (customer_id, total_amount, shipping_address) VALUES (?, ?, ?)',

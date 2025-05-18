@@ -214,4 +214,40 @@ router.get('/cart/count', verifyToken, async (req, res) => {
   }
 });
 
+// Get user's wishlist
+router.get('/wishlist', verifyToken, async (req, res) => {
+  try {
+    const [products] = await pool.query(`
+      SELECT p.*, 
+        (SELECT image_url FROM product_images WHERE product_id = p.id AND is_primary = 1 LIMIT 1) as primary_image
+      FROM wishlist w
+      JOIN products p ON w.product_id = p.id
+      WHERE w.user_id = ?
+    `, [req.user.id]);
+    res.json({ success: true, products });
+  } catch (err) {
+    res.status(500).json({ success: false, message: 'Failed to fetch wishlist' });
+  }
+});
+
+// Add after other profile routes
+router.post('/save-card', verifyToken, async (req, res) => {
+  try {
+    const { card_number, card_expiry, card_cvc, card_name } = req.body;
+    // In production, NEVER store raw card data! Use a payment gateway/tokenization.
+    // For demo, we'll just store last 4 digits and expiry.
+    if (!card_number || !card_expiry || !card_cvc || !card_name) {
+      return res.status(400).json({ success: false, message: 'Incomplete card info.' });
+    }
+    const last4 = card_number.slice(-4);
+    await pool.query(
+      'UPDATE users SET credit_card = ?, credit_card_expiry = ?, credit_card_name = ? WHERE id = ?',
+      [last4, card_expiry, card_name, req.user.id]
+    );
+    res.json({ success: true, message: 'Card saved.' });
+  } catch (err) {
+    res.status(500).json({ success: false, message: 'Failed to save card.' });
+  }
+});
+
 module.exports = router; 

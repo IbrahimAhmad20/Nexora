@@ -94,7 +94,16 @@ document.addEventListener('DOMContentLoaded', () => {
     await clearCartBackend();
     renderCart();
   });
-  document.querySelector('.checkout-btn').addEventListener('click', () => {
+  document.querySelector('.checkout-btn').addEventListener('click', async () => {
+    const cart = await getCart();
+    if (!cart.length) {
+        alert('Your cart is empty.');
+        return;
+    }
+    if (!(await hasCreditCardInfo())) {
+        alert('Please add your credit card information before checking out.');
+        return;
+    }
     window.location.href = 'checkout.html';
   });
 });
@@ -130,10 +139,36 @@ async function removeCartItem(productId) {
   }
 }
 
+async function hasCreditCardInfo() {
+    const token = localStorage.getItem('token');
+    if (!token) return false;
+    try {
+        const res = await fetch(`${BASE_API_URL}/api/users/profile`, {
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
+        if (!res.ok) return false;
+        const data = await res.json();
+        return !!(data.data && data.data.credit_card);
+    } catch {
+        return false;
+    }
+}
+
 async function placeOrderFromCart() {
     const token = localStorage.getItem('token');
     if (!token) {
         alert('You must be logged in to place an order.');
+        return;
+    }
+    // Check for empty cart
+    const cart = await getCart();
+    if (!cart.length) {
+        alert('Your cart is empty.');
+        return;
+    }
+    // Check for credit card info
+    if (!(await hasCreditCardInfo())) {
+        alert('Please add your credit card information before checking out.');
         return;
     }
     // You may want to prompt for or select a shipping address here

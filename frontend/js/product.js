@@ -7,10 +7,15 @@ function getProductIdFromUrl() {
 }
 
 async function fetchProduct(id) {
-  const res = await fetch(`${API_BASE_URL}/products/${id}`);
-  const data = await res.json();
-  if (!data.success) throw new Error(data.message);
-  return data.data;
+  try {
+    const res = await fetch(`${API_BASE_URL}/products/${id}`);
+    if (!res.ok) throw new Error('Product not found or unavailable.');
+    const data = await res.json();
+    if (!data.success) throw new Error(data.message);
+    return data.data;
+  } catch (err) {
+    throw new Error('Product not found or unavailable.');
+  }
 }
 
 async function fetchReviews(productId) {
@@ -51,15 +56,17 @@ async function fetchSpecs(productId) {
 function renderGallery(images, mainImage) {
   const gallery = document.getElementById('productGallery');
   const BASE_API_URL = 'http://localhost:5000';
-  const mainImgUrl = mainImage?.startsWith('http') ? mainImage : BASE_API_URL + mainImage;
+  let mainImgUrl = mainImage?.startsWith('http') ? mainImage : BASE_API_URL + mainImage;
+  if (!mainImage) mainImgUrl = 'https://upload.wikimedia.org/wikipedia/commons/d/d1/Image_not_available.png';
   gallery.innerHTML = `
     <div class="main-image">
-      <img id="mainProductImage" src="${mainImgUrl}" alt="Product Image">
+      <img id="mainProductImage" src="${mainImgUrl}" alt="Product Image" onerror="this.onerror=null;this.src='https://upload.wikimedia.org/wikipedia/commons/d/d1/Image_not_available.png'">
     </div>
     <div class="thumbnails">
       ${images.map(img => {
-        const imageUrl = img.url?.startsWith('http') ? img.url : BASE_API_URL + img.url;
-        return `<img src="${imageUrl}" class="thumb" onclick="document.getElementById('mainProductImage').src='${imageUrl}'">`;
+        let imageUrl = img.url?.startsWith('http') ? img.url : BASE_API_URL + img.url;
+        if (!img.url) imageUrl = 'https://upload.wikimedia.org/wikipedia/commons/d/d1/Image_not_available.png';
+        return `<img src="${imageUrl}" class="thumb" onclick="document.getElementById('mainProductImage').src='${imageUrl}'" onerror="this.onerror=null;this.src='https://upload.wikimedia.org/wikipedia/commons/d/d1/Image_not_available.png'">`;
       }).join('')}
     </div>
   `;
@@ -386,12 +393,12 @@ function renderRelated(related) {
         } else if (p.images && p.images.length && p.images[0].url) {
           imageUrl = p.images[0].url.startsWith('http') ? p.images[0].url : BASE_API_URL + p.images[0].url;
         } else {
-          imageUrl = 'https://via.placeholder.com/180x160?text=No+Image';
+          imageUrl = 'https://upload.wikimedia.org/wikipedia/commons/d/d1/Image_not_available.png';
         }
         return `
           <div class="related-card">
             <a href="product.html?id=${p.id}">
-              <img src="${imageUrl}" alt="${p.name}" onerror="this.onerror=null;this.src='https://via.placeholder.com/180x160?text=No+Image';">
+              <img src="${imageUrl}" alt="${p.name}" onerror="this.onerror=null;this.src='https://upload.wikimedia.org/wikipedia/commons/d/d1/Image_not_available.png'">
               <h4>${p.name}</h4>
               <div class="product-price">$${Number(p.price).toFixed(2)}</div>
               <span>View Details</span>
@@ -401,6 +408,41 @@ function renderRelated(related) {
       }).join('')}
     </div>
   `;
+}
+
+// Fetch and render related products
+async function fetchRelatedProducts(productId) {
+    try {
+        const res = await fetch(`${API_BASE_URL}/products/${productId}/related`);
+        const data = await res.json();
+        if (data.success && Array.isArray(data.products)) {
+            renderRelatedProducts(data.products);
+        }
+    } catch (err) {
+        renderRelatedProducts([]);
+    }
+}
+
+function renderRelatedProducts(products) {
+    const container = document.getElementById('relatedProductsContainer');
+    if (!container) return;
+    if (!products.length) {
+        container.innerHTML = '<p>No related products found.</p>';
+        return;
+    }
+    container.innerHTML = products.map(product => {
+        const imageUrl = product.primary_image
+            ? (product.primary_image.startsWith('http') ? product.primary_image : BASE_API_URL + product.primary_image)
+            : 'https://upload.wikimedia.org/wikipedia/commons/d/d1/Image_not_available.png';
+        return `
+            <div class="related-product-card">
+                <img src="${imageUrl}" alt="${product.name}" class="related-product-img">
+                <div class="related-product-title">${product.name}</div>
+                <div class="related-product-price">$${Number(product.price).toFixed(2)}</div>
+                <a href="product.html?id=${product.id}" class="related-product-link">View Details</a>
+            </div>
+        `;
+    }).join('');
 }
 
 (async function() {
@@ -430,10 +472,9 @@ function renderRelated(related) {
     const specs = await fetchSpecs(productId);
     renderSpecs(specs);
     
-    // Related
-    const related = await fetchRelated(data.category, data.id);
-    renderRelated(related);
+    // Related products (new logic only)
+    await fetchRelatedProducts(productId);
   } catch (err) {
-    document.body.innerHTML = `<p>Error: ${err.message}</p>`;
+    document.body.innerHTML = `<p style='color:#e57373;font-size:1.3rem;text-align:center;margin-top:4rem;'>${err.message}</p>`;
   }
 })(); 

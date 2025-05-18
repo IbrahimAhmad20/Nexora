@@ -25,6 +25,7 @@ async function fetchProducts() {
             allProducts = data.products;
             filteredProducts = allProducts;
             renderProducts(filteredProducts);
+            markWishlistProducts();
         } else {
             showNoProductsFound();
         }
@@ -41,19 +42,20 @@ function renderProducts(products) {
         return;
     }
     productGrid.innerHTML = products.map(product => {
-        const imageUrl = product.primary_image?.startsWith('http')
+        let imageUrl = product.primary_image?.startsWith('http')
             ? product.primary_image
             : BASE_API_URL + product.primary_image;
+        if (!product.primary_image) imageUrl = 'https://upload.wikimedia.org/wikipedia/commons/d/d1/Image_not_available.png';
         return `
-            <div class="product-card" data-product-id="${product.id}">
+            <div class="product-card" data-product-id="${product.id}" tabindex="0" style="cursor:pointer;">
                 ${product.badge ? `<span class="badge ${product.badgeColor || ''}">${product.badge}</span>` : ''}
-                <a href="product.html?id=${product.id}" class="product-link" tabindex="-1">
-                    <img src="${imageUrl}" alt="${product.name}">
+                <div class="product-link" tabindex="-1" style="pointer-events:none;">
+                    <img src="${imageUrl}" alt="${product.name}" onerror="this.onerror=null;this.src='https://upload.wikimedia.org/wikipedia/commons/d/d1/Image_not_available.png'">
                     <div class="product-info">
                         <div class="product-category">${product.category ? product.category.toUpperCase() : ''}</div>
-                        <div class="product-title">${product.name}</div>
+                        <div class="product-title" style="font-family:'Poppins', 'Segoe UI', Arial, sans-serif; font-size:1.18rem; font-weight:700; color:#fff; margin-bottom:0.2rem; letter-spacing:0.01em; text-decoration:none; box-shadow:none; border-bottom:none;">${product.name}</div>
                     </div>
-                </a>
+                </div>
                 <div class="product-info">
                     <div class="product-rating">
                         <i class="fas fa-star"></i> ${(product.rating || 4.5).toFixed(1)}
@@ -67,22 +69,31 @@ function renderProducts(products) {
                         ${product.discount ? `<span class="product-discount">${product.discount}% OFF</span>` : ''}
                     </div>
                     <div class="product-actions">
-                        <button class="add-cart-btn" onclick="addToCart(${product.id})"><i class="fas fa-cart-plus"></i> Add to Cart</button>
-                        <button class="wishlist-btn"><i class="fas fa-heart"></i></button>
+                        <button class="add-cart-btn" onclick="addToCart(${product.id});event.stopPropagation();" title="Add to Cart"><i class="fas fa-cart-plus"></i></button>
+                        <button class="wishlist-btn" onclick="addToWishlist(${product.id});event.stopPropagation();" title="Add to Favourites"><i class="fas fa-heart"></i></button>
+                        <a class="btn btn-secondary" href="product.html?id=${product.id}" onclick="event.stopPropagation();" title="View Details"><i class="fas fa-info-circle"></i></a>
                     </div>
                 </div>
             </div>
         `;
     }).join('');
 
-    // Add click handler to product cards (except buttons)
+    // Make the entire card clickable except for action buttons
     document.querySelectorAll('.product-card').forEach(card => {
         card.addEventListener('click', function(e) {
-            if (e.target.closest('button')) return; // Don't trigger on button clicks
+            if (e.target.closest('.product-actions')) return;
             const id = card.getAttribute('data-product-id');
             window.location.href = `product.html?id=${id}`;
         });
+        card.addEventListener('keypress', function(e) {
+            if ((e.key === 'Enter' || e.key === ' ') && !e.target.closest('.product-actions')) {
+                const id = card.getAttribute('data-product-id');
+                window.location.href = `product.html?id=${id}`;
+            }
+        });
     });
+
+    markWishlistProducts();
 }
 
 // Category filter
@@ -192,7 +203,25 @@ function logout() {
     window.location.href = 'index.html';
 }
 
-// Bind logout in profile dropdown
+// Fetch and mark wishlist items on page load
+async function markWishlistProducts() {
+    const token = localStorage.getItem('token');
+    if (!token) return;
+    try {
+        const res = await fetch(`${API_BASE_URL}/users/wishlist`, {
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
+        if (!res.ok) return;
+        const data = await res.json();
+        if (data.success && Array.isArray(data.products)) {
+            data.products.forEach(product => {
+                const btn = document.querySelector(`.product-card[data-product-id="${product.id}"] .wishlist-btn`);
+                if (btn) btn.classList.add('active');
+            });
+        }
+    } catch {}
+}
+
 window.addEventListener('DOMContentLoaded', () => {
     fetchProducts();
     updateCartCount();
@@ -214,4 +243,31 @@ document.addEventListener('DOMContentLoaded', function() {
     if (cartBtn) {
         cartBtn.onclick = function() { window.location.href = 'cart.html'; };
     }
-}); 
+});
+
+window.addToWishlist = async function(productId) {
+    const token = localStorage.getItem('token');
+    if (!token) {
+        alert('Please log in to add to wishlist.');
+        return;
+    }
+    // Find the button for this product
+    const btn = document.querySelector(`.product-card[data-product-id="${productId}"] .wishlist-btn`);
+    const isActive = btn && btn.classList.contains('active');
+    const method = isActive ? 'DELETE' : 'POST';
+    try {
+        const res = await fetch(`${API_BASE_URL}/products/${productId}/wishlist`, {
+            method,
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
+        const data = await res.json();
+        if (data.success) {
+            if (btn) btn.classList.toggle('active');
+            alert(isActive ? 'Removed from wishlist' : 'Added to wishlist');
+        } else {
+            alert(data.message || 'Wishlist update failed');
+        }
+    } catch (err) {
+        alert('Failed to update wishlist');
+    }
+}; 
