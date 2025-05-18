@@ -1,2 +1,2 @@
-window.API_BASE_URL = 'http://localhost:5000/api';
-window.BASE_API_URL = 'http://localhost:5000';
+window.API_BASE_URL = 'https://nexora-yapl.onrender.com';
+window.BASE_API_URL = 'https://nexora-yapl.onrender.com';
