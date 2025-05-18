@@ -399,7 +399,7 @@ async function loadFeaturedProducts() {
     if (!landingFeaturedProductsGrid) return;
     try {
         // Try to fetch featured products, fallback to first 6 products
-        let res = await fetch(`${API_BASE_URL}/products/featured`);
+        let res = await fetch(`${API_BASE_URL}/api/products/featured`);
         let products = [];
         if (res.ok) {
             const data = await res.json();

@@ -1,6 +1,3 @@
-const BASE_API_URL = window.BASE_API_URL;
-const API_BASE_URL = window.API_BASE_URL;
-
 function getProductIdFromUrl() {
   const params = new URLSearchParams(window.location.search);
   return params.get('id');
@@ -8,7 +5,7 @@ function getProductIdFromUrl() {
 
 async function fetchProduct(id) {
   try {
-    const res = await fetch(`${API_BASE_URL}/products/${id}`);
+    const res = await fetch(`${window.API_BASE_URL}/products/${id}`);
     if (!res.ok) throw new Error('Product not found or unavailable.');
     const data = await res.json();
     if (!data.success) throw new Error(data.message);
@@ -19,35 +16,35 @@ async function fetchProduct(id) {
 }
 
 async function fetchReviews(productId) {
-  const res = await fetch(`${API_BASE_URL}/products/${productId}/reviews`);
+  const res = await fetch(`${window.API_BASE_URL}/products/${productId}/reviews`);
   if (!res.ok) return [];
   const data = await res.json();
   return data.success ? data.reviews : [];
 }
 
 async function fetchRelated(category, excludeId) {
-  const res = await fetch(`${API_BASE_URL}/products?category=${encodeURIComponent(category)}`);
+  const res = await fetch(`${window.API_BASE_URL}/products?category=${encodeURIComponent(category)}`);
   if (!res.ok) return [];
   const data = await res.json();
   return (data.products || []).filter(p => p.id !== excludeId).slice(0, 4);
 }
 
 async function fetchQA(productId) {
-  const res = await fetch(`${API_BASE_URL}/products/${productId}/qa`);
+  const res = await fetch(`${window.API_BASE_URL}/products/${productId}/qa`);
   if (!res.ok) return [];
   const data = await res.json();
   return data.success ? data.qa : [];
 }
 
 async function fetchVariants(productId) {
-  const res = await fetch(`${API_BASE_URL}/products/${productId}/variants`);
+  const res = await fetch(`${window.API_BASE_URL}/products/${productId}/variants`);
   if (!res.ok) return [];
   const data = await res.json();
   return data.success ? data.variants : [];
 }
 
 async function fetchSpecs(productId) {
-  const res = await fetch(`${API_BASE_URL}/products/${productId}/specs`);
+  const res = await fetch(`${window.API_BASE_URL}/products/${productId}/specs`);
   if (!res.ok) return {};
   const data = await res.json();
   return data.success ? data.specifications : {};
@@ -55,8 +52,7 @@ async function fetchSpecs(productId) {
 
 function renderGallery(images, mainImage) {
   const gallery = document.getElementById('productGallery');
-  const BASE_API_URL = window.BASE_API_URL;
-  let mainImgUrl = mainImage?.startsWith('http') ? mainImage : BASE_API_URL + mainImage;
+  let mainImgUrl = mainImage?.startsWith('http') ? mainImage : window.BASE_API_URL + mainImage;
   if (!mainImage) mainImgUrl = 'https://upload.wikimedia.org/wikipedia/commons/d/d1/Image_not_available.png';
   gallery.innerHTML = `
     <div class="main-image">
@@ -64,7 +60,7 @@ function renderGallery(images, mainImage) {
     </div>
     <div class="thumbnails">
       ${images.map(img => {
-        let imageUrl = img.url?.startsWith('http') ? img.url : BASE_API_URL + img.url;
+        let imageUrl = img.url?.startsWith('http') ? img.url : window.BASE_API_URL + img.url;
         if (!img.url) imageUrl = 'https://upload.wikimedia.org/wikipedia/commons/d/d1/Image_not_available.png';
         return `<img src="${imageUrl}" class="thumb" onclick="document.getElementById('mainProductImage').src='${imageUrl}'" onerror="this.onerror=null;this.src='https://upload.wikimedia.org/wikipedia/commons/d/d1/Image_not_available.png'">`;
       }).join('')}
@@ -99,7 +95,7 @@ async function addToCart(productId) {
     alert('Please log in to add to cart.');
     return;
   }
-  const res = await fetch(`${API_BASE_URL}/cart/add`, {
+  const res = await fetch(`${window.API_BASE_URL}/cart/add`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -185,7 +181,7 @@ async function submitReview(e) {
   const rating = form.rating.value;
   const text = form.text.value;
   try {
-    const res = await fetch(`${API_BASE_URL}/products/${getProductIdFromUrl()}/reviews`, {
+    const res = await fetch(`${window.API_BASE_URL}/products/${getProductIdFromUrl()}/reviews`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -268,7 +264,7 @@ async function submitQuestion(e) {
   const form = e.target;
   const question = form.question.value;
   try {
-    const res = await fetch(`${API_BASE_URL}/products/${getProductIdFromUrl()}/qa`, {
+    const res = await fetch(`${window.API_BASE_URL}/products/${getProductIdFromUrl()}/qa`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -358,7 +354,7 @@ async function toggleWishlist(productId) {
   const method = isInWishlist ? 'DELETE' : 'POST';
   
   try {
-    const res = await fetch(`${API_BASE_URL}/products/${productId}/wishlist`, {
+    const res = await fetch(`${window.API_BASE_URL}/products/${productId}/wishlist`, {
       method,
       headers: {
         'Authorization': `Bearer ${token}`
@@ -378,7 +374,6 @@ async function toggleWishlist(productId) {
 
 function renderRelated(related) {
   const section = document.getElementById('relatedProducts');
-  const BASE_API_URL = window.BASE_API_URL;
   if (!related.length) {
     section.innerHTML = '';
     return;
@@ -389,9 +384,9 @@ function renderRelated(related) {
       ${related.map(p => {
         let imageUrl = '';
         if (p.image) {
-          imageUrl = p.image.startsWith('http') ? p.image : BASE_API_URL + p.image;
+          imageUrl = p.image.startsWith('http') ? p.image : window.BASE_API_URL + p.image;
         } else if (p.images && p.images.length && p.images[0].url) {
-          imageUrl = p.images[0].url.startsWith('http') ? p.images[0].url : BASE_API_URL + p.images[0].url;
+          imageUrl = p.images[0].url.startsWith('http') ? p.images[0].url : window.BASE_API_URL + p.images[0].url;
         } else {
           imageUrl = 'https://upload.wikimedia.org/wikipedia/commons/d/d1/Image_not_available.png';
         }
@@ -413,7 +408,7 @@ function renderRelated(related) {
 // Fetch and render related products
 async function fetchRelatedProducts(productId) {
     try {
-        const res = await fetch(`${API_BASE_URL}/products/${productId}/related`);
+        const res = await fetch(`${window.API_BASE_URL}/products/${productId}/related`);
         const data = await res.json();
         if (data.success && Array.isArray(data.products)) {
             renderRelatedProducts(data.products);
@@ -432,7 +427,7 @@ function renderRelatedProducts(products) {
     }
     container.innerHTML = products.map(product => {
         const imageUrl = product.primary_image
-            ? (product.primary_image.startsWith('http') ? product.primary_image : BASE_API_URL + product.primary_image)
+            ? (product.primary_image.startsWith('http') ? product.primary_image : window.BASE_API_URL + product.primary_image)
             : 'https://upload.wikimedia.org/wikipedia/commons/d/d1/Image_not_available.png';
         return `
             <div class="related-product-card">

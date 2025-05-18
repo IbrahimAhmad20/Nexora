@@ -1,5 +1,4 @@
 // Nexora Shop Page JS
-const BASE_API_URL = window.BASE_API_URL;
 const API_BASE_URL = window.API_BASE_URL;
 const productGrid = document.getElementById('shopProductGrid');
 const categoryFilters = document.getElementById('categoryFilters');
@@ -44,7 +43,7 @@ function renderProducts(products) {
     productGrid.innerHTML = products.map(product => {
         let imageUrl = product.primary_image?.startsWith('http')
             ? product.primary_image
-            : BASE_API_URL + product.primary_image;
+            : window.BASE_API_URL + product.primary_image;
         if (!product.primary_image) imageUrl = 'https://upload.wikimedia.org/wikipedia/commons/d/d1/Image_not_available.png';
         return `
             <div class="product-card" data-product-id="${product.id}" tabindex="0" style="cursor:pointer;">
