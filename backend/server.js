@@ -7,10 +7,10 @@ const db = require('./config/db');
 const session = require('express-session');
 const passport = require('./config/passport');
 const { checkMaintenanceMode } = require('./middleware/admin.middleware');
-console.log('=== Nexora backend started ===');
+
 // Load environment variables
 dotenv.config();
-
+db.testConnection();
 // Create Express app
 const app = express();
 
@@ -26,7 +26,7 @@ app.use(cors({
 }));
 app.use('/uploads', express.static('uploads', {
   setHeaders: (res, path, stat) => {
-    res.set('Access-Control-Allow-Origin', 'http://localhost:3000');
+    res.set('Access-Control-Allow-Origin', process.env.CORS_ORIGIN || 'http://localhost:3000');
   }
 }));
 
