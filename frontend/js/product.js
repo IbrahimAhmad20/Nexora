@@ -454,7 +454,7 @@ function renderRelatedProducts(products) {
 (async function() {
   const productId = getProductIdFromUrl();
   if (!productId) {
-    document.body.innerHTML = `<div class="alert alert-warning" style="background:#fff3cd;color:#856404;padding:0.7em 1em;border-radius:6px;font-size:1.05em;text-align:center;margin:3em auto;max-width:400px;">Product not found.</div>`;
+    document.body.insertAdjacentHTML('afterbegin', `<div class="alert alert-warning" style="background:#fff3cd;color:#856404;padding:0.7em 1em;border-radius:6px;font-size:1.05em;text-align:center;margin:3em auto;max-width:400px;">Product not found.</div>`);
     return;
   }
   try {
@@ -481,6 +481,6 @@ function renderRelatedProducts(products) {
     // Related products (new logic only)
     await fetchRelatedProducts(productId);
   } catch (err) {
-    document.body.innerHTML = `<p style='color:#e57373;font-size:1.3rem;text-align:center;margin-top:4rem;'>${err.message}</p>`;
+    document.body.insertAdjacentHTML('afterbegin', `<div class="alert alert-warning" style="background:#fff3cd;color:#856404;padding:0.7em 1em;border-radius:6px;font-size:1.05em;text-align:center;margin:3em auto;max-width:400px;">${err.message}</div>`);
   }
 })(); 
