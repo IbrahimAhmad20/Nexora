@@ -1,5 +1,6 @@
 const wishlistGrid = document.getElementById('wishlistProductGrid');
 const token = localStorage.getItem('token');
+if (!wishlistGrid) return;
 if (!token) {
     wishlistGrid.innerHTML = '<p style="color:#e57373;">Please log in to view your wishlist.</p>';
 } else {

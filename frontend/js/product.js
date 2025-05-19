@@ -52,6 +52,7 @@ async function fetchSpecs(productId) {
 
 function renderGallery(images, mainImage) {
   const gallery = document.getElementById('productGallery');
+  if (!gallery) return;
   let mainImgUrl = mainImage?.startsWith('http') ? mainImage : window.BASE_API_URL + mainImage;
   if (!mainImage) mainImgUrl = 'https://upload.wikimedia.org/wikipedia/commons/d/d1/Image_not_available.png';
   gallery.innerHTML = `
@@ -70,6 +71,7 @@ function renderGallery(images, mainImage) {
 
 function renderInfo(product) {
   const info = document.getElementById('productInfo');
+  if (!info) return;
   info.innerHTML = `
     <h1>${product.name}</h1>
     <div class="product-price">$${Number(product.price).toFixed(2)}</div>
@@ -86,7 +88,8 @@ function renderInfo(product) {
       </button>
     </div>
   `;
-  document.getElementById('addToCartBtn').onclick = () => addToCart(product.id);
+  const addToCartBtn = document.getElementById('addToCartBtn');
+  if (addToCartBtn) addToCartBtn.onclick = () => addToCart(product.id);
 }
 
 async function addToCart(productId) {
@@ -113,13 +116,15 @@ async function addToCart(productId) {
 
 function renderReviews(reviews) {
   const section = document.getElementById('reviewsSection');
+  if (!section) return;
   if (!reviews.length) {
     section.innerHTML = `
       <h3>Reviews</h3>
       <p style="color:#888;">No reviews yet.</p>
       <button class="btn btn-primary" id="writeReviewBtn">Write a Review</button>
     `;
-    document.getElementById('writeReviewBtn').onclick = showReviewForm;
+    const writeReviewBtn = document.getElementById('writeReviewBtn');
+    if (writeReviewBtn) writeReviewBtn.onclick = showReviewForm;
     return;
   }
   section.innerHTML = `
@@ -133,7 +138,8 @@ function renderReviews(reviews) {
       </div>
     `).join('')}
   `;
-  document.getElementById('writeReviewBtn').onclick = showReviewForm;
+  const writeReviewBtn = document.getElementById('writeReviewBtn');
+  if (writeReviewBtn) writeReviewBtn.onclick = showReviewForm;
 }
 
 function showReviewForm() {
@@ -206,13 +212,15 @@ async function submitReview(e) {
 
 function renderQA(qa) {
   const section = document.getElementById('qaSection');
+  if (!section) return;
   if (!qa.length) {
     section.innerHTML = `
       <h3>Questions & Answers</h3>
       <p style="color:#888;">No questions yet.</p>
       <button class="btn btn-primary" id="askQuestionBtn">Ask a Question</button>
     `;
-    document.getElementById('askQuestionBtn').onclick = showQuestionForm;
+    const askQuestionBtn = document.getElementById('askQuestionBtn');
+    if (askQuestionBtn) askQuestionBtn.onclick = showQuestionForm;
     return;
   }
   section.innerHTML = `
@@ -228,7 +236,8 @@ function renderQA(qa) {
       </div>
     `).join('')}
   `;
-  document.getElementById('askQuestionBtn').onclick = showQuestionForm;
+  const askQuestionBtn = document.getElementById('askQuestionBtn');
+  if (askQuestionBtn) askQuestionBtn.onclick = showQuestionForm;
 }
 
 function showQuestionForm() {
@@ -320,6 +329,7 @@ function renderVariants(variants) {
 
 function renderSpecs(specs) {
   const section = document.getElementById('specsSection');
+  if (!section) return;
   if (Object.keys(specs).length === 0) {
     section.innerHTML = '';
     return;
@@ -372,16 +382,17 @@ async function toggleWishlist(productId) {
   }
 }
 
-function renderRelated(related) {
+function renderRelated(products) {
   const section = document.getElementById('relatedProducts');
-  if (!related.length) {
+  if (!section) return;
+  if (!products.length) {
     section.innerHTML = '';
     return;
   }
   section.innerHTML = `
     <h3>Related Products</h3>
     <div class="related-grid">
-      ${related.map(p => {
+      ${products.map(p => {
         let imageUrl = '';
         if (p.image) {
           imageUrl = p.image.startsWith('http') ? p.image : window.BASE_API_URL + p.image;
