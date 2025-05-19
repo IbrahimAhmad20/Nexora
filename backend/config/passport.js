@@ -23,7 +23,13 @@ passport.use(new GoogleStrategy({
     // Create user if not exists
     const [result] = await pool.query(
       'INSERT INTO users (email, password, first_name, last_name, role) VALUES (?, ?, ?, ?, ?)',
-      [email, 'OAUTH', profile.name.givenName, profile.name.familyName, 'customer']
+      [
+        email,
+        'OAUTH',
+        profile.name.givenName || '',
+        profile.name.familyName || '',
+        'customer'
+      ]
     );
     [[user]] = await pool.query('SELECT * FROM users WHERE id = ?', [result.insertId]);
   }
@@ -42,7 +48,13 @@ passport.use(new FacebookStrategy({
   if (!user) {
     const [result] = await pool.query(
       'INSERT INTO users (email, password, first_name, last_name, role) VALUES (?, ?, ?, ?, ?)',
-      [email, 'OAUTH', profile.name.givenName, profile.name.familyName, 'customer']
+      [
+        email,
+        'OAUTH',
+        profile.name.givenName || '',
+        profile.name.familyName || '',
+        'customer'
+      ]
     );
     [[user]] = await pool.query('SELECT * FROM users WHERE id = ?', [result.insertId]);
   }
