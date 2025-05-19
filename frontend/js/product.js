@@ -454,7 +454,7 @@ function renderRelatedProducts(products) {
 (async function() {
   const productId = getProductIdFromUrl();
   if (!productId) {
-    document.body.innerHTML = '<p>Product not found.</p>';
+    document.body.innerHTML = `<div class="alert alert-warning" style="background:#fff3cd;color:#856404;padding:0.7em 1em;border-radius:6px;font-size:1.05em;text-align:center;margin:3em auto;max-width:400px;">Product not found.</div>`;
     return;
   }
   try {
