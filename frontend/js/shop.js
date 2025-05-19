@@ -41,7 +41,7 @@ async function fetchProducts() {
 function renderProducts(products) {
     if (!productGrid) return;
     if (!products.length) {
-        productGrid.innerHTML = '<p style="color:#bfc9da">No products found.</p>';
+        productGrid.innerHTML = '<div class="alert alert-warning" style="background:#fff3cd;color:#856404;padding:0.7em 1em;border-radius:6px;font-size:0.98em;text-align:center;margin:1.5em auto;max-width:400px;">No products found.</div>';
         return;
     }
     productGrid.innerHTML = products.map(product => {
@@ -121,7 +121,7 @@ function showFailedToLoadProducts() {
 }
 function showNoProductsFound() {
     if (productGrid) {
-        productGrid.innerHTML = '<p style="color: #e57373;">No products found.</p>';
+        productGrid.innerHTML = '<div class="alert alert-warning" style="background:#fff3cd;color:#856404;padding:0.7em 1em;border-radius:6px;font-size:0.98em;text-align:center;margin:1.5em auto;max-width:400px;">No products found.</div>';
     } else {
         console.warn('shop.js: #shopProductGrid element not found. Cannot show no products message.');
     }
@@ -268,8 +268,9 @@ window.addEventListener('DOMContentLoaded', () => {
 
     // Hamburger menu
     if (hamburger) {
-        hamburger.addEventListener('click', function() { ... });
-        hamburger.addEventListener('keypress', function(e) { ... });
+        // Add your hamburger menu event listeners here if needed, e.g.:
+        // hamburger.addEventListener('click', function() { ... });
+        // hamburger.addEventListener('keypress', function(e) { ... });
     }
 });
 
