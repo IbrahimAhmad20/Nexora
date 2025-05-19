@@ -11,6 +11,7 @@ const profileBtn = document.getElementById('profileBtn');
 const profileMenu = document.querySelector('.profile-menu');
 const profileDropdown = document.getElementById('profileDropdown');
 const profileInitials = document.getElementById('profileInitials');
+const hamburger = document.getElementById('hamburgerMenu');
 
 let allProducts = [];
 let filteredProducts = [];
@@ -263,6 +264,12 @@ window.addEventListener('DOMContentLoaded', () => {
     const cartBtn = document.getElementById('headerCartBtn');
     if (cartBtn) {
         cartBtn.onclick = function() { window.location.href = 'cart.html'; };
+    }
+
+    // Hamburger menu
+    if (hamburger) {
+        hamburger.addEventListener('click', function() { ... });
+        hamburger.addEventListener('keypress', function(e) { ... });
     }
 });
 
