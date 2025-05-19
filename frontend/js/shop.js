@@ -38,6 +38,7 @@ async function fetchProducts() {
 
 // Render products
 function renderProducts(products) {
+    if (!productGrid) return;
     if (!products.length) {
         productGrid.innerHTML = '<p style="color:#bfc9da">No products found.</p>';
         return;
@@ -111,10 +112,10 @@ if (categoryFilters) {
     });
 }
 function showFailedToLoadProducts() {
-    productGrid.innerHTML = '<p style="color: #e57373; font-size:1.1rem;">Sorry, we are having trouble loading products. Please try again later.</p>';
+    if (productGrid) productGrid.innerHTML = '<p style="color: #e57373; font-size:1.1rem;">Sorry, we are having trouble loading products. Please try again later.</p>';
 }
 function showNoProductsFound() {
-    productGrid.innerHTML = '<p style="color: #e57373;">No products found.</p>';
+    if (productGrid) productGrid.innerHTML = '<p style="color: #e57373;">No products found.</p>';
 }
 function filterProducts() {
     if (currentCategory === 'all') {
