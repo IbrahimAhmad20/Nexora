@@ -47,12 +47,12 @@ function renderProducts(products) {
         let imageUrl = product.primary_image?.startsWith('http')
             ? product.primary_image
             : window.BASE_API_URL + product.primary_image;
-        if (!product.primary_image) imageUrl = 'https://upload.wikimedia.org/wikipedia/commons/d/d1/Image_not_available.png';
+        if (!product.primary_image) imageUrl = 'images/placeholder.png';
         return `
             <div class="product-card" data-product-id="${product.id}" tabindex="0" style="cursor:pointer;">
                 ${product.badge ? `<span class="badge ${product.badgeColor || ''}">${product.badge}</span>` : ''}
                 <div class="product-link" tabindex="-1" style="pointer-events:none;">
-                    <img src="${imageUrl}" alt="${product.name}" onerror="this.onerror=null;this.src='https://upload.wikimedia.org/wikipedia/commons/d/d1/Image_not_available.png'">
+                    <img src="${imageUrl}" alt="${product.name}" onerror="this.onerror=null;this.src='images/placeholder.png'">
                     <div class="product-info">
                         <div class="product-category">${product.category ? product.category.toUpperCase() : ''}</div>
                         <div class="product-title" style="font-family:'Poppins', 'Segoe UI', Arial, sans-serif; font-size:1.18rem; font-weight:700; color:#fff; margin-bottom:0.2rem; letter-spacing:0.01em; text-decoration:none; box-shadow:none; border-bottom:none;">${product.name}</div>
@@ -112,10 +112,18 @@ if (categoryFilters) {
     });
 }
 function showFailedToLoadProducts() {
-    if (productGrid) productGrid.innerHTML = '<p style="color: #e57373; font-size:1.1rem;">Sorry, we are having trouble loading products. Please try again later.</p>';
+    if (productGrid) {
+        productGrid.innerHTML = '<p style="color: #e57373; font-size:1.1rem;">Sorry, we are having trouble loading products. Please try again later.</p>';
+    } else {
+        console.warn('shop.js: #shopProductGrid element not found. Cannot show failed to load message.');
+    }
 }
 function showNoProductsFound() {
-    if (productGrid) productGrid.innerHTML = '<p style="color: #e57373;">No products found.</p>';
+    if (productGrid) {
+        productGrid.innerHTML = '<p style="color: #e57373;">No products found.</p>';
+    } else {
+        console.warn('shop.js: #shopProductGrid element not found. Cannot show no products message.');
+    }
 }
 function filterProducts() {
     if (currentCategory === 'all') {
@@ -238,9 +246,11 @@ window.addEventListener('DOMContentLoaded', () => {
     fetchProducts();
     updateCartCount();
     setProfileInitials();
+
+    // Profile dropdown
     if (profileDropdown) {
         const links = profileDropdown.querySelectorAll('a');
-        const logoutLink = links[links.length - 1]; // Last link is Logout
+        const logoutLink = links[links.length - 1];
         if (logoutLink) {
             logoutLink.addEventListener('click', function(e) {
                 e.preventDefault();
@@ -248,9 +258,8 @@ window.addEventListener('DOMContentLoaded', () => {
             });
         }
     }
-});
 
-document.addEventListener('DOMContentLoaded', function() {
+    // Cart button
     const cartBtn = document.getElementById('headerCartBtn');
     if (cartBtn) {
         cartBtn.onclick = function() { window.location.href = 'cart.html'; };
