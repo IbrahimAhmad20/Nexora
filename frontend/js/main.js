@@ -1,5 +1,5 @@
-window.API_BASE_URL = "https://your-backend-service.onrender.com";
-window.BASE_API_URL = "https://your-backend-service.onrender.com";
+window.API_BASE_URL = "https://nexora-yapl.onrender.com";
+window.BASE_API_URL = "https://nexora-yapl.onrender.com";
 
 (function() {
 // Add TOTP modal HTML and variable initialization at the very top
