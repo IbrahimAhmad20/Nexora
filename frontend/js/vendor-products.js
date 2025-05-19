@@ -72,7 +72,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
 
-            const response = await fetch(`http://localhost:5000/api/vendor/products?page=${page}&search=${search}&category=${category}`, {
+            const response = await fetch(`${window.API_BASE_URL}/api/vendor/products?page=${page}&search=${search}&category=${category}`, {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }
@@ -197,7 +197,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const variants = collectVariants();
             formData.append('variants', JSON.stringify(variants));
             
-            const response = await fetch('http://localhost:5000/api/products', {
+            const response = await fetch(`${window.API_BASE_URL}/api/products`, {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${token}`
@@ -240,7 +240,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const variants = collectVariants();
             formData.append('variants', JSON.stringify(variants));
 
-            const response = await fetch(`http://localhost:5000/api/products/${productId}`, {
+            const response = await fetch(`${window.API_BASE_URL}/api/products/${productId}`, {
                 method: 'PUT',
                 headers: {
                     'Authorization': `Bearer ${token}`
@@ -265,7 +265,7 @@ document.addEventListener('DOMContentLoaded', () => {
     async function deleteProduct(productId) {
         try {
             const token = localStorage.getItem('token');
-            const response = await fetch(`http://localhost:5000/api/products/${productId}`, {
+            const response = await fetch(`${window.API_BASE_URL}/api/products/${productId}`, {
                 method: 'DELETE',
                 headers: {
                     'Authorization': `Bearer ${token}`
@@ -288,7 +288,7 @@ document.addEventListener('DOMContentLoaded', () => {
     async function editProduct(productId) {
         try {
             const token = localStorage.getItem('token');
-            const response = await fetch(`http://localhost:5000/api/vendor/products/${productId}`, {
+            const response = await fetch(`${window.API_BASE_URL}/api/vendor/products/${productId}`, {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }

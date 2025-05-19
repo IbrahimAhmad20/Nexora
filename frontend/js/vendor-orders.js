@@ -64,7 +64,7 @@ document.addEventListener('DOMContentLoaded', () => {
         params.append('page', currentPage);
         if (currentSearch) params.append('search', currentSearch);
         if (currentStatus) params.append('status', currentStatus);
-        const res = await fetch(`http://localhost:5000/api/vendor/orders?${params.toString()}`, {
+        const res = await fetch(`${window.API_BASE_URL}/api/vendor/orders?${params.toString()}`, {
             headers: { 'Authorization': `Bearer ${token}` }
         });
         const data = await res.json();
@@ -88,7 +88,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('saveEditOrderBtn').onclick = async () => {
             const newAddress = document.getElementById('editShippingAddress').value.trim();
             if (!newAddress) return alert('Shipping address is required.');
-            await fetch(`http://localhost:5000/api/vendor/orders/${editOrderId}`, {
+            await fetch(`${window.API_BASE_URL}/api/vendor/orders/${editOrderId}`, {
                 method: 'PUT',
                 headers: {
                     'Authorization': `Bearer ${token}`,
@@ -104,7 +104,7 @@ document.addEventListener('DOMContentLoaded', () => {
     tableBody.addEventListener('click', async e => {
         if (e.target.closest('.view-btn')) {
             const orderId = e.target.closest('.view-btn').dataset.id;
-            const res = await fetch(`http://localhost:5000/api/vendor/orders/${orderId}`, {
+            const res = await fetch(`${window.API_BASE_URL}/api/vendor/orders/${orderId}`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             const data = await res.json();
@@ -133,7 +133,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 modal.style.display = 'block';
                 document.getElementById('updateStatusBtn').onclick = async () => {
                     const newStatus = document.getElementById('orderStatus').value;
-                    await fetch(`http://localhost:5000/api/vendor/orders/${orderId}/status`, {
+                    await fetch(`${window.API_BASE_URL}/api/vendor/orders/${orderId}/status`, {
                         method: 'PUT',
                         headers: {
                             'Authorization': `Bearer ${token}`,
@@ -147,7 +147,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         } else if (e.target.closest('.edit-btn')) {
             const orderId = e.target.closest('.edit-btn').dataset.id;
-            const res = await fetch(`http://localhost:5000/api/vendor/orders/${orderId}`, {
+            const res = await fetch(`${window.API_BASE_URL}/api/vendor/orders/${orderId}`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             const data = await res.json();
@@ -157,7 +157,7 @@ document.addEventListener('DOMContentLoaded', () => {
         } else if (e.target.closest('.delete-btn')) {
             const orderId = e.target.closest('.delete-btn').dataset.id;
             if (confirm('Are you sure you want to cancel this order?')) {
-                await fetch(`http://localhost:5000/api/vendor/orders/${orderId}`, {
+                await fetch(`${window.API_BASE_URL}/api/vendor/orders/${orderId}`, {
                     method: 'DELETE',
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
@@ -183,7 +183,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const params = new URLSearchParams();
         if (currentSearch) params.append('search', currentSearch);
         if (currentStatus) params.append('status', currentStatus);
-        const res = await fetch(`http://localhost:5000/api/vendor/orders/export?${params.toString()}`, {
+        const res = await fetch(`${window.API_BASE_URL}/api/vendor/orders/export?${params.toString()}`, {
             headers: { 'Authorization': `Bearer ${token}` }
         });
         if (!res.ok) {
