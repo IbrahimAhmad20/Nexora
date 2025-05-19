@@ -6,6 +6,7 @@ const { body, validationResult } = require('express-validator');
 const jwt = require('jsonwebtoken');
 const { logoUpload } = require('../utils/upload');
 const { Parser } = require('json2csv');
+const { BASE_URL } = require('../config/url.config');
 
 router.use((req, res, next) => {
   console.log('Vendor route hit:', req.method, req.originalUrl);
@@ -142,7 +143,7 @@ router.get('/products',
         images.forEach(img => {
           if (!imagesByProduct[img.product_id]) imagesByProduct[img.product_id] = [];
           imagesByProduct[img.product_id].push({
-            url: `http://localhost:5000${img.image_url}`,
+            url: `${BASE_URL}${img.image_url}`,
             is_primary: !!img.is_primary
           });
         });
@@ -156,7 +157,7 @@ router.get('/products',
         stock: p.stock_quantity,
         status: p.stock_quantity === 0 ? 'outofstock' : (p.status === 'deleted' ? 'inactive' : p.status),
         description: p.description,
-        image: p.primary_image ? `http://localhost:5000${p.primary_image}` : null,
+        image: p.primary_image ? `${BASE_URL}${p.primary_image}` : null,
         images: imagesByProduct[p.id] || [],
         createdAt: p.created_at,
         updatedAt: p.updated_at
@@ -204,7 +205,7 @@ router.get('/products/:id',
         [p.id]
       );
       const imageArr = images.map(img => ({
-        url: `http://localhost:5000${img.image_url}`,
+        url: `${BASE_URL}${img.image_url}`,
         is_primary: !!img.is_primary
       }));
       res.json({
@@ -215,7 +216,7 @@ router.get('/products/:id',
         stock: p.stock_quantity,
         status: p.stock_quantity === 0 ? 'outofstock' : (p.status === 'deleted' ? 'inactive' : p.status),
         description: p.description,
-        image: p.primary_image ? `http://localhost:5000${p.primary_image}` : null,
+        image: p.primary_image ? `${BASE_URL}${p.primary_image}` : null,
         images: imageArr,
         createdAt: p.created_at,
         updatedAt: p.updated_at
@@ -791,7 +792,7 @@ router.post('/logo',
       res.json({
         success: true,
         message: 'Logo uploaded successfully',
-        logo_url: `http://localhost:5000${logoUrl}`
+        logo_url: `${BASE_URL}${logoUrl}`
       });
     } catch (error) {
       console.error('Error uploading vendor logo:', error);
@@ -827,7 +828,7 @@ router.get('/logo',
       
       res.json({
         success: true,
-        logo_url: logoUrl ? `http://localhost:5000${logoUrl}` : null
+        logo_url: logoUrl ? `${BASE_URL}${logoUrl}` : null
       });
     } catch (error) {
       console.error('Error getting vendor logo:', error);

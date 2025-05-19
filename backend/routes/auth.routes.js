@@ -9,6 +9,7 @@ const cors = require('cors');
 const speakeasy = require('speakeasy');
 const qrcode = require('qrcode');
 const passport = require('../config/passport');
+const { FRONTEND_URL } = require('../config/url.config');
 
 // Register new user
 router.post('/register',
@@ -297,7 +298,7 @@ router.get('/google/callback', passport.authenticate('google', { session: false,
       first_name: req.user.first_name,
       last_name: req.user.last_name
     }));
-    res.redirect(`http://localhost:3000/login.html?token=${token}&user=${user}`);
+    res.redirect(`${FRONTEND_URL}/login.html?token=${token}&user=${user}`);
   }
 );
 
@@ -314,7 +315,7 @@ router.get('/facebook/callback', passport.authenticate('facebook', { session: fa
       first_name: req.user.first_name,
       last_name: req.user.last_name
     }));
-    res.redirect(`http://localhost:3000/login.html?token=${token}&user=${user}`);
+    res.redirect(`${FRONTEND_URL}/login.html?token=${token}&user=${user}`);
   }
 );
 

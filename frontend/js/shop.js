@@ -1,5 +1,7 @@
 // Nexora Shop Page JS
 (function() {
+window.API_BASE_URL = "https://your-backend-service.onrender.com";
+window.BASE_API_URL = "https://your-backend-service.onrender.com";
 const productGrid = document.getElementById('shopProductGrid');
 const categoryFilters = document.getElementById('categoryFilters');
 const searchForm = document.getElementById('shopSearchForm');
