@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "bcryptjs": "^3.0.2",
     "cors": "^2.8.5",
     "express-session": "^1.18.1",
     "json2csv": "^6.0.0-alpha.2",
