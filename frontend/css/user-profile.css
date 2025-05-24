@@ -99,6 +99,7 @@ body {
     align-items: center;
     gap: 0.75rem;
     cursor: pointer;
+    position: relative;
 }
 
 .user-avatar {
@@ -130,7 +131,7 @@ body {
 }
 
 .sidebar.collapsed {
-    width: var(--sidebar-collapsed-width);
+    width: var(--sidebar-collapsed-width) !important;
 }
 
 .sidebar-toggle {
@@ -190,16 +191,16 @@ body {
 
 .sidebar.collapsed .menu-item-text,
 .sidebar.collapsed .menu-title {
-    display: none;
+    display: none !important;
 }
 
 .sidebar.collapsed .menu-item {
-    justify-content: center;
+    justify-content: center !important;
 }
 
 .sidebar.collapsed .menu-item i {
-    margin-right: 0;
-    font-size: 1.25rem;
+    margin-right: 0 !important;
+    font-size: 1.25rem !important;
 }
 
 /* Main Content Styles */
@@ -210,14 +211,16 @@ body {
 }
 
 .main-content.expanded {
-    margin-left: var(--sidebar-collapsed-width);
+    margin-left: var(--sidebar-collapsed-width) !important;
 }
 
 .page-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 2rem;
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+    margin-bottom: 0;
 }
 
 .page-header h1 {
@@ -809,7 +812,7 @@ input:checked + .toggle-slider:before {
 }
 
 .modal {
-    background-color: var(--bg-card);
+    background-color: var(--primary-dark-2); /* Use a darker background */
     color: var(--text-light);
     padding: 2rem;
     border-radius: 8px;
@@ -817,13 +820,14 @@ input:checked + .toggle-slider:before {
     width: 90%;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     position: relative;
+    border: 1px solid var(--primary-dark-3); /* Add a subtle border */
 }
 
 .modal-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border-bottom: 1px solid var(--border-color);
+    border-bottom: 1px solid rgba(100, 255, 218, 0.1); /* Consistent border color */
     padding-bottom: 1rem;
     margin-bottom: 1.5rem;
 }
@@ -837,19 +841,20 @@ input:checked + .toggle-slider:before {
 .modal-close {
     background: none;
     border: none;
-    color: var(--text-muted);
+    color: var(--text-gray); /* Use text-gray for muted color */
     font-size: 1.5rem;
     cursor: pointer;
     transition: color 0.3s ease;
 }
 
 .modal-close:hover {
-    color: var(--accent);
+    color: var(--accent-blue); /* Use accent blue on hover */
 }
 
 .modal-body p {
-    margin-bottom: 1rem;
+    margin-bottom: 0.75rem; /* Slightly less space */
     line-height: 1.5;
+    color: var(--text-light); /* Ensure text is light */
 }
 
 .qr-code-container {
@@ -858,6 +863,7 @@ input:checked + .toggle-slider:before {
     padding: 1rem;
     background-color: #fff; /* QR code needs a light background */
     border-radius: 4px;
+    box-shadow: var(--box-shadow); /* Add a subtle shadow */
 }
 
 #qrCodeImage {
@@ -870,11 +876,14 @@ input:checked + .toggle-slider:before {
     text-align: center;
     font-family: monospace;
     font-size: 1.1rem;
-    color: var(--text-light);
+    color: var(--accent-blue); /* Highlight the secret key */
     word-break: break-all;
     white-space: normal;
     overflow-wrap: break-word;
     margin-top: 0.5rem;
+    padding: 0.5rem;
+    background-color: var(--primary-dark-3); /* Add background for readability */
+    border-radius: 4px;
 }
 
 .modal-body .form-group {
@@ -885,15 +894,22 @@ input:checked + .toggle-slider:before {
     display: block;
     margin-bottom: 0.5rem;
     font-weight: 500;
+    color: var(--text-light); /* Ensure label text is light */
 }
 
 .modal-body .form-control {
     width: 100%;
     padding: 0.75rem;
-    border: 1px solid var(--border-color);
-    border-radius: 4px;
-    background-color: var(--bg-input);
+    border: 1px solid var(--primary-dark-3); /* Consistent border */
+    background-color: var(--primary-dark); /* Darker input background */
     color: var(--text-light);
+    border-radius: 4px;
+}
+
+.modal-body .form-control:focus {
+    outline: none;
+    border-color: var(--accent-blue); /* Accent color on focus */
+    box-shadow: 0 0 0 3px rgba(100, 255, 218, 0.1); /* Consistent focus style */
 }
 
 .modal-body .btn-primary {
@@ -901,8 +917,8 @@ input:checked + .toggle-slider:before {
     width: 100%;
     padding: 0.75rem;
     text-align: center;
-    background-color: var(--accent);
-    color: var(--bg-main);
+    background-color: var(--accent-blue); /* Use accent blue for primary button */
+    color: var(--primary-dark); /* Use dark text on accent background */
     border: none;
     border-radius: 4px;
     cursor: pointer;
@@ -911,7 +927,7 @@ input:checked + .toggle-slider:before {
 }
 
 .modal-body .btn-primary:hover {
-    background-color: var(--accent-dark);
+    background-color: var(--accent-blue-2); /* Darker accent on hover */
 }
 
 /* Optional: Add responsiveness */
@@ -921,5 +937,81 @@ input:checked + .toggle-slider:before {
     }
     .modal-header h3 {
         font-size: 1.3rem;
+    }
+}
+
+/* User Profile Dropdown */
+.profile-dropdown {
+    position: absolute;
+    top: 100%; /* Position below the user-profile */
+    right: 0; /* Align to the right */
+    background-color: var(--primary-dark-2); /* Darker background */
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    overflow: hidden;
+    min-width: 150px;
+    z-index: 900; /* Above other content but below modal */
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(10px); /* Start slightly lower */
+    transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s ease;
+    border: 1px solid var(--primary-dark-3); /* Subtle border */
+}
+
+.profile-dropdown.show {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0); /* Slide up into view */
+}
+
+.profile-dropdown a {
+    display: block;
+    padding: 0.75rem 1rem;
+    color: var(--text-light); /* Light text */
+    text-decoration: none;
+    transition: background-color 0.2s ease;
+}
+
+.profile-dropdown a:hover {
+    background-color: var(--primary-dark-3); /* Highlight on hover */
+}
+
+/* Add Address Modal Styles */
+/* Reusing general modal styles from 2FA modal */
+#addAddressModal .modal-body .form-group {
+    margin-bottom: 1rem; /* Add some space between form groups */
+}
+
+#addAddressModal .modal-body .checkbox-group {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+}
+
+#addAddressModal .modal-body .checkbox-group input[type="checkbox"] {
+    /* Basic checkbox styling */
+    width: 16px;
+    height: 16px;
+    margin-right: 0.5rem;
+    cursor: pointer;
+}
+
+#addAddressModal .modal-body .checkbox-group label {
+    font-weight: normal;
+    color: var(--text-light);
+    cursor: pointer;
+}
+
+#addAddressModal .modal-body .btn-primary {
+     width: auto; /* Allow button to size based on content */
+     padding: 0.75rem 2rem; /* Add padding */
+     align-self: flex-start; /* Align button to the start */
+}
+
+@media (max-width: 600px) {
+    #addAddressModal .modal-body .btn-primary {
+         width: 100%; /* Full width button on small screens */
+         align-self: stretch; /* Stretch button */
     }
 } 

@@ -330,11 +330,10 @@ class ApiService {
     }
 
     async addAddress(addressData) {
-         return this.request('/users/addresses', {
-             method: 'POST',
-             body: JSON.stringify(addressData),
-             headers: { 'Content-Type': 'application/json' }
-         });
+        return this.request('/users/addresses', {
+            method: 'POST',
+            body: JSON.stringify(addressData)
+        });
     }
 
     async updateAddress(addressId, addressData) {

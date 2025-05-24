@@ -230,7 +230,8 @@ router.get('/2fa-status',
 
 // Generate TOTP secret and QR code (for any user)
 router.post('/2fa/setup', verifyToken, async (req, res) => {
-  const secret = speakeasy.generateSecret({ name: 'Nexora Platform' });
+  const userEmail = req.user.email; // Assuming user email is available in req.user
+  const secret = speakeasy.generateSecret({ name: `Nexora Platform:${userEmail}` });
   await pool.query('UPDATE users SET totp_secret = ? WHERE id = ?', [secret.base32, req.user.id]);
   const qr = await qrcode.toDataURL(secret.otpauth_url);
   res.json({ success: true, qr, secret: secret.base32 });

@@ -1,8 +1,3 @@
-// Initialize API service
-// Access the global api instance attached to window
-const api = window.api;
-
-// Wrap all DOM interaction and event listeners inside DOMContentLoaded
 document.addEventListener('DOMContentLoaded', async () => {
     // Load user data when page loads
     try {
@@ -168,9 +163,74 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
 
     // Add new address button
-    document.getElementById('add-address-btn').addEventListener('click', () => {
-        window.location.href = '/add-address.html';
-    });
+    const addAddressBtn = document.getElementById('add-address-btn');
+    const addAddressModal = document.getElementById('addAddressModal');
+    const closeAddAddressModalBtn = document.getElementById('closeAddAddressModal');
+    const addAddressForm = document.getElementById('add-address-form');
+    
+    if (addAddressBtn && addAddressModal && closeAddAddressModalBtn && addAddressForm) {
+        addAddressBtn.addEventListener('click', () => {
+            addAddressModal.style.display = 'flex'; // Show modal
+        });
+
+        closeAddAddressModalBtn.addEventListener('click', () => {
+            addAddressModal.style.display = 'none'; // Hide modal
+            addAddressForm.reset(); // Clear form fields
+        });
+
+        addAddressModal.addEventListener('click', (e) => {
+            if (e.target === addAddressModal) {
+                addAddressModal.style.display = 'none'; // Hide modal when clicking outside content
+                addAddressForm.reset(); // Clear form fields
+            }
+        });
+
+        addAddressForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const formData = {
+                title: document.getElementById('modal-title').value,
+                street: document.getElementById('modal-street').value,
+                apartment: document.getElementById('modal-apartment').value || null, // Optional field
+                city: document.getElementById('modal-city').value,
+                state: document.getElementById('modal-state').value,
+                zip_code: document.getElementById('modal-zip_code').value,
+                country: document.getElementById('modal-country').value,
+                phone: document.getElementById('modal-phone').value || null, // Optional field
+                is_default: document.getElementById('modal-is_default').checked
+            };
+
+            try {
+                const response = await api.addAddress(formData);
+
+                if (response.success) {
+                    showSuccess('Address added successfully!');
+                    addAddressModal.style.display = 'none'; // Hide modal
+                    addAddressForm.reset(); // Clear form fields
+                    await loadAddresses(); // Reload addresses to update list
+                } else {
+                    showError('Failed to add address: ' + (response.message || 'Unknown error'));
+                }
+            } catch (error) {
+                console.error('Error adding address:', error);
+                // Attempt to parse and display backend validation errors
+                let errorMessage = 'An error occurred while adding the address.';
+                if (error.message) {
+                    errorMessage = error.message;
+                }
+                // If the backend sends back an 'errors' array (common for validation errors)
+                if (error.errors && Array.isArray(error.errors)) {
+                    errorMessage += '\n\nDetails:';
+                    error.errors.forEach(err => {
+                        errorMessage += `\n- ${err.param}: ${err.msg}`; // Assuming typical express-validator format
+                    });
+                }
+                showError(errorMessage);
+            }
+        });
+    } else {
+        console.error('Add address button or modal elements not found.');
+    }
 
     // Add new payment method button
     document.getElementById('add-payment-btn').addEventListener('click', () => {
@@ -230,23 +290,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     }
 
-    // Order Details/Track Buttons (Assuming these buttons exist within the order history table)
-    // This event listener uses event delegation for efficiency
-    document.getElementById('recent-orders').addEventListener('click', (e) => {
-        const target = e.target.closest('.btn-secondary');
-        if (target) {
-            e.preventDefault();
-            const orderRow = target.closest('tr');
-            const orderId = orderRow.querySelector('td:first-child').textContent.replace('#', ''); // Remove # from ID
-            const action = target.textContent.trim().toLowerCase();
-            if (action === 'details') {
-              window.location.href = `/order-details.html?id=${orderId}`;
-            } else if (action === 'track') {
-              window.location.href = `/track-order.html?id=${orderId}`;
-            }
-        }
-    });
-
     // Address Card Actions (Using event delegation)
     document.getElementById('address-cards').addEventListener('click', async (e) => {
         const target = e.target.closest('.address-card-action');
@@ -304,6 +347,26 @@ document.addEventListener('DOMContentLoaded', async () => {
         document.querySelector('.sidebar').classList.toggle('sidebar-collapsed');
     });
 
+    // User Profile Dropdown Toggle
+    const userProfileHeader = document.getElementById('userProfile');
+    const profileDropdown = userProfileHeader.querySelector('.profile-dropdown');
+
+    if (userProfileHeader && profileDropdown) {
+        userProfileHeader.addEventListener('click', (e) => {
+            // Prevent clicks inside the dropdown from closing it immediately
+            if (!profileDropdown.contains(e.target)) {
+                profileDropdown.classList.toggle('show');
+            }
+        });
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!userProfileHeader.contains(e.target) && profileDropdown.classList.contains('show')) {
+                profileDropdown.classList.remove('show');
+            }
+        });
+    }
+
     // Add placeholder for 2FA setup UI and logic functions
     function show2faSetupModal(qrCodeData, secret) {
         const modal = document.getElementById('twoFactorSetupModal');
@@ -325,6 +388,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     function close2faSetupModal() {
         const modal = document.getElementById('twoFactorSetupModal');
+        console.log('Attempting to close 2FA setup modal.');
         modal.style.display = 'none';
         document.getElementById('verification-code').value = '';
     }
@@ -350,7 +414,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     async function start2faSetupFlow() {
         try {
             const response = await api.setup2fa();
-            show2faSetupModal(response.qrCode, response.secret);
+            show2faSetupModal(response.qr, response.secret);
         } catch (error) {
             console.error('Error starting 2FA setup:', error);
             showError(error.message || 'Failed to start 2FA setup');
@@ -408,6 +472,18 @@ document.addEventListener('DOMContentLoaded', async () => {
              // After toggle change (and potential disable/enable success/failure), reload user data to ensure UI reflects actual state
              // This also handles updating the toggle state based on the latest user data
              await loadUserData();
+        });
+    }
+
+    // Add event listener for Logout link
+    const logoutLink = document.querySelector('.profile-dropdown .logout-link');
+    if (logoutLink) {
+        logoutLink.addEventListener('click', (e) => {
+            e.preventDefault(); // Prevent default link behavior
+            // Clear the token (assuming it's stored in localStorage)
+            localStorage.removeItem('token');
+            // Redirect to the login page (adjust the URL if needed)
+            window.location.href = '/login.html';
         });
     }
 
@@ -522,12 +598,12 @@ async function loadAddresses() {
         console.log('Addresses data received:', addresses);
         const addressCardsContainer = document.getElementById('address-cards');
         
-        if (!addresses.length) {
+        if (!addresses.data || addresses.data.length === 0) {
             addressCardsContainer.innerHTML = '<div class="text-center">No addresses saved yet</div>';
             return;
         }
         
-        addressCardsContainer.innerHTML = addresses.map(address => `
+        addressCardsContainer.innerHTML = addresses.data.map(address => `
             <div class="address-card" data-address-id="${address.id}">
                 <div class="address-card-header">
                     <h3>${address.title}</h3>
@@ -630,6 +706,7 @@ function show2faSetupModal(qrCodeData, secret) {
 
 function close2faSetupModal() {
     const modal = document.getElementById('twoFactorSetupModal');
+    console.log('Attempting to close 2FA setup modal.');
     modal.style.display = 'none';
     document.getElementById('verification-code').value = '';
 }
@@ -655,7 +732,7 @@ async function verify2faSetupCode() {
 async function start2faSetupFlow() {
     try {
         const response = await api.setup2fa();
-        show2faSetupModal(response.qrCode, response.secret);
+        show2faSetupModal(response.qr, response.secret);
     } catch (error) {
         console.error('Error starting 2FA setup:', error);
         showError(error.message || 'Failed to start 2FA setup');

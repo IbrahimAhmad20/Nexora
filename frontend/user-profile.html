@@ -62,13 +62,7 @@
             </a>
             
             <div class="header-right">
-                <div class="nav-links">
-                    <a href="index.html" class="nav-link">Home</a>
-                    <a href="shop.html" class="nav-link">Products</a>
-                    <a href="categories.html" class="nav-link">Categories</a>
-                    <a href="#" class="nav-link">Vendors</a>
-                </div>
-                <div class="user-profile" id="userProfile">
+                <div class="user-profile" id="userProfile" style="margin-left: auto;">
                     <div class="user-avatar">CU</div>
                     <i class="fas fa-chevron-down"></i>
                     <div class="profile-dropdown">
@@ -83,9 +77,6 @@
         <div class="content-wrapper">
             <div class="page-header">
                 <h1>My Profile</h1>
-                <button class="btn btn-secondary">
-                    <i class="fas fa-shopping-cart"></i> View Cart
-                </button>
             </div>
             
             <!-- Customer Stats -->
@@ -315,12 +306,67 @@
         </div>
     </main>
 
+    <!-- Add Address Modal -->
+    <div class="modal-overlay" id="addAddressModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>Add New Address</h3>
+                <button class="modal-close" id="closeAddAddressModal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="add-address-form">
+                    <div class="form-group">
+                        <label for="modal-title">Address Title (e.g., Home, Work)</label>
+                        <input type="text" id="modal-title" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="modal-street">Street Address</label>
+                        <input type="text" id="modal-street" class="form-control" required>
+                    </div>
+                     <div class="form-group">
+                        <label for="modal-apartment">Apartment, Suite, etc. (Optional)</label>
+                        <input type="text" id="modal-apartment" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label for="modal-city">City</label>
+                        <input type="text" id="modal-city" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="modal-state">State/Province</label>
+                        <input type="text" id="modal-state" class="form-control" required>
+                    </div>
+                     <div class="form-group">
+                        <label for="modal-zip_code">Zip/Postal Code</label>
+                        <input type="text" id="modal-zip_code" class="form-control" required>
+                    </div>
+                     <div class="form-group">
+                        <label for="modal-country">Country</label>
+                        <input type="text" id="modal-country" class="form-control" required>
+                    </div>
+                     <div class="form-group">
+                        <label for="modal-phone">Phone Number (Optional)</label>
+                        <input type="tel" id="modal-phone" class="form-control">
+                    </div>
+                    <div class="form-group checkbox-group">
+                        <input type="checkbox" id="modal-is_default">
+                        <label for="modal-is_default">Set as default address</label>
+                    </div>
+                    <button type="submit" class="btn btn-primary">
+                        Add Address
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+    
     <!-- 2FA Setup Modal -->
     <div class="modal-overlay" id="twoFactorSetupModal">
         <div class="modal">
             <div class="modal-header">
                 <h3>Set Up Two-Factor Authentication</h3>
-                <button class="modal-close" onclick="close2faSetupModal()">
+                <button class="modal-close">
                     <i class="fas fa-times"></i>
                 </button>
             </div>
