@@ -191,12 +191,12 @@ document.addEventListener('DOMContentLoaded', async () => {
             const formData = {
                 title: document.getElementById('modal-title').value,
                 street: document.getElementById('modal-street').value,
-                apartment: document.getElementById('modal-apartment').value || null, // Optional field
+                apartment: document.getElementById('modal-apartment').value || null,
                 city: document.getElementById('modal-city').value,
                 state: document.getElementById('modal-state').value,
                 zip_code: document.getElementById('modal-zip_code').value,
                 country: document.getElementById('modal-country').value,
-                phone: document.getElementById('modal-phone').value || null, // Optional field
+                phone: document.getElementById('modal-phone').value || null,
                 is_default: document.getElementById('modal-is_default').checked
             };
 
