@@ -67,7 +67,12 @@ async function showTotpLogin(user, token) {
   });
 }
 
-document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener("DOMContentLoaded", async function() {
+  // Wait for the api object to be defined on the window
+  while (typeof window.api === 'undefined') {
+    await new Promise(resolve => setTimeout(resolve, 50)); // Wait 50ms before checking again
+  }
+
   // Login form submission with 2FA
   const loginForm = document.getElementById("loginForm");
   if (loginForm) {
@@ -149,10 +154,46 @@ document.addEventListener("DOMContentLoaded", function() {
       window.location.href = 'vendor-dashboard.html';
     }
   }
+
+  // Show signup form
+  function showSignupForm() {
+    document.getElementById("signupBtn").style.display = "none";
+    document.getElementById("signupFooterText").style.display = "none";
+    document.getElementById("signupForm").style.display = "block";
+  }
+
+  // For demo purposes - toggle between login and signup on mobile
+  function showSignup() {
+    if (window.innerWidth <= 768) {
+      document.querySelector(".login-section").style.display = "none";
+      document.querySelector(".signup-section").style.display = "flex";
+    } else {
+      showSignupForm();
+    }
+  }
+
+  function showLogin() {
+    document.getElementById("signupBtn").style.display = "block";
+    document.getElementById("signupFooterText").style.display = "block";
+    document.getElementById("signupForm").style.display = "none";
+    
+    if (window.innerWidth <= 768) {
+      document.querySelector(".signup-section").style.display = "none";
+      document.querySelector(".login-section").style.display = "flex";
+    }
+  }
+
+  // Add responsive behavior
+  window.addEventListener("resize", function() {
+    if (window.innerWidth > 768) {
+      document.querySelector(".login-section").style.display = "flex";
+      document.querySelector(".signup-section").style.display = "flex";
+    }
+  });
 });
 
 // Update api.register to accept first_name and last_name
-api.register = async function(email, password, role, first_name, last_name) {
+window.api.register = async function(email, password, role, first_name, last_name) {
   return this.request('/auth/register', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },

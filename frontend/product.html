@@ -5,23 +5,34 @@
   <title>Product Details - Nexora</title>
   <link rel="stylesheet" href="css/product.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-</head>
-<body>
-  <a href="shop.html" class="back-to-shop"><i class="fas fa-arrow-left"></i> Back to Shop</a>
-  <div class="product-details-container">
-    <div class="product-gallery" id="productGallery"></div>
-    <div class="product-info" id="productInfo"></div>
-  </div>
-  <div class="section-card" id="variantsSection"></div>
-  <div class="section-card" id="specsSection"></div>
-  <div class="section-card" id="reviewsSection"></div>
-  <div class="section-card" id="qaSection"></div>
-  <div class="section-card">
-    <h3 class="related-products-title">Related Products</h3>
-    <div class="related-products" id="relatedProductsContainer"></div>
-  </div>
   <script src="js/config.js"></script>
   <script src="js/api.js"></script>
+  <script src="js/cart.js"></script>
+  <script src="js/wishlist.js"></script>
+</head>
+<body>
+  <div class="container">
+    <a href="shop.html" class="back-to-shop"><i class="fas fa-arrow-left"></i> Back to Shop</a>
+    <div class="product-main-area">
+      <div class="product-gallery-wrap">
+        <div class="product-gallery" id="productGallery"></div>
+      </div>
+      <div class="product-info-wrap">
+        <div class="product-info" id="productInfo"></div>
+      </div>
+      <div class="product-purchase-wrap">
+        <div class="product-purchase" id="productPurchase"></div>
+      </div>
+    </div>
+    <div class="section-card" id="variantsSection"></div>
+    <div class="section-card" id="specsSection"></div>
+    <div class="section-card" id="reviewsSection"></div>
+    <div class="section-card" id="qaSection"></div>
+    <div class="section-card">
+      <h3 class="section-title">Related Products</h3>
+      <div class="related-products" id="relatedProductsContainer"></div>
+    </div>
+  </div>
   <script src="js/product.js"></script>
 </body>
 </html> 

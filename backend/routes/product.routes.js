@@ -37,18 +37,39 @@ router.get('/featured', async (req, res) => {
 // Get all products (public)
 router.get('/', async (req, res) => {
     try {
-        const [products] = await pool.query(`
-            SELECT p.*, v.business_name as vendor_name, 
+        const { search } = req.query; // Get search query parameter
+        let query = `
+            SELECT p.*, v.business_name as vendor_name, AVG(r.rating) as rating, COUNT(r.id) as reviews,
             (SELECT image_url FROM product_images WHERE product_id = p.id AND is_primary = 1 LIMIT 1) as primary_image
             FROM products p
             JOIN vendor_profiles v ON p.vendor_id = v.id
+            LEFT JOIN reviews r ON p.id = r.product_id
             WHERE p.status = 'active'
+        `;
+        const queryParams = [];
+
+        if (search) {
+            // Add search condition
+            query += `
+                AND (p.name LIKE ? OR p.description LIKE ?)
+            `;
+            // Add wildcards for partial matching and add to query parameters
+            queryParams.push(`%${search}%`);
+            queryParams.push(`%${search}%`);
+        }
+
+        query += `
+            GROUP BY p.id
             ORDER BY p.created_at DESC
-        `);
+        `;
+
+        console.log('Executing products query:', query, queryParams);
+
+        const [products] = await pool.query(query, queryParams);
 
         res.json({
             products,
-            totalPages: 1
+            totalPages: 1 // Assuming no pagination for now
         });
     } catch (error) {
         console.error('Error fetching products:', error);
@@ -59,54 +80,6 @@ router.get('/', async (req, res) => {
 });
 
 // Get single product (public)
-router.get('/:id', async (req, res) => {
-  try {
-    const [products] = await pool.query(`
-      SELECT p.*, v.business_name as vendor_name, v.id as vendor_id
-      FROM products p
-      JOIN vendor_profiles v ON p.vendor_id = v.id
-      WHERE p.id = ? AND p.status = 'active'
-    `, [req.params.id]);
-
-    if (products.length === 0) {
-      return res.status(404).json({
-        success: false,
-        message: 'Product not found'
-      });
-    }
-
-    const product = products[0];
-    
-    // Get all images
-    const [images] = await pool.query(
-      'SELECT image_url as url, is_primary FROM product_images WHERE product_id = ?',
-      [product.id]
-    );
-
-    // Format response
-    const response = {
-      success: true,
-      data: {
-        ...product,
-        stock: product.stock_quantity,
-        images: images,
-        image: images.find(i => i.is_primary)?.url || (images[0] && images[0].url) || null,
-        vendor: {
-          id: product.vendor_id,
-          name: product.vendor_name
-        }
-      }
-    };
-
-    res.json(response);
-  } catch (error) {
-    console.error('Error fetching product:', error);
-    res.status(500).json({
-      success: false,
-      message: 'Error fetching product'
-    });
-  }
-});
 
 // Create product (vendor only)
 router.post('/',
@@ -377,15 +350,15 @@ router.delete('/:id',
 );
 
 // Get product details by id (with all images, vendor info, and stock)
-router.get('/products/:id', async (req, res) => {
+router.get('/:id', async (req, res) => {
   try {
     const [products] = await pool.query(`
-      SELECT p.*, v.name as vendor_name, v.id as vendor_id
+      SELECT p.*, v.business_name as vendor_name, v.id as vendor_id
       FROM products p
       JOIN vendor_profiles v ON p.vendor_id = v.id
-      WHERE p.id = ?
+      WHERE p.id = ? AND p.status = 'active'
     `, [req.params.id]);
-    if (!products.length) return res.status(404).json({ message: 'Product not found' });
+    if (products.length === 0) return res.status(404).json({ success: false, message: 'Product not found or inactive' });
     const product = products[0];
     // Get all images
     const [images] = await pool.query('SELECT image_url as url, is_primary FROM product_images WHERE product_id = ?', [product.id]);
@@ -394,9 +367,10 @@ router.get('/products/:id', async (req, res) => {
     product.images = images;
     product.image = images.find(i => i.is_primary)?.url || (images[0] && images[0].url) || null;
     product.vendor = { id: product.vendor_id, name: product.vendor_name };
-    res.json(product);
+    res.json({ success: true, data: product });
   } catch (err) {
-    res.status(500).json({ message: 'Failed to fetch product' });
+    console.error('Error fetching product details:', err);
+    res.status(500).json({ success: false, message: 'Failed to fetch product details' });
   }
 });
 

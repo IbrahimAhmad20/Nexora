@@ -59,16 +59,156 @@ async function renderOrderSummary() {
   totalEl.textContent = `$${total.toFixed(2)}`;
 }
 
-// --- Address Selection ---
+// --- Address Management ---
+async function fetchAndRenderAddresses() {
+  const token = localStorage.getItem('token');
+  const addressListEl = document.querySelector('.address-list');
+  if (!token || !addressListEl) return;
+
+  try {
+    const res = await fetch(window.API_BASE_URL + '/api/users/addresses', {
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+    const data = await res.json();
+
+    addressListEl.innerHTML = ''; // Clear existing addresses
+    if (data.success && Array.isArray(data.data)) {
+      if (data.data.length === 0) {
+         addressListEl.innerHTML = '<p style="text-align:center; color:#888;">No addresses found. Add one below.</p>';
+      } else {
+        data.data.forEach((address, index) => {
+          const addressCardHtml = `
+            <div class="address-card ${index === 0 ? 'selected' : ''}" data-address-id="${address.id}">
+              <div class="address-title">${address.label || 'Address #' + (index + 1)}</div>
+              <div class="address-details">
+                ${address.address}<br>
+                ${address.city}, ${address.state} ${address.zip}<br>
+                ${address.country}
+              </div>
+            </div>
+          `;
+          addressListEl.insertAdjacentHTML('beforeend', addressCardHtml);
+        });
+      }
+    } else {
+       addressListEl.innerHTML = '<p style="text-align:center; color:#e74c3c;">Failed to load addresses.</p>';
+       console.error('Failed to fetch addresses:', data);
+    }
+  } catch (error) {
+    console.error('Error fetching addresses:', error);
+    addressListEl.innerHTML = '<p style="text-align:center; color:#e74c3c;">Error loading addresses.</p>';
+  }
+}
+
+// Add event listener for address card selection using delegation
+document.addEventListener('click', (e) => {
+  const addressCard = e.target.closest('.address-card');
+  if (addressCard) {
+    document.querySelectorAll('.address-card').forEach(c => c.classList.remove('selected'));
+    addressCard.classList.add('selected');
+  }
+});
+
+// Modify DOMContentLoaded to call fetchAndRenderAddresses
 document.addEventListener('DOMContentLoaded', () => {
   renderOrderSummary();
-  // Address selection
-  document.querySelectorAll('.address-card').forEach(card => {
-    card.addEventListener('click', () => {
-      document.querySelectorAll('.address-card').forEach(c => c.classList.remove('selected'));
-      card.classList.add('selected');
-    });
+  fetchAndRenderAddresses(); // Fetch and display addresses
+  // Address selection event listener is now handled by delegation above
+
+  // --- Add New Address Modal/Form (Moved inside DOMContentLoaded) ---
+  const addAddressModal = document.getElementById('add-address-modal');
+  const addAddressCloseBtn = document.getElementById('add-address-close-btn');
+  const addAddressForm = document.getElementById('add-address-form');
+  const addAddressMsgEl = document.getElementById('add-address-msg');
+
+  // Event listeners for add address modal
+  document.querySelector('.add-address').addEventListener('click', () => {
+    if (addAddressModal) addAddressModal.style.display = 'flex';
   });
+
+  if (addAddressCloseBtn) {
+    addAddressCloseBtn.addEventListener('click', () => {
+      if (addAddressModal) addAddressModal.style.display = 'none';
+      if (addAddressForm) addAddressForm.reset();
+      if (addAddressMsgEl) addAddressMsgEl.textContent = '';
+    });
+  }
+
+  if (addAddressModal) {
+    addAddressModal.addEventListener('click', (e) => {
+      if (e.target === addAddressModal) {
+        if (addAddressModal) addAddressModal.style.display = 'none';
+        if (addAddressForm) addAddressForm.reset();
+        if (addAddressMsgEl) addAddressMsgEl.textContent = '';
+      }
+    });
+  }
+
+  // Add address form submission
+  if (addAddressForm) {
+    addAddressForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      if (addAddressMsgEl) addAddressMsgEl.textContent = ''; // Clear previous messages
+
+      const token = localStorage.getItem('token');
+      if (!token) {
+        if (addAddressMsgEl) addAddressMsgEl.textContent = 'You must be logged in to add an address.';
+        return;
+      }
+
+      const newAddress = {
+        label: document.getElementById('address-label')?.value.trim(),
+        address: document.getElementById('address-address')?.value.trim(),
+        city: document.getElementById('address-city')?.value.trim(),
+        state: document.getElementById('address-state')?.value.trim(),
+        zip: document.getElementById('address-zip')?.value.trim(),
+        country: document.getElementById('address-country')?.value.trim(),
+      };
+
+      // Basic validation (backend has more)
+      if (!newAddress.address || !newAddress.city || !newAddress.state || !newAddress.zip || !newAddress.country) {
+        if (addAddressMsgEl) addAddressMsgEl.textContent = 'Please fill in all required address fields.';
+        return;
+      }
+
+      try {
+        const res = await fetch(window.API_BASE_URL + '/api/users/addresses', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify(newAddress)
+        });
+
+        const data = await res.json();
+
+        if (data.success) {
+          if (addAddressMsgEl) {
+            addAddressMsgEl.style.color = '#28a745'; // Green for success
+            addAddressMsgEl.textContent = data.message || 'Address added successfully!';
+          }
+          if (addAddressForm) addAddressForm.reset();
+          fetchAndRenderAddresses(); // Refresh the address list
+          // Optionally close the modal after a short delay
+          setTimeout(() => { if (addAddressModal) addAddressModal.style.display = 'none'; }, 1500);
+        } else {
+          if (addAddressMsgEl) {
+            addAddressMsgEl.style.color = '#e74c3c'; // Red for error
+            addAddressMsgEl.textContent = data.message || 'Failed to add address.';
+          }
+        }
+      } catch (error) {
+        console.error('Error adding address:', error);
+        if (addAddressMsgEl) {
+          addAddressMsgEl.style.color = '#e74c3c'; // Red for error
+          addAddressMsgEl.textContent = 'Error adding address. Please try again.';
+        }
+      }
+    });
+  }
+
   // Payment method selection
   document.querySelectorAll('.payment-option').forEach(opt => {
     opt.addEventListener('click', () => {
@@ -137,6 +277,8 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
       }
     }
+
+    console.log('Sending checkout request with:', { shipping_address, card });
 
     try {
         const res = await fetch(window.API_BASE_URL + '/api/checkout', {

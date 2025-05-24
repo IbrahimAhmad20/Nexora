@@ -3,57 +3,135 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nexora Shop</title>
+    <title>Products | Nexora Marketplace</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/shop.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
-    <header class="shop-header">
-        <div class="logo">Nexora</div>
-        <form class="shop-search" id="shopSearchForm">
-            <input type="text" id="shopSearchInput" placeholder="Search products...">
-            <button type="submit"><i class="fas fa-search"></i></button>
-        </form>
-        <nav class="shop-nav">
-            <a href="#" class="nav-link active">Shop</a>
-            <a href="#" class="nav-link">Categories</a>
-            <a href="#" class="nav-link">Deals</a>
-            <a href="#" class="nav-link">About</a>
-            <a href="wishlist.html" class="nav-link">Wishlist</a>
-        </nav>
-        <div class="shop-actions">
-            <button class="cart-btn" id="headerCartBtn" type="button">
+    <header class="main-header">
+        <a href="#" class="logo">
+            <i class="fas fa-store"></i>
+            <span>Nexora</span>
+        </a>
+        
+        <div class="header-right">
+            <div class="search-box">
+                <i class="fas fa-search"></i>
+                <input type="text" id="searchInput" placeholder="Search products...">
+            </div>
+            
+            <nav class="nav-links">
+                <a href="index.html" class="nav-link">Home</a>
+                <a href="shop.html" class="nav-link active">Shop</a>
+                <a href="categories.html" class="nav-link">Categories</a>
+                <a href="deals.html" class="nav-link">Deals</a>
+                <a href="about.html" class="nav-link">About</a>
+            </nav>
+            
+            <div class="action-icons">
+                <div class="cart-icon" id="cartIcon">
                 <i class="fas fa-shopping-cart"></i>
-                <span class="cart-count" id="cartCount">0</span>
-            </button>
-            <div class="profile-menu">
-                <button class="profile-btn" id="profileBtn">
-                    <span class="profile-initials" id="profileInitials">CU</span>
-                    <i class="fas fa-chevron-down"></i>
-                </button>
-                <div class="profile-dropdown" id="profileDropdown">
+                    <span class="cart-count">0</span>
+                </div>
+                <div class="wishlist-icon" id="wishlistIcon">
+                     <i class="fas fa-heart"></i>
+                 </div>
+            </div>
+            
+            <div class="user-profile" id="userProfile">
+                <div class="user-avatar">GU</div>
+                <i class="fas fa-chevron-down"></i>
+                <div class="profile-dropdown">
                     <a href="user-profile.html">Profile</a>
-                    <a href="#">Orders</a>
-                    <a href="#" id="logoutLink">Logout</a>
+                    <a href="orders.html">Orders</a>
+                    <a href="#" class="logout-link">Logout</a>
                 </div>
             </div>
         </div>
     </header>
-    <main class="shop-main">
-        <div class="category-filters" id="categoryFilters">
+
+    <div class="content-wrapper">
+        <div class="page-header">
+            <h1>All Products</h1>
+        </div>
+        
+        <div class="filter-section" id="categoryFilters">
             <button class="filter-btn active" data-category="all">All</button>
             <button class="filter-btn" data-category="electronics">Electronics</button>
             <button class="filter-btn" data-category="clothing">Clothing</button>
-            <button class="filter-btn" data-category="home">Home & Garden</button>
+            <button class="filter-btn" data-category="home & garden">Home & Garden</button>
             <button class="filter-btn" data-category="books">Books</button>
             <button class="filter-btn" data-category="toys">Toys</button>
             <button class="filter-btn" data-category="beauty">Beauty</button>
             <button class="filter-btn" data-category="sports">Sports</button>
         </div>
-        <div class="product-grid" id="shopProductGrid"></div>
-    </main>
+        
+        <div class="product-grid" id="productGrid">
+            <!-- Product cards will be dynamically loaded here -->
+        </div>
+        
+        <div class="pagination" id="pagination">
+            <button class="pagination-btn"><i class="fas fa-chevron-left"></i></button>
+            <button class="pagination-btn active">1</button>
+            <button class="pagination-btn">2</button>
+            <button class="pagination-btn">3</button>
+            <button class="pagination-btn"><i class="fas fa-chevron-right"></i></button>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="quick-view-modal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 id="modalTitle">Product Title</h2>
+                <button class="modal-close" id="modalCloseBtn">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="modal-image">
+                    <img src="" alt="Product Image" id="modalImage">
+                </div>
+                <div class="modal-details">
+                    <h3 id="modalDetailsTitle">Product Title</h3>
+                    <div class="modal-rating" id="modalRating">
+                         <!-- Stars will be added here -->
+                    </div>
+                    <div class="modal-price" id="modalPrice">
+                        <span class="modal-current" id="modalCurrentPrice"></span>
+                        <span class="modal-original" id="modalOriginalPrice"></span>
+                        <span class="modal-discount" id="modalDiscountBadge"></span>
+                    </div>
+                    <p class="modal-description" id="modalDescription"></p>
+                    
+                    <div class="quantity-selector">
+                        <button class="quantity-btn minus" id="modalQtyMinus">
+                            <i class="fas fa-minus"></i>
+                        </button>
+                        <input type="number" class="quantity-input" id="modalQtyInput" value="1" min="1">
+                        <button class="quantity-btn plus" id="modalQtyPlus">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                    </div>
+                    
+                    <div class="modal-actions">
+                        <button class="btn btn-primary" id="modalAddToCartBtn" data-product-id="">
+                            <i class="fas fa-shopping-cart"></i> Add to Cart
+                        </button>
+                        <button class="btn btn-secondary" id="modalAddToWishlistBtn" data-product-id="">
+                            <i class="far fa-heart"></i> Add to Wishlist
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script src="js/config.js"></script>
+    <script src="js/api.js"></script>
     <script src="js/shop.js"></script>
     <script src="js/cart.js"></script>
+    <script src="js/wishlist.js"></script>
+    <script src="js/app.js"></script>
 </body>
 </html> 

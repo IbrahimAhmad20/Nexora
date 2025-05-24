@@ -16,37 +16,37 @@
         </div>
         <div class="sidebar-menu">
             <div class="menu-title">Shopping</div>
-            <a href="#" class="menu-item">
+            <a href="index.html" class="menu-item">
                 <i class="fas fa-home"></i>
                 <span class="menu-item-text">Home</span>
             </a>
-            <a href="#" class="menu-item">
+            <a href="shop.html" class="menu-item">
                 <i class="fas fa-search"></i>
                 <span class="menu-item-text">Browse Products</span>
             </a>
-            <a href="#" class="menu-item">
+            <a href="wishlist.html" class="menu-item">
                 <i class="fas fa-heart"></i>
                 <span class="menu-item-text">Wishlist</span>
             </a>
             
             <div class="menu-title">My Account</div>
-            <a href="#" class="menu-item">
+            <a href="cart.html" class="menu-item">
                 <i class="fas fa-shopping-cart"></i>
                 <span class="menu-item-text">Cart</span>
             </a>
-            <a href="#" class="menu-item">
+            <a href="orders.html" class="menu-item">
                 <i class="fas fa-box-open"></i>
                 <span class="menu-item-text">Orders</span>
             </a>
-            <a href="#" class="menu-item active">
+            <a href="user-profile.html" class="menu-item active">
                 <i class="fas fa-user"></i>
                 <span class="menu-item-text">Profile</span>
             </a>
-            <a href="#" class="menu-item">
+            <a href="addresses.html" class="menu-item">
                 <i class="fas fa-map-marker-alt"></i>
                 <span class="menu-item-text">Addresses</span>
             </a>
-            <a href="#" class="menu-item">
+            <a href="payment-methods.html" class="menu-item">
                 <i class="fas fa-credit-card"></i>
                 <span class="menu-item-text">Payment Methods</span>
             </a>
@@ -56,21 +56,26 @@
     <!-- Main Content -->
     <main class="main-content">
         <header class="main-header">
-            <a href="#" class="logo">
+            <a href="index.html" class="logo">
                 <i class="fas fa-store"></i>
                 <span>Nexora</span>
             </a>
             
             <div class="header-right">
                 <div class="nav-links">
-                    <a href="#" class="nav-link">Home</a>
-                    <a href="#" class="nav-link">Products</a>
-                    <a href="#" class="nav-link">Categories</a>
+                    <a href="index.html" class="nav-link">Home</a>
+                    <a href="shop.html" class="nav-link">Products</a>
+                    <a href="categories.html" class="nav-link">Categories</a>
                     <a href="#" class="nav-link">Vendors</a>
                 </div>
-                <div class="user-profile">
+                <div class="user-profile" id="userProfile">
                     <div class="user-avatar">CU</div>
                     <i class="fas fa-chevron-down"></i>
+                    <div class="profile-dropdown">
+                         <a href="user-profile.html">Profile</a>
+                         <a href="orders.html">Orders</a>
+                         <a href="#" class="logout-link">Logout</a>
+                    </div>
                 </div>
             </div>
         </header>
@@ -141,34 +146,6 @@
                     <p id="profile-email">Loading...</p>
                     <span class="profile-role" id="profile-role">Loading...</span>
                 </div>
-            </div>
-            
-            <!-- Recent Orders Section -->
-            <div class="settings-section">
-                <div class="settings-section-header">
-                    <h2>Recent Orders</h2>
-                    <a href="/orders.html" class="btn btn-secondary btn-sm">
-                        <i class="fas fa-list"></i> View All Orders
-                    </a>
-                </div>
-                
-                <table class="order-history">
-                    <thead>
-                        <tr>
-                            <th>Order ID</th>
-                            <th>Date</th>
-                            <th>Items</th>
-                            <th>Total</th>
-                            <th>Status</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody id="recent-orders">
-                        <tr>
-                            <td colspan="6" class="text-center">Loading orders...</td>
-                        </tr>
-                    </tbody>
-                </table>
             </div>
             
             <!-- Saved Addresses Section -->
@@ -338,8 +315,36 @@
         </div>
     </main>
 
+    <!-- 2FA Setup Modal -->
+    <div class="modal-overlay" id="twoFactorSetupModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>Set Up Two-Factor Authentication</h3>
+                <button class="modal-close" onclick="close2faSetupModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="qr-code-container">
+                    <img id="qrCodeImage" src="" alt="QR Code">
+                </div>
+                <p>Scan this QR code with your authenticator app (like Google Authenticator or Authy)</p>
+                <p>Or manually enter the secret key:</p>
+                <p><strong id="twoFactorSecret"></strong></p>
+                <div class="form-group">
+                    <label for="verification-code">Enter the 6-digit code from your authenticator app</label>
+                    <input type="text" id="verification-code" class="form-control" maxlength="6" placeholder="000000">
+                </div>
+                <button class="btn btn-primary" onclick="verify2faSetupCode()">
+                    Verify and Enable 2FA
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Scripts -->
     <script src="js/config.js"></script>
-    <script src="js/api.js" type="module"></script>
+    <script src="js/api.js"></script>
     <script src="js/user-profile.js" type="module"></script>
 </body>
 </html> 

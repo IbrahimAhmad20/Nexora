@@ -112,6 +112,8 @@ router.put('/cart/:productId',
   ],
   async (req, res) => {
     try {
+      console.log(`PUT /cart/:productId hit. Product ID: ${req.params.productId}, User ID: ${req.user.id}`);
+      console.log('Request body:', req.body);
       const errors = validationResult(req);
       if (!errors.isEmpty()) {
         return res.status(400).json({ success: false, errors: errors.array() });
@@ -167,16 +169,29 @@ router.delete('/cart/:productId',
   async (req, res) => {
     try {
       const { productId } = req.params;
+      console.log(`Attempting to delete product ID: ${productId} for user: ${req.user.id}`);
 
-      await pool.query(
+      const [result] = await pool.query(
         'DELETE FROM shopping_cart WHERE customer_id = ? AND product_id = ?',
         [req.user.id, productId]
       );
 
-      res.json({
-        success: true,
-        message: 'Item removed from cart'
-      });
+      console.log('Delete query result:', result);
+
+      // Check if a row was actually deleted
+      if (result.affectedRows > 0) {
+          res.json({
+            success: true,
+            message: 'Item removed from cart'
+          });
+      } else {
+          // If no rows affected, it means the item wasn't in the cart for this user
+          res.status(404).json({ // Return 404 if item not found in cart for this user
+              success: false,
+              message: 'Product not found in cart'
+          });
+      }
+
     } catch (error) {
       console.error('Error removing from cart:', error);
       res.status(500).json({
@@ -452,6 +467,31 @@ router.post('/cart/add',
       res.status(500).json({
         success: false,
         message: 'Error adding to cart'
+      });
+    }
+  }
+);
+
+// Clear entire cart
+router.delete('/cart',
+  verifyToken,
+  checkRole(['customer']),
+  async (req, res) => {
+    try {
+      await pool.query(
+        'DELETE FROM shopping_cart WHERE customer_id = ?',
+        [req.user.id]
+      );
+
+      res.json({
+        success: true,
+        message: 'Cart cleared successfully'
+      });
+    } catch (error) {
+      console.error('Error clearing cart:', error);
+      res.status(500).json({
+        success: false,
+        message: 'Error clearing cart'
       });
     }
   }

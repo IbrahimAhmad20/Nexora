@@ -1,28 +1,34 @@
-import { ApiService } from './api.js';
-
 // Initialize API service
-const api = new ApiService();
+// Access the global api instance attached to window
+const api = window.api;
 
 // Wrap all DOM interaction and event listeners inside DOMContentLoaded
 document.addEventListener('DOMContentLoaded', async () => {
     // Load user data when page loads
     try {
+        console.log('Inside loadUserData function.');
         await loadUserData();
+        console.log('User data load attempt finished.');
         // await loadOrders(); // Load orders after user data is loaded
+        // Commented out payment methods loading until table is created
         // await loadAddresses(); // Load addresses after user data is loaded
         // await loadPaymentMethods(); // Load payment methods after user data is loaded
     } catch (error) {
-        console.error('Error loading user data:', error);
+        console.error('Error loading user data in DOMContentLoaded:', error);
         showError('Failed to load user data. Please try refreshing the page.');
     }
 
     // Load other data after user profile is loaded (optional, can be parallel)
     try {
-        await loadOrders();
+        console.log('Attempting to load addresses...');
         await loadAddresses();
-        await loadPaymentMethods();
+        console.log('Addresses load attempt finished.');
+        // Commented out payment methods loading until table is created
+        // console.log('Attempting to load payment methods...');
+        // await loadPaymentMethods();
+        // console.log('Payment methods load attempt finished.');
     } catch (error) {
-        console.error('Error loading related data:', error);
+        console.error('Error loading related data in DOMContentLoaded:', error);
         // Decide if you want to show an error or just leave sections empty
     }
 
@@ -52,6 +58,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         const currentPassword = document.getElementById('current-password').value;
         const newPassword = document.getElementById('new-password').value;
         const confirmPassword = document.getElementById('confirm-password').value;
+        const twoFactorToggle = document.getElementById('two-factor');
+        const enable2fa = twoFactorToggle.checked;
 
         if (newPassword && newPassword !== confirmPassword) {
             showError('New passwords do not match');
@@ -59,17 +67,61 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
 
         try {
-            const formData = {
-                current_password: currentPassword,
-                new_password: newPassword || undefined,
-                two_factor_enabled: document.getElementById('two-factor').checked
-            };
-            await api.updateUserProfile(formData);
-            showSuccess('Security settings updated successfully');
-            e.target.reset(); // Clear the form after successful submission
+            // Handle password update and 2FA toggle separately
+            if (currentPassword || newPassword) {
+                 // Only update password if current password or new password fields are filled
+                if (!currentPassword) {
+                     showError('Current password is required to change password.');
+                     return;
+                }
+                if (newPassword && newPassword.length < 6) {
+                     showError('New password must be at least 6 characters long.');
+                     return;
+                }
+
+                 const passwordUpdateData = {
+                     current_password: currentPassword,
+                     new_password: newPassword
+                 };
+                // Assuming backend /user/profile endpoint handles password change if passwords are provided
+                 await api.updateUserProfile(passwordUpdateData);
+                 showSuccess('Password updated successfully');
+                 e.target.querySelector('#current-password').value = '';
+                 e.target.querySelector('#new-password').value = '';
+                 e.target.querySelector('#confirm-password').value = '';
+            }
+
+            // Handle 2FA toggle
+            // Check the *current* state of the toggle AFTER potential password update
+            const current2faStatusResponse = await api.get2faStatus();
+            const is2faEnabled = current2faStatusResponse.enabled;
+
+            if (enable2fa && !is2faEnabled) {
+                // User wants to enable 2FA, and it's currently disabled
+                // Trigger 2FA setup flow (show QR code, etc.)
+                 await start2faSetupFlow();
+
+            } else if (!enable2fa && is2faEnabled) {
+                // User wants to disable 2FA, and it's currently enabled
+                // No extra verification needed for disabling on this endpoint based on backend code
+                await api.toggle2fa(false);
+                showSuccess('Two-factor authentication disabled successfully');
+            }
+
+            // If password was changed, reload user data to clear password fields
+             if (currentPassword || newPassword) {
+                 await loadUserData();
+             }
+
         } catch (error) {
             console.error('Error updating security settings:', error);
-            showError('Failed to update security settings');
+            showError(error.message || 'Failed to update security settings');
+             // Revert toggle state if enabling/disabling failed
+            const current2faStatusResponse = await api.get2faStatus();
+            const is2faEnabled = current2faStatusResponse.enabled;
+            if (twoFactorToggle) {
+                twoFactorToggle.checked = is2faEnabled; // Revert to actual status
+            }
         }
     });
 
@@ -252,11 +304,110 @@ document.addEventListener('DOMContentLoaded', async () => {
         document.querySelector('.sidebar').classList.toggle('sidebar-collapsed');
     });
 
-    // Mobile menu toggle
-    const mobileMenuToggle = document.querySelector('.mobile-menu-toggle');
-    if (mobileMenuToggle) { // Check if element exists
-        mobileMenuToggle.addEventListener('click', () => {
-            document.querySelector('.mobile-menu').classList.toggle('active');
+    // Add placeholder for 2FA setup UI and logic functions
+    function show2faSetupModal(qrCodeData, secret) {
+        const modal = document.getElementById('twoFactorSetupModal');
+        const qrCodeImage = document.getElementById('qrCodeImage');
+        const twoFactorSecretSpan = document.getElementById('twoFactorSecret');
+
+        console.log('Showing 2FA setup modal.');
+        console.log('QR Code Data:', qrCodeData ? qrCodeData.substring(0, 50) + '...' : 'No QR Code Data'); // Log first 50 chars
+        console.log('Secret:', secret);
+
+        if (modal && qrCodeImage && twoFactorSecretSpan) {
+            qrCodeImage.src = qrCodeData;
+            twoFactorSecretSpan.textContent = secret;
+            modal.style.display = 'flex'; // Or 'block', depending on CSS
+        } else {
+            console.error('2FA setup modal elements not found.');
+        }
+    }
+
+    function close2faSetupModal() {
+        const modal = document.getElementById('twoFactorSetupModal');
+        modal.style.display = 'none';
+        document.getElementById('verification-code').value = '';
+    }
+
+    async function verify2faSetupCode() {
+        const code = document.getElementById('verification-code').value;
+        if (!code || code.length !== 6) {
+            showError('Please enter a valid 6-digit code');
+            return;
+        }
+
+        try {
+            await api.verify2faSetup(code);
+            showSuccess('Two-factor authentication enabled successfully');
+            close2faSetupModal();
+            document.getElementById('two-factor').checked = true;
+        } catch (error) {
+            console.error('Error verifying 2FA setup:', error);
+            showError(error.message || 'Failed to verify 2FA setup');
+        }
+    }
+
+    async function start2faSetupFlow() {
+        try {
+            const response = await api.setup2fa();
+            show2faSetupModal(response.qrCode, response.secret);
+        } catch (error) {
+            console.error('Error starting 2FA setup:', error);
+            showError(error.message || 'Failed to start 2FA setup');
+            // Revert toggle state
+            document.getElementById('two-factor').checked = false;
+        }
+    }
+
+    // Add event listeners for the 2FA modal after DOM is loaded
+    const twoFactorSetupModal = document.getElementById('twoFactorSetupModal');
+    if (twoFactorSetupModal) {
+        const closeBtn = twoFactorSetupModal.querySelector('.modal-close');
+        const verifyBtn = twoFactorSetupModal.querySelector('.modal-body .btn-primary');
+
+        if (closeBtn) {
+            closeBtn.addEventListener('click', close2faSetupModal);
+        }
+
+        if (verifyBtn) {
+            verifyBtn.addEventListener('click', verify2faSetupCode);
+        }
+
+        // Close modal when clicking outside
+        twoFactorSetupModal.addEventListener('click', (e) => {
+            if (e.target === twoFactorSetupModal) {
+                close2faSetupModal();
+            }
+        });
+    }
+
+    // Add click handler for 2FA toggle
+    const twoFactorToggle = document.getElementById('two-factor');
+    if (twoFactorToggle) {
+        twoFactorToggle.addEventListener('change', async (e) => {
+            if (e.target.checked) {
+                // User wants to enable 2FA, trigger setup flow
+                await start2faSetupFlow();
+            } else {
+                // User wants to disable 2FA
+                if (confirm('Are you sure you want to disable two-factor authentication? This will make your account less secure.')) {
+                    try {
+                        await api.disable2fa();
+                        showSuccess('Two-factor authentication has been disabled.');
+                        // Update UI after disabling
+                        // loadUserData(); // Might not be necessary, toggle state is handled below
+                    } catch (error) {
+                        console.error('Error disabling 2FA:', error);
+                        showError(error.message || 'Failed to disable 2FA. Please try again.');
+                        e.target.checked = true; // Reset toggle on failure
+                    }
+                } else {
+                    e.target.checked = true; // Reset toggle if user cancels
+                }
+            }
+             // After toggle change (and potential disable/enable success/failure), reload user data to ensure UI reflects actual state
+             // This also handles updating the toggle state based on the latest user data
+             await loadUserData();
         });
     }
 
@@ -264,24 +415,27 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 // Load user profile data
 async function loadUserData() {
+    console.log('Inside loadUserData function.');
     try {
         const response = await api.getUserProfile();
         const userData = response.data; // Extract data from the 'data' property
+        console.log('User profile data received:', userData);
         updateUIWithUserData(userData);
          // After loading user data, load related data
-        // await loadOrders();
         // await loadAddresses();
         // await loadPaymentMethods();
 
     } catch (error) {
-        console.error('Error loading user profile:', error);
+        console.error('Error in loadUserData:', error);
         // Handle error, e.g., show a message or redirect to login
         throw error; // Re-throw to be caught by the DOMContentLoaded handler
     }
+    console.log('Finished loadUserData function.');
 }
 
 // Update UI with user data
 function updateUIWithUserData(userData) {
+    console.log('Inside updateUIWithUserData with data:', userData);
     // Update profile information (using snake_case from backend)
     document.getElementById('profile-name').textContent = `${userData.first_name} ${userData.last_name}`;
     document.getElementById('profile-email').textContent = userData.email;
@@ -311,6 +465,12 @@ function updateUIWithUserData(userData) {
         if (methodRadio) {
              methodRadio.checked = true;
         }
+    }
+
+    // Update 2FA toggle state
+    const twoFactorToggle = document.getElementById('two-factor');
+    if (twoFactorToggle) {
+        twoFactorToggle.checked = userData.two_factor_enabled;
     }
 
     // Update stats (assuming stats object exists in backend response)
@@ -354,134 +514,85 @@ function updateUIWithUserData(userData) {
 
 }
 
-// Load orders
-async function loadOrders() {
-    try {
-        const response = await api.getOrders();
-        const orders = response.data; // Assuming orders are in a 'data' property
-        const recentOrders = orders.slice(0, 5); // Get 5 most recent orders
-        const ordersContainer = document.getElementById('recent-orders');
-
-        if (!ordersContainer) return; // Check if container exists
-
-        if (recentOrders.length === 0) {
-            ordersContainer.innerHTML = '<tr><td colspan="6" class="text-center">No orders found</td></tr>';
-            return;
-        }
-
-        ordersContainer.innerHTML = recentOrders.map(order => `
-            <tr>
-                <td>#${order.id}</td>
-                <td>${new Date(order.created_at).toLocaleDateString()}</td>
-                <td>${order.items.length}</td>
-                <td>$${order.total.toFixed(2)}</td>
-                <td><span class="order-status status-${order.status.toLowerCase()}">${order.status}</span></td>
-                <td>
-                    <a href="/order-details.html?id=${order.id}" class="btn btn-secondary btn-sm">Details</a>
-                    ${order.status === 'SHIPPED' ? `<a href="/track-order.html?id=${order.id}" class="btn btn-secondary btn-sm">Track</a>` : ''}
-                </td>
-            </tr>
-        `).join('');
-    } catch (error) {
-        console.error('Error loading orders:', error);
-        const ordersContainer = document.getElementById('recent-orders');
-         if (ordersContainer) {
-             ordersContainer.innerHTML = '<tr><td colspan="6" class="text-center">Error loading orders</td></tr>';
-         }
-    }
-}
-
 // Load addresses
 async function loadAddresses() {
+    console.log('Inside loadAddresses function.');
     try {
-        const response = await api.getAddresses();
-        const addresses = response.data; // Assuming addresses are in a 'data' property
-        const addressesContainer = document.getElementById('address-cards');
-
-         if (!addressesContainer) return; // Check if container exists
-
-        if (addresses.length === 0) {
-            addressesContainer.innerHTML = '<div class="text-center">No addresses found</div>';
+        const addresses = await api.getAddresses();
+        console.log('Addresses data received:', addresses);
+        const addressCardsContainer = document.getElementById('address-cards');
+        
+        if (!addresses.length) {
+            addressCardsContainer.innerHTML = '<div class="text-center">No addresses saved yet</div>';
             return;
         }
-
-        addressesContainer.innerHTML = addresses.map(address => `
-            <div class="address-card ${address.is_default ? 'address-card-default' : ''}" data-address-id="${address.id}">
+        
+        addressCardsContainer.innerHTML = addresses.map(address => `
+            <div class="address-card" data-address-id="${address.id}">
                 <div class="address-card-header">
-                    <div class="address-card-title">${address.title}</div>
-                    ${address.is_default ? '<span class="address-card-default-badge">Default</span>' : ''}
-                </div>
-                <div class="address-card-actions">
-                    <div class="address-card-action edit-address">
-                        <i class="fas fa-edit"></i>
+                    <h3>${address.title}</h3>
+                    <div class="address-card-actions">
+                        <button class="address-card-action edit-address" title="Edit">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="address-card-action delete-address" title="Delete">
+                            <i class="fas fa-trash"></i>
+                        </button>
                     </div>
-                    <div class="address-card-action delete-address">
-                        <i class="fas fa-trash"></i>
-                    </div>
                 </div>
-                <p>${address.street}</p>
-                ${address.apartment ? `<p>${address.apartment}</p>` : ''}
+                <p>${address.street}${address.apartment ? `, ${address.apartment}` : ''}</p>
                 <p>${address.city}, ${address.state} ${address.zip_code}</p>
                 <p>${address.country}</p>
-                <p>Phone: ${address.phone}</p>
+                ${address.phone ? `<p>Phone: ${address.phone}</p>` : ''}
+                ${address.is_default ? '<span class="default-badge">Default</span>' : ''}
             </div>
         `).join('');
-
-        // Add event listeners for address actions (using event delegation earlier)
-
     } catch (error) {
         console.error('Error loading addresses:', error);
-         const addressesContainer = document.getElementById('address-cards');
-         if (addressesContainer) {
-             addressesContainer.innerHTML = '<div class="text-center">Error loading addresses</div>';
-         }
+        document.getElementById('address-cards').innerHTML = 
+            '<div class="text-center text-error">Failed to load addresses</div>';
     }
 }
 
 // Load payment methods
+// Commented out until user_payment_methods table is created
+/*
 async function loadPaymentMethods() {
+    console.log('Inside loadPaymentMethods function.');
     try {
-        const response = await api.getPaymentMethods();
-        const paymentMethods = response.data; // Assuming payment methods are in a 'data' property
-        const methodsContainer = document.getElementById('payment-methods');
-
-         if (!methodsContainer) return; // Check if container exists
-
-        if (paymentMethods.length === 0) {
-            methodsContainer.innerHTML = '<div class="text-center">No payment methods found</div>';
+        const paymentMethods = await api.getPaymentMethods();
+        console.log('Payment methods data received:', paymentMethods);
+        const paymentMethodsContainer = document.getElementById('payment-methods');
+        
+        if (!paymentMethods.length) {
+            paymentMethodsContainer.innerHTML = '<div class="text-center">No payment methods saved yet</div>';
             return;
         }
-
-        methodsContainer.innerHTML = paymentMethods.map(method => `
-            <div class="payment-method" data-method-id="${method.id}">
-                <div class="payment-method-icon">
-                    <i class="fab fa-${method.type.toLowerCase()}"></i>
+        
+        paymentMethodsContainer.innerHTML = paymentMethods.map(method => `
+            <div class="payment-method-card" data-method-id="${method.id}">
+                <div class="payment-method-header">
+                    <i class="fas ${method.type === 'credit_card' ? 'fa-credit-card' : 'fa-paypal'}"></i>
+                    <div class="payment-method-actions">
+                        <button class="payment-method-action delete-method" title="Delete">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
                 </div>
-                <div class="payment-method-info">
-                    <div class="payment-method-name">${method.type} ending in ${method.last4}</div>
-                    <div class="payment-method-details">Expires ${method.expiry_month}/${method.expiry_year}</div>
-                </div>
-                <div class="payment-method-actions">
-                    <button class="btn btn-secondary btn-sm edit-payment">
-                        <i class="fas fa-edit"></i>
-                    </button>
-                    <button class="btn btn-secondary btn-sm delete-payment">
-                        <i class="fas fa-trash"></i>
-                    </button>
+                <div class="payment-method-details">
+                    <p>**** **** **** ${method.last4}</p>
+                    <p>Expires ${method.expiry_month}/${method.expiry_year}</p>
+                    ${method.is_default ? '<span class="default-badge">Default</span>' : ''}
                 </div>
             </div>
         `).join('');
-
-        // Add event listeners for payment method actions (using event delegation earlier)
-
     } catch (error) {
         console.error('Error loading payment methods:', error);
-         const methodsContainer = document.getElementById('payment-methods');
-         if (methodsContainer) {
-             methodsContainer.innerHTML = '<div class="text-center">Error loading payment methods</div>';
-         }
+        document.getElementById('payment-methods').innerHTML = 
+            '<div class="text-center text-error">Failed to load payment methods</div>';
     }
 }
+*/
 
 // Utility functions
 function showSuccess(message) {
@@ -497,3 +608,58 @@ function showError(message) {
 }
 
 // Note: Sidebar toggle and mobile menu toggle listeners are now inside DOMContentLoaded 
+
+// Add placeholder for 2FA setup UI and logic functions
+function show2faSetupModal(qrCodeData, secret) {
+    const modal = document.getElementById('twoFactorSetupModal');
+    const qrCodeImage = document.getElementById('qrCodeImage');
+    const twoFactorSecretSpan = document.getElementById('twoFactorSecret');
+
+    console.log('Showing 2FA setup modal.');
+    console.log('QR Code Data:', qrCodeData ? qrCodeData.substring(0, 50) + '...' : 'No QR Code Data'); // Log first 50 chars
+    console.log('Secret:', secret);
+
+    if (modal && qrCodeImage && twoFactorSecretSpan) {
+        qrCodeImage.src = qrCodeData;
+        twoFactorSecretSpan.textContent = secret;
+        modal.style.display = 'flex'; // Or 'block', depending on CSS
+    } else {
+        console.error('2FA setup modal elements not found.');
+    }
+}
+
+function close2faSetupModal() {
+    const modal = document.getElementById('twoFactorSetupModal');
+    modal.style.display = 'none';
+    document.getElementById('verification-code').value = '';
+}
+
+async function verify2faSetupCode() {
+    const code = document.getElementById('verification-code').value;
+    if (!code || code.length !== 6) {
+        showError('Please enter a valid 6-digit code');
+        return;
+    }
+
+    try {
+        await api.verify2faSetup(code);
+        showSuccess('Two-factor authentication enabled successfully');
+        close2faSetupModal();
+        document.getElementById('two-factor').checked = true;
+    } catch (error) {
+        console.error('Error verifying 2FA setup:', error);
+        showError(error.message || 'Failed to verify 2FA setup');
+    }
+}
+
+async function start2faSetupFlow() {
+    try {
+        const response = await api.setup2fa();
+        show2faSetupModal(response.qrCode, response.secret);
+    } catch (error) {
+        console.error('Error starting 2FA setup:', error);
+        showError(error.message || 'Failed to start 2FA setup');
+        // Revert toggle state
+        document.getElementById('two-factor').checked = false;
+    }
+} 

@@ -717,17 +717,36 @@ input:checked + .toggle-slider:before {
         display: block;
         overflow-x: auto;
     }
-}
 
-@media (max-width: 576px) {
-    .main-content {
-        padding: 1rem;
+    /* Modal Overlay Styles */
+    .modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(2, 12, 27, 0.8); /* Dark overlay */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 1000; /* Ensure it's on top */
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.3s ease;
     }
 
-    .page-header {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 1rem;
+    .modal-overlay.active {
+        opacity: 1;
+        visibility: visible;
+    }
+
+    /* Modal Styles */
+    .modal {
+        background: linear-gradient(135deg, var(--primary-dark-3), var(--primary-dark-2));
+        border-radius: var(--border-radius);
+        box-shadow: var(--box-shadow-lg);
+        width: 95%;
+        max-width: 500px; /* Adjust max width for 2FA modal */
     }
 
     .profile-card {
@@ -742,5 +761,165 @@ input:checked + .toggle-slider:before {
 
     .customer-stats {
         grid-template-columns: 1fr;
+    }
+}
+
+/* Modal body styles */
+.modal-body {
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Center content */
+    gap: 1.5rem; /* Spacing between elements */
+}
+
+.qr-code-container {
+    background-color: white; /* White background for QR code */
+    padding: 1rem;
+    border-radius: var(--border-radius);
+}
+
+.qr-code-container img {
+    display: block;
+    max-width: 200px; /* Limit QR code size */
+    height: auto;
+}
+
+.modal-body .form-group {
+    width: 100%; /* Full width form group */
+    margin-bottom: 0; /* Remove default form-group margin */
+}
+
+.modal-body .btn-primary {
+    width: 100%; /* Full width button */
+}
+
+/* 2FA Modal Styles */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: none; /* Hidden by default */
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal {
+    background-color: var(--bg-card);
+    color: var(--text-light);
+    padding: 2rem;
+    border-radius: 8px;
+    max-width: 500px;
+    width: 90%;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    position: relative;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.modal-header h3 {
+    margin: 0;
+    color: var(--text-light);
+    font-size: 1.5rem;
+}
+
+.modal-close {
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    font-size: 1.5rem;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.modal-close:hover {
+    color: var(--accent);
+}
+
+.modal-body p {
+    margin-bottom: 1rem;
+    line-height: 1.5;
+}
+
+.qr-code-container {
+    text-align: center;
+    margin-bottom: 1.5rem;
+    padding: 1rem;
+    background-color: #fff; /* QR code needs a light background */
+    border-radius: 4px;
+}
+
+#qrCodeImage {
+    max-width: 100%;
+    height: auto;
+}
+
+#twoFactorSecret {
+    display: block;
+    text-align: center;
+    font-family: monospace;
+    font-size: 1.1rem;
+    color: var(--text-light);
+    word-break: break-all;
+    white-space: normal;
+    overflow-wrap: break-word;
+    margin-top: 0.5rem;
+}
+
+.modal-body .form-group {
+    margin-bottom: 1.5rem;
+}
+
+.modal-body .form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+}
+
+.modal-body .form-control {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    background-color: var(--bg-input);
+    color: var(--text-light);
+}
+
+.modal-body .btn-primary {
+    display: block;
+    width: 100%;
+    padding: 0.75rem;
+    text-align: center;
+    background-color: var(--accent);
+    color: var(--bg-main);
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1.1rem;
+    transition: background-color 0.3s ease;
+}
+
+.modal-body .btn-primary:hover {
+    background-color: var(--accent-dark);
+}
+
+/* Optional: Add responsiveness */
+@media (max-width: 600px) {
+    .modal {
+        padding: 1.5rem;
+    }
+    .modal-header h3 {
+        font-size: 1.3rem;
     }
 } 
