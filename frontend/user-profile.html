@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Profile | Nexora Marketplace</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/user-profile.css">
+</head>
+<body>
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar">
+        <div class="sidebar-toggle">
+            <i class="fas fa-chevron-left"></i>
+        </div>
+        <div class="sidebar-menu">
+            <div class="menu-title">Shopping</div>
+            <a href="#" class="menu-item">
+                <i class="fas fa-home"></i>
+                <span class="menu-item-text">Home</span>
+            </a>
+            <a href="#" class="menu-item">
+                <i class="fas fa-search"></i>
+                <span class="menu-item-text">Browse Products</span>
+            </a>
+            <a href="#" class="menu-item">
+                <i class="fas fa-heart"></i>
+                <span class="menu-item-text">Wishlist</span>
+            </a>
+            
+            <div class="menu-title">My Account</div>
+            <a href="#" class="menu-item">
+                <i class="fas fa-shopping-cart"></i>
+                <span class="menu-item-text">Cart</span>
+            </a>
+            <a href="#" class="menu-item">
+                <i class="fas fa-box-open"></i>
+                <span class="menu-item-text">Orders</span>
+            </a>
+            <a href="#" class="menu-item active">
+                <i class="fas fa-user"></i>
+                <span class="menu-item-text">Profile</span>
+            </a>
+            <a href="#" class="menu-item">
+                <i class="fas fa-map-marker-alt"></i>
+                <span class="menu-item-text">Addresses</span>
+            </a>
+            <a href="#" class="menu-item">
+                <i class="fas fa-credit-card"></i>
+                <span class="menu-item-text">Payment Methods</span>
+            </a>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <header class="main-header">
+            <a href="#" class="logo">
+                <i class="fas fa-store"></i>
+                <span>Nexora</span>
+            </a>
+            
+            <div class="header-right">
+                <div class="nav-links">
+                    <a href="#" class="nav-link">Home</a>
+                    <a href="#" class="nav-link">Products</a>
+                    <a href="#" class="nav-link">Categories</a>
+                    <a href="#" class="nav-link">Vendors</a>
+                </div>
+                <div class="user-profile">
+                    <div class="user-avatar">CU</div>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+            </div>
+        </header>
+
+        <div class="content-wrapper">
+            <div class="page-header">
+                <h1>My Profile</h1>
+                <button class="btn btn-secondary">
+                    <i class="fas fa-shopping-cart"></i> View Cart
+                </button>
+            </div>
+            
+            <!-- Customer Stats -->
+            <div class="customer-stats">
+                <div class="stat-card">
+                    <div class="stat-card-header">
+                        <span class="stat-card-title">Total Orders</span>
+                        <i class="fas fa-box-open"></i>
+                    </div>
+                    <div class="stat-card-value" id="total-orders">-</div>
+                    <div class="stat-card-change change-positive" id="orders-change">
+                        <i class="fas fa-arrow-up"></i> <span>Loading...</span>
+                    </div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-card-header">
+                        <span class="stat-card-title">Wishlist Items</span>
+                        <i class="fas fa-heart"></i>
+                    </div>
+                    <div class="stat-card-value" id="wishlist-count">-</div>
+                    <div class="stat-card-change change-positive" id="wishlist-change">
+                        <i class="fas fa-arrow-up"></i> <span>Loading...</span>
+                    </div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-card-header">
+                        <span class="stat-card-title">Pending Orders</span>
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <div class="stat-card-value" id="pending-orders">-</div>
+                    <div class="stat-card-change change-negative" id="pending-change">
+                        <i class="fas fa-arrow-down"></i> <span>Loading...</span>
+                    </div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-card-header">
+                        <span class="stat-card-title">Reviews Given</span>
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <div class="stat-card-value" id="reviews-count">-</div>
+                    <div class="stat-card-change change-positive" id="reviews-change">
+                        <i class="fas fa-arrow-up"></i> <span>Loading...</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Customer Profile Card -->
+            <div class="profile-card">
+                <div class="profile-avatar">
+                    <span id="profile-initials">-</span>
+                    <div class="profile-avatar-edit">Change</div>
+                </div>
+                <div class="profile-info">
+                    <h3 id="profile-name">Loading...</h3>
+                    <p id="profile-email">Loading...</p>
+                    <span class="profile-role" id="profile-role">Loading...</span>
+                </div>
+            </div>
+            
+            <!-- Recent Orders Section -->
+            <div class="settings-section">
+                <div class="settings-section-header">
+                    <h2>Recent Orders</h2>
+                    <a href="/orders.html" class="btn btn-secondary btn-sm">
+                        <i class="fas fa-list"></i> View All Orders
+                    </a>
+                </div>
+                
+                <table class="order-history">
+                    <thead>
+                        <tr>
+                            <th>Order ID</th>
+                            <th>Date</th>
+                            <th>Items</th>
+                            <th>Total</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="recent-orders">
+                        <tr>
+                            <td colspan="6" class="text-center">Loading orders...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <!-- Saved Addresses Section -->
+            <div class="settings-section">
+                <div class="settings-section-header">
+                    <h2>Saved Addresses</h2>
+                    <button class="btn btn-secondary btn-sm" id="add-address-btn">
+                        <i class="fas fa-plus"></i> Add New Address
+                    </button>
+                </div>
+                
+                <div class="address-cards" id="address-cards">
+                    <div class="text-center">Loading addresses...</div>
+                </div>
+            </div>
+            
+            <!-- Payment Methods Section -->
+            <div class="settings-section">
+                <div class="settings-section-header">
+                    <h2>Payment Methods</h2>
+                    <button class="btn btn-secondary btn-sm" id="add-payment-btn">
+                        <i class="fas fa-plus"></i> Add New Method
+                    </button>
+                </div>
+                
+                <div class="payment-methods" id="payment-methods">
+                    <div class="text-center">Loading payment methods...</div>
+                </div>
+            </div>
+            
+            <!-- Personal Information Section -->
+            <div class="settings-section">
+                <div class="settings-section-header">
+                    <h2>Personal Information</h2>
+                </div>
+                
+                <form id="personal-info-form">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="first-name">First Name</label>
+                            <input type="text" id="first-name" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="last-name">Last Name</label>
+                            <input type="text" id="last-name" class="form-control" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="customer-email">Email Address</label>
+                        <input type="email" id="customer-email" class="form-control" readonly>
+                        <p class="form-hint">This will be used for account communication and login</p>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="customer-phone">Phone Number</label>
+                        <input type="tel" id="customer-phone" class="form-control">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="birth-date">Date of Birth</label>
+                        <input type="date" id="birth-date" class="form-control">
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save"></i> Save Personal Information
+                    </button>
+                </form>
+            </div>
+            
+            <!-- Security Section -->
+            <div class="settings-section">
+                <div class="settings-section-header">
+                    <h2>Security</h2>
+                </div>
+                
+                <form id="security-form">
+                    <div class="form-group">
+                        <label for="current-password">Current Password</label>
+                        <input type="password" id="current-password" class="form-control" placeholder="Enter your current password">
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="new-password">New Password</label>
+                            <input type="password" id="new-password" class="form-control" placeholder="Enter new password">
+                        </div>
+                        <div class="form-group">
+                            <label for="confirm-password">Confirm Password</label>
+                            <input type="password" id="confirm-password" class="form-control" placeholder="Confirm new password">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="two-factor">Two-Factor Authentication</label>
+                        <div style="display: flex; align-items: center; gap: 1rem;">
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="two-factor">
+                                <span class="toggle-slider"></span>
+                            </label>
+                            <span>Enable two-factor authentication</span>
+                        </div>
+                        <p class="form-hint">Add an extra layer of security to your account</p>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-lock"></i> Update Security Settings
+                    </button>
+                </form>
+            </div>
+            
+            <!-- Notification Preferences Section -->
+            <div class="settings-section">
+                <div class="settings-section-header">
+                    <h2>Notification Preferences</h2>
+                </div>
+                
+                <form id="notification-form">
+                    <div class="form-group">
+                        <label>
+                            <input type="checkbox" name="order-updates" value="orderUpdates"> Order updates
+                        </label>
+                        <p class="form-hint">Receive notifications about your order status</p>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>
+                            <input type="checkbox" name="promotions" value="promotions"> Promotions and offers
+                        </label>
+                        <p class="form-hint">Get special offers and discounts from vendors</p>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>
+                            <input type="checkbox" name="price-drop-alerts" value="priceDropAlerts"> Price drop alerts
+                        </label>
+                        <p class="form-hint">Be notified when items in your wishlist drop in price</p>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>
+                            <input type="checkbox" name="new-arrivals" value="newArrivals"> New arrivals
+                        </label>
+                        <p class="form-hint">Get updates about new products from your favorite vendors</p>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Notification Method</label>
+                        <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+                            <label>
+                                <input type="radio" name="notification-method" value="email" checked> Email
+                            </label>
+                            <label>
+                                <input type="radio" name="notification-method" value="sms"> SMS
+                            </label>
+                            <label>
+                                <input type="radio" name="notification-method" value="both"> Both
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-bell"></i> Save Notification Preferences
+                    </button>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <script src="js/config.js"></script>
+    <script src="js/api.js" type="module"></script>
+    <script src="js/user-profile.js" type="module"></script>
+</body>
+</html> 

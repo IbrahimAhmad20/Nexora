@@ -10,7 +10,7 @@ const pool = mysql.createPool({
   database: process.env.DB_NAME,
   port: process.env.DB_PORT,
   waitForConnections: true,
-  connectionLimit: 2, // Railway free tier limit
+  connectionLimit: 2, 
   queueLimit: 0,
   connectTimeout: 20000,
 

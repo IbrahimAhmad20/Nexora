@@ -1,0 +1,191 @@
+%% BUICS THESIS STYLE for LaTeX2e
+%%
+%% badwanpk, Tue March 10 18:53:15 2015
+%%
+%% PLEASE send improvements to badwanpk at bui dot edu dot pk
+%%
+%%========================================
+%% Commands: pdflatex tese
+%%           bibtex tese
+%%           makeindex tese (only if creating an index) 
+%%           pdflatex tese
+%%========================================
+
+\documentclass[11pt,a4paper]{report}
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+%\usepackage[portuges]{babel}
+\usepackage{fancyvrb}
+\usepackage{multirow}
+%\usepackage{epstopdf}
+\usepackage{rotating}
+\usepackage{slashbox,pict2e}
+\usepackage{soul}
+\usepackage{amssymb}
+\usepackage{lscape}
+\usepackage{longtable}
+\usepackage{makeidx}
+\usepackage{amsmath}
+\usepackage{multirow}
+\usepackage{makecell}
+\usepackage{wrapfig}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{setspace}
+\usepackage{makecell}
+%% For the final version, comment next line and uncomment the second line
+%\usepackage[provisional,alpharefs]{buics}
+\usepackage[numericrefs]{buics} %alpharefs
+
+% Load hyperref last
+% \usepackage[pdftex,plainpages=false,pdfpagelabels,bookmarks,hyperindex,hyperfigures]{hyperref}
+
+%PDF properties 
+\hypersetup{
+  pdftitle={Nexora: A Modern Full-Stack Web Application},
+  pdfauthor={Muhammad Ibrahim, Saim Zafar, Zarish Fatima},
+  pdfsubject={Computer Science},
+  pdfcreator={MiKTex 2.9},
+  pdfproducer={MiKTex 2.9},
+  pdfkeywords={Web Development, Full-Stack, Node.js, MySQL}
+}
+
+%% Options: 
+%% - english: titles, etc in english
+%% - provisional: the thesis has not been approved yet
+%% - print: links are not shown (for paper versions)
+%% - alpharefs: bibliography references are alphabetic
+%% - numericrefs: bibliography references are numbered (in order of citation)
+%% ( by default: author-date format of the ``natbib'' package is used 
+
+
+%% Provide a version number in order to keep track of
+%% thesis versions (it will printed in the footer of most pages)
+
+\version{v1.0.2023}
+
+%% uncomment in the final version in order to make version footer disappear
+%\noversiontrue
+
+%% uncomment to create an index (at the end of the document)
+\makeindex 
+
+%%  path to the figures directory
+%%  TIP: use folder ``figures'' to keep all your figures
+\graphicspath{{figures/}}
+
+%%----------------------------------------
+%% TIP: if you want to define more macros, use an external file to
+%% keep them
+%%----------------------------------------
+
+%%========================================
+%% Start of document
+%%========================================
+\begin{document}
+
+%%----------------------------------------
+%% Information about the work
+%%----------------------------------------
+\title{Nexora: A Modern Full-Stack Web Application}
+\author{{\sc Muhammad Ibrahim}\\01-135241-035\\[1em]
+{\sc Saim Zafar}\\01-135241-045\\[1em]
+{\sc Zarish Fatima}\\01-135241-052}
+
+
+\degree{\textbf{\Large{Bachelor of Science in Computer Science}}}
+
+%\degree{\emph{Thesis submitted to the Department of Computer Science, Bahria University, Islamabad\\for fulfillment of the requirements of Bachelors of Science in Computer Science degree.}}
+%% Date of submission
+
+\department{Department of Computer Science\\Bahria University, Islamabad}
+\thesisdate{December 2023}
+%\thesisdate{\Large{\textbf{September 2012}}}
+
+%% insert copyright text if used
+\copyrightnotice{Muhammad Ibrahim, Saim Zafar, Zarish Fatima, 2023}
+
+%% uncomment next line if necessary
+\supervisor{Supervisor}{Supervisor Name}{}
+\supervisor{Co-Supervisor}{Co-Supervisor name}{}
+
+% uncomment committee stuff in the final version if used
+
+\certificatetext{We accept the work contained in the report titled ``Nexora: A Modern Full-Stack Web Application'', written by Muhammad Ibrahim, Saim Zafar, and Zarish Fatima as a confirmation to the required standard for the partial fulfillment of the degree of Bachelor of Science in Computer Science.}
+
+\committeetext{Approved by \ldots:}
+
+\committeemember{Supervisor}{Name of the Supervisor}{(Title)}
+\signature
+
+\committeedate{December 31$^{st}$, 2023}
+
+%% specify cover logo (in folder ``figures'')
+\logo{BUI-Logo}
+
+%%----------------------------------------
+%% Cover page(s)
+%%----------------------------------------
+\maketitle
+%% uncomment next line in the final version if used
+\committeepage
+
+%% Preliminary materials
+\StartPrelim
+\begin{singlespace}
+  \include{abstract} % the abstract
+  \include{acknows}  % the acknowledgments
+  \include{quote}    % initial quotation if desired
+  \cleardoublepage
+  \pdfbookmark[0]{Table of Contents}{contents}
+  \tableofcontents
+  \cleardoublepage
+  \pdfbookmark[0]{List of Figures}{figures}
+  \listoffigures
+  \cleardoublepage
+  \pdfbookmark[0]{List of Tables}{tables}
+  \listoftables
+  \include{abbrevs}  % the list of abbreviations used
+\end{singlespace}
+
+%%----------------------------------------
+%% Body
+%%----------------------------------------
+\StartBody
+
+%% TIP: use a separate  file for each
+\include{chapter1} % Introduction
+\include{chapter2} % Literature Review
+\include{chapter3} % Requirements Specifications
+\include{chapter4} % System Design
+\include{chapter5} % Frontend Implementation
+\include{chapter6} % Backend Implementation
+\include{chapter7} % Testing and Evaluation
+\include{chapter8} % Database Implementation
+\include{chapter9} % Results and Discussion
+\include{chapter10} % Conclusion and Future Work
+\include{technical_doc}
+\include{user_manual}
+%\include{chapter8}
+%%\printindex
+%% comment next 2 commands if numbered appendixes not used
+\appendix
+\include{appendix1}
+
+%%----------------------------------------
+%% Final materials
+%%----------------------------------------
+
+\begin{singlespace}
+  %% Bibliography
+  %% comment the next command if BibTeX file not used
+  %% bibliography is in ``references.bib''
+  \PrintBib{references}
+
+  %% Index
+  %% uncomment next command if index is required
+  %% don't forget to run ``makeindex tese'' command
+  \PrintIndex
+\end{singlespace}
+
+\end{document}

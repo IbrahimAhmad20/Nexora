@@ -31,6 +31,110 @@ class ApiService {
         }
     }
 
+    // User Profile endpoints
+    async getUserProfile() {
+        return this.request('/users/profile');
+    }
+
+    async updateUserProfile(profileData) {
+        return this.request('/users/profile', {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(profileData)
+        });
+    }
+
+    async updateUserAvatar(formData) {
+        const response = await fetch(`${this.baseUrl}/users/profile/avatar`, {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('token')}`
+            },
+            body: formData
+        });
+
+        if (!response.ok) {
+            const error = await response.json();
+            throw new Error(error.message || 'Error updating avatar');
+        }
+
+        return response.json();
+    }
+
+    async getAddresses() {
+        return this.request('/users/addresses');
+    }
+
+    async addAddress(addressData) {
+        return this.request('/users/addresses', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(addressData)
+        });
+    }
+
+    async updateAddress(addressId, addressData) {
+        return this.request(`/users/addresses/${addressId}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(addressData)
+        });
+    }
+
+    async deleteAddress(addressId) {
+        return this.request(`/users/addresses/${addressId}`, {
+            method: 'DELETE'
+        });
+    }
+
+    async getPaymentMethods() {
+        return this.request('/users/payment-methods');
+    }
+
+    async addPaymentMethod(paymentData) {
+        return this.request('/users/payment-methods', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(paymentData)
+        });
+    }
+
+    async updatePaymentMethod(methodId, paymentData) {
+        return this.request(`/users/payment-methods/${methodId}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(paymentData)
+        });
+    }
+
+    async deletePaymentMethod(methodId) {
+        return this.request(`/users/payment-methods/${methodId}`, {
+            method: 'DELETE'
+        });
+    }
+
+    async updateNotificationPreferences(preferences) {
+        return this.request('/users/notifications/preferences', {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(preferences)
+        });
+    }
+
+    // Order endpoints
+    async getOrders() {
+        return this.request('/orders');
+    }
+
+    async getOrder(id) {
+        return this.request(`/orders/${id}`);
+    }
+
+    // Cart endpoints
+    async getCart() {
+        return this.request('/cart');
+    }
+
     // Product endpoints
     async getProducts(params = {}) {
         const queryString = new URLSearchParams(params).toString();
@@ -106,61 +210,6 @@ class ApiService {
             console.error('[api] deleteVendor error:', err);
             throw err;
         }
-    }
-    // Cart endpoints
-    async getCart() {
-        const token = localStorage.getItem('token');
-        const res = await fetch(window.API_BASE_URL + '/api/cart', {
-            headers: { 'Authorization': `Bearer ${token}` }
-        });
-        return await res.json();
-    }
-
-    async addToCart(productId, quantity = 1) {
-        return this.request('/cart/add', {
-            method: 'POST',
-            body: JSON.stringify({ productId, quantity })
-        });
-    }
-
-    async updateCartItem(productId, quantity) {
-        return this.request(`/cart/items/${productId}`, {
-            method: 'PUT',
-            body: JSON.stringify({ quantity })
-        });
-    }
-
-    async removeFromCart(productId) {
-        return this.request(`/cart/items/${productId}`, {
-            method: 'DELETE'
-        });
-    }
-
-    async getCartCount() {
-        return this.request('/cart/count');
-    }
-
-    // Order endpoints
-    async createOrder(orderData) {
-        return this.request('/orders', {
-            method: 'POST',
-            body: JSON.stringify(orderData)
-        });
-    }
-
-    async getOrders() {
-        return this.request('/orders');
-    }
-
-    async getOrder(id) {
-        return this.request(`/orders/${id}`);
-    }
-
-    async updateOrderStatus(id, status) {
-        return this.request(`/orders/${id}/status`, {
-            method: 'PUT',
-            body: JSON.stringify({ status })
-        });
     }
 
     // Vendor endpoints
@@ -309,4 +358,7 @@ class ApiService {
 const api = new ApiService();
 
 // Export API instance
-window.api = api; 
+window.api = api;
+
+// Export the API service
+export { ApiService }; 

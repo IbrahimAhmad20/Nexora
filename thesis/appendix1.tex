@@ -1,0 +1,169 @@
+\chapter{Technical Appendix}
+\label{app:technical}
+
+\section{Installation Guide}
+\subsection{Prerequisites}
+Required software and tools:
+\begin{itemize}
+    \item Node.js (v14 or higher)
+    \item My MySQL (v4.4 or higher)
+    \item Git
+    \item npm
+\end{itemize}
+
+\subsection{Setup Instructions}
+Step-by-step setup process:
+\begin{enumerate}
+    \item Clone the repository
+    \item Install dependencies
+    \item Configure environment variables
+    \item Start the development server
+\end{enumerate}
+
+\section{API Documentation}
+\subsection{Authentication Endpoints}
+\begin{itemize}
+    \item POST /api/auth/register
+    \item POST /api/auth/login
+    \item GET /api/auth/profile
+    \item POST /api/auth/logout
+\end{itemize}
+
+\subsection{User Management Endpoints}
+\begin{itemize}
+    \item GET /api/users
+    \item GET /api/users/:id
+    \item PUT /api/users/:id
+    \item DELETE /api/users/:id
+\end{itemize}
+
+
+\section{Deployment Guide}
+\subsection{Production Setup}
+Deployment steps:
+\begin{enumerate}
+    \item Build the frontend
+    \item Configure production environment
+    \item Set up the database
+    \item Deploy the application
+\end{enumerate}
+
+\subsection{Monitoring}
+Monitoring setup:
+\begin{itemize}
+    \item Application logs
+    \item Error tracking
+    \item Performance monitoring
+    \item Security monitoring
+\end{itemize}
+
+
+\section{Database Schema Details}
+\subsection{Table Definitions}
+\begin{verbatim}
+CREATE TABLE users (
+    id VARCHAR(36) PRIMARY KEY,
+    username VARCHAR(50) NOT NULL,
+    email VARCHAR(100) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL,
+    role ENUM('customer', 'vendor', 'admin') NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+CREATE TABLE products (
+    id VARCHAR(36) PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    description TEXT,
+    price DECIMAL(10,2) NOT NULL,
+    category_id VARCHAR(36),
+    vendor_id VARCHAR(36),
+    stock INT NOT NULL DEFAULT 0,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (category_id) REFERENCES categories(id),
+    FOREIGN KEY (vendor_id) REFERENCES users(id)
+);
+\end{verbatim}
+
+
+
+\section{Security Measures}
+\subsection{Authentication}
+\begin{itemize}
+    \item JWT token-based authentication
+    \item Password hashing using bcrypt
+    \item Session management
+    \item Role-based access control
+\end{itemize}
+
+\subsection{Data Protection}
+\begin{itemize}
+    \item HTTPS encryption
+    \item Input validation
+    \item SQL injection prevention
+    \item XSS protection
+    \item CSRF protection
+\end{itemize}
+
+\section{Deployment Configuration}
+\subsection{Environment Variables}
+\begin{verbatim}
+# Backend
+NODE_ENV=production
+PORT=3000
+DB_HOST=your-db-host
+DB_USER=your-db-user
+DB_PASSWORD=your-db-password
+DB_NAME=nexora
+JWT_SECRET=your-jwt-secret
+CORS_ORIGIN=https://your-frontend-domain
+
+# Frontend
+REACT_APP_API_URL=https://your-backend-domain
+REACT_APP_STRIPE_KEY=your-stripe-key
+\end{verbatim}
+
+\subsection{Server Requirements}
+\begin{itemize}
+    \item Node.js v14 or higher
+    \item MySQL v8.0 or higher
+    \item 2GB RAM minimum
+    \item 20GB storage
+    \item SSL certificate
+\end{itemize}
+
+\section{Maintenance Procedures}
+\subsection{Backup Strategy}
+\begin{enumerate}
+    \item Daily database backups
+    \item Weekly full system backups
+    \item Monthly archive backups
+    \item Backup verification
+\end{enumerate}
+
+\subsection{Update Procedures}
+\begin{enumerate}
+    \item Test updates in staging environment
+    \item Schedule maintenance window
+    \item Perform database migrations
+    \item Deploy application updates
+    \item Verify system functionality
+\end{enumerate}
+
+\section{Error Handling}
+\subsection{Common Errors}
+\begin{itemize}
+    \item Database connection errors
+    \item Authentication failures
+    \item Validation errors
+    \item API timeout errors
+\end{itemize}
+
+\subsection{Error Resolution}
+\begin{itemize}
+    \item Check application logs
+    \item Verify database connectivity
+    \item Test API endpoints
+    \item Monitor system resources
+\end{itemize} 

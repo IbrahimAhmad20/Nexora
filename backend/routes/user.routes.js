@@ -42,7 +42,8 @@ router.put('/profile',
   [
     body('first_name').optional().notEmpty().withMessage('First name cannot be empty'),
     body('last_name').optional().notEmpty().withMessage('Last name cannot be empty'),
-    body('phone').optional().matches(/^\+?[\d\s-]{10,}$/).withMessage('Invalid phone number')
+    body('phone').optional().matches(/^[+\\d\\s-]{10,}$/).withMessage('Invalid phone number'),
+    body('password').optional().isLength({ min: 6 }).withMessage('Password must be at least 6 characters')
   ],
   async (req, res) => {
     try {
@@ -51,12 +52,35 @@ router.put('/profile',
         return res.status(400).json({ success: false, errors: errors.array() });
       }
 
-      const { first_name, last_name, phone } = req.body;
+      const { first_name, last_name, phone, password } = req.body;
+      const updateFields = [];
+      const updateValues = [];
 
-      // Update user profile
+      if (first_name !== undefined) {
+        updateFields.push('first_name = ?');
+        updateValues.push(first_name);
+      }
+      if (last_name !== undefined) {
+        updateFields.push('last_name = ?');
+        updateValues.push(last_name);
+      }
+      if (phone !== undefined) {
+        updateFields.push('phone = ?');
+        updateValues.push(phone);
+      }
+      if (password) {
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(password, salt);
+        updateFields.push('password = ?');
+        updateValues.push(hashedPassword);
+      }
+      if (updateFields.length === 0) {
+        return res.status(400).json({ success: false, message: 'No fields to update' });
+      }
+      updateValues.push(req.user.id);
       await pool.query(
-        'UPDATE users SET first_name = ?, last_name = ?, phone = ? WHERE id = ?',
-        [first_name, last_name, phone, req.user.id]
+        `UPDATE users SET ${updateFields.join(', ')} WHERE id = ?`,
+        updateValues
       );
 
       res.json({

@@ -155,6 +155,7 @@ document.addEventListener("DOMContentLoaded", function() {
 api.register = async function(email, password, role, first_name, last_name) {
   return this.request('/auth/register', {
     method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ email, password, role, first_name, last_name })
   });
 };
