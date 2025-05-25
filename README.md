@@ -242,8 +242,8 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## Contact
 
-Your Name - your.email@example.com
-Project Link: https://github.com/yourusername/nexora 
+Your Name - ibrahimmohsneen@gmail.com
+Project Link: https://github.com/IbrahimAhmad20/nexora 
 
 # Nexora Marketplace Admin Panel
 
