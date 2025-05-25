@@ -164,6 +164,10 @@ document.addEventListener('DOMContentLoaded', () => {
         state: document.getElementById('address-state')?.value.trim(),
         zip: document.getElementById('address-zip')?.value.trim(),
         country: document.getElementById('address-country')?.value.trim(),
+        // Note: Backend also expects optional 'apartment' and 'is_default' fields if available
+        // You would need form fields for these if you want to send them
+        // apartment: document.getElementById('address-apartment')?.value.trim() || null,
+        // is_default: document.getElementById('address-is_default')?.checked || false,
       };
 
       // Basic validation (backend has more)
@@ -249,36 +253,40 @@ document.addEventListener('DOMContentLoaded', () => {
         alert('Your cart is empty.');
         return;
     }
-    // Get selected address (update this as needed for your UI)
-    const selectedAddress = document.querySelector('.address-card.selected .address-details');
-    if (!selectedAddress) {
+    // Get selected address
+    const selectedAddressCard = document.querySelector('.address-card.selected');
+    if (!selectedAddressCard) {
         alert('Please select a shipping address.');
         return;
     }
-    const shipping_address = selectedAddress.innerText.trim();
+    const addressId = selectedAddressCard.dataset.addressId;
+    if (!addressId) {
+        alert('Invalid address selection. Please try again.');
+        return;
+    }
 
     let card = null;
     const cardOptionSelected = document.querySelector('.payment-option.selected').dataset.method === 'card';
     const cardFields = {
-      card_number: document.querySelector('.card-number-input').value.trim(),
-      card_expiry: document.querySelector('.card-expiry-input').value.trim(),
-      card_cvc: document.querySelector('.card-cvc-input').value.trim(),
-      card_name: document.querySelector('.card-name-input').value.trim()
+        card_number: document.querySelector('.card-number-input').value.trim(),
+        card_expiry: document.querySelector('.card-expiry-input').value.trim(),
+        card_cvc: document.querySelector('.card-cvc-input').value.trim(),
+        card_name: document.querySelector('.card-name-input').value.trim()
     };
     const cardFormFilled = cardFields.card_number && cardFields.card_expiry && cardFields.card_cvc && cardFields.card_name;
 
     if (cardOptionSelected) {
-      if (await hasCreditCardInfo()) {
-        // Use saved card (card = null)
-      } else if (cardFormFilled) {
-        card = cardFields; // Use form card for this order only
-      } else {
-        alert('Please fill out all card fields before checking out.');
-        return;
-      }
+        if (await hasCreditCardInfo()) {
+            // Use saved card (card = null)
+        } else if (cardFormFilled) {
+            card = cardFields; // Use form card for this order only
+        } else {
+            alert('Please fill out all card fields before checking out.');
+            return;
+        }
     }
 
-    console.log('Sending checkout request with:', { shipping_address, card });
+    console.log('Sending checkout request with:', { addressId, card });
 
     try {
         const res = await fetch(window.API_BASE_URL + '/api/checkout', {
@@ -287,7 +295,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 'Authorization': `Bearer ${token}`,
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ shipping_address, card })
+            body: JSON.stringify({ addressId, card })
         });
         const data = await res.json();
         if (data.success) {

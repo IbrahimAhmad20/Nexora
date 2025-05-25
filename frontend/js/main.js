@@ -1,6 +1,4 @@
-window.API_BASE_URL = "https://nexora-yapl.onrender.com";
-window.BASE_API_URL = "https://nexora-yapl.onrender.com";
-
+// API URLs are configured in config.js
 (function() {
 // Add TOTP modal HTML and variable initialization at the very top
 const totpLoginModalHtml = `

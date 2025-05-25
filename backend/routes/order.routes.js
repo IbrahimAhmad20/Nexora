@@ -207,7 +207,7 @@ router.post('/checkout',
   verifyToken,
   checkRole(['customer']),
   [
-    body('shipping_address').notEmpty().withMessage('Shipping address is required'),
+    body('addressId').notEmpty().withMessage('Shipping address ID is required'),
     body('card').isObject().optional()
   ],
   async (req, res) => {
@@ -219,8 +219,23 @@ router.post('/checkout',
         return res.status(400).json({ success: false, errors: errors.array() });
       }
 
-      const { shipping_address, card } = req.body;
-      console.log('Shipping address:', shipping_address);
+      const { addressId, card } = req.body;
+      console.log('Address ID:', addressId);
+
+      // Verify address belongs to user
+      const [addresses] = await pool.query(
+        'SELECT * FROM addresses WHERE id = ? AND user_id = ?',
+        [addressId, req.user.id]
+      );
+
+      if (addresses.length === 0) {
+        return res.status(400).json({
+          success: false,
+          message: 'Invalid shipping address'
+        });
+      }
+
+      const shippingAddress = addresses[0];
 
       // Get cart items
       const [cartItems] = await pool.query(`
@@ -267,7 +282,7 @@ router.post('/checkout',
         // Create order
         const [orderResult] = await connection.query(
           'INSERT INTO orders (customer_id, total_amount, shipping_address) VALUES (?, ?, ?)',
-          [req.user.id, totalAmount, shipping_address]
+          [req.user.id, totalAmount, shippingAddress.address]
         );
         const orderId = orderResult.insertId;
         console.log('Order created with id:', orderId);
