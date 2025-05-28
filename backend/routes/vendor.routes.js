@@ -4,9 +4,10 @@ const { pool } = require('../config/db.config');
 const { verifyToken, checkRole } = require('../middleware/auth.middleware');
 const { body, validationResult } = require('express-validator');
 const jwt = require('jsonwebtoken');
-const { logoUpload } = require('../utils/upload');
+const { logoUpload, productUpload } = require('../utils/upload');
 const { Parser } = require('json2csv');
 const { BASE_URL } = require('../config/url.config');
+const { uploadFileToS3, deleteFileFromS3 } = require('../services/s3Service');
 
 router.use((req, res, next) => {
   console.log('Vendor route hit:', req.method, req.originalUrl);
@@ -101,6 +102,7 @@ router.get('/products',
       // Support category filtering
       const category = req.query.category;
       const search = req.query.search;
+      
       let productsQuery = `
         SELECT p.*,
         c.name as category_name,
@@ -111,69 +113,59 @@ router.get('/products',
         WHERE vp.user_id = ?
       `;
       let productsParams = [req.user.id];
+
+      // Add filtering by category name (as currently implemented)
       if (category) {
-        productsQuery += ' AND p.category = ?';
+        productsQuery += ' AND c.name = ?'; // Filter by category name
         productsParams.push(category);
       }
+
       if (search) {
         productsQuery += ' AND p.name LIKE ?';
         productsParams.push(`%${search}%`);
       }
+
       productsQuery += ' ORDER BY p.created_at DESC LIMIT ? OFFSET ?';
       productsParams.push(limit, offset);
 
-      // Get total count for pagination
+      // Get total count for pagination (adjust count query filtering as needed)
       const [[{ count }]] = await pool.query(`
         SELECT COUNT(*) as count
         FROM products p
+        LEFT JOIN categories c ON p.category_id = c.id
         JOIN vendor_profiles vp ON p.vendor_id = vp.id
         WHERE vp.user_id = ?
-      `, [req.user.id]);
+        ${category ? ' AND c.name = ?' : ''}
+        ${search ? ' AND p.name LIKE ?' : ''}
+      `, search ? [req.user.id, category, `%${search}%`] : (category ? [req.user.id, category] : [req.user.id])); // Pass parameters correctly
+
       const totalPages = Math.max(1, Math.ceil(count / limit));
 
       // Fetch products
       const [products] = await pool.query(productsQuery, productsParams);
 
-      console.log('Fetched raw products from DB:', products);
+      // No longer need to fetch all images here, as primary_image URL is in the main query
+      // and frontend fetches full image list for gallery if needed.
 
-      // Fetch all images for these products
-      const productIds = products.map(p => p.id);
-      let imagesByProduct = {};
-      if (productIds.length > 0) {
-        const [images] = await pool.query(
-          'SELECT product_id, image_url, is_primary FROM product_images WHERE product_id IN (?)',
-          [productIds]
-        );
-        images.forEach(img => {
-          if (!imagesByProduct[img.product_id]) imagesByProduct[img.product_id] = [];
-          imagesByProduct[img.product_id].push({
-            url: `${BASE_URL}${img.image_url}`,
-            is_primary: !!img.is_primary
-          });
-        });
-      }
       // Map fields for frontend
       const mappedProducts = products.map(p => ({
         id: p.id,
         name: p.name,
-        category: p.category_name,
+        category: p.category_name, // Use category_name from the join
+        category_id: p.category_id, // Include category_id if needed by frontend (e.g., for edit modal)
         price: parseFloat(p.price),
-        stock: p.stock_quantity,
-        status: p.stock_quantity === 0 ? 'outofstock' : (p.status === 'deleted' ? 'inactive' : p.status),
+        stock: p.stock_quantity, // Use stock_quantity column
+        status: p.stock_quantity === 0 ? 'outofstock' : p.status, // Set status based on stock or DB status
         description: p.description,
-        image: p.primary_image ? `${BASE_URL}${p.primary_image}` : null,
-        images: imagesByProduct[p.id] || [],
+        image: p.primary_image
+          ? (p.primary_image.startsWith('http') ? p.primary_image : `${BASE_URL}${p.primary_image}`)
+          : null,
+        images: p.primary_image
+          ? [{ url: p.primary_image.startsWith('http') ? p.primary_image : `${BASE_URL}${p.primary_image}`, is_primary: true }]
+          : [],
         createdAt: p.created_at,
         updatedAt: p.updated_at
       }));
-
-      console.log('Mapped products for frontend:', mappedProducts);
-
-      
-
-
-
-
 
       res.json({
         products: mappedProducts,
@@ -217,7 +209,7 @@ router.get('/products/:id',
         [p.id]
       );
       const imageArr = images.map(img => ({
-        url: `${BASE_URL}${img.image_url}`,
+        url: img.image_url.startsWith('http') ? img.image_url : `${BASE_URL}${img.image_url}`,
         is_primary: !!img.is_primary
       }));
       res.json({
@@ -228,7 +220,9 @@ router.get('/products/:id',
         stock: p.stock_quantity,
         status: p.stock_quantity === 0 ? 'outofstock' : (p.status === 'deleted' ? 'inactive' : p.status),
         description: p.description,
-        image: p.primary_image ? `${BASE_URL}${p.primary_image}` : null,
+        image: p.primary_image
+          ? (p.primary_image.startsWith('http') ? p.primary_image : `${BASE_URL}${p.primary_image}`)
+          : null,
         images: imageArr,
         createdAt: p.created_at,
         updatedAt: p.updated_at
@@ -348,11 +342,18 @@ router.get('/orders/:orderId',
         WHERE o.id = ?
       `, [orderId]);
 
+      const mappedOrderItems = orderItems.map(item => ({
+        ...item,
+        image: item.image
+          ? (item.image.startsWith('http') ? item.image : `${BASE_URL}${item.image}`)
+          : null
+      }));
+
       res.json({
         success: true,
         data: {
           ...orders[0],
-          items: orderItems
+          items: mappedOrderItems
         }
       });
     } catch (error) {
@@ -687,7 +688,8 @@ router.get('/dashboard', verifyVendor, async (req, res) => {
       [vendorProfileId]
     );
     const [recentOrders] = await pool.query(
-      `SELECT o.id, o.status, oi.price_at_time * oi.quantity AS total, o.created_at, u.first_name AS customer
+      `SELECT o.id, o.status, oi.price_at_time * oi.quantity AS total, o.created_at, u.first_name AS customer,
+        (SELECT image_url FROM product_images WHERE product_id = oi.product_id AND is_primary = 1 LIMIT 1) as image
        FROM orders o
        JOIN order_items oi ON o.id = oi.order_id
        JOIN users u ON o.customer_id = u.id
@@ -697,18 +699,19 @@ router.get('/dashboard', verifyVendor, async (req, res) => {
       [vendorProfileId]
     );
 
+    const mappedRecentOrders = recentOrders.map(order => ({
+      ...order,
+      image: order.image
+        ? (order.image.startsWith('http') ? order.image : `${BASE_URL}${order.image}`)
+        : null
+    }));
+
     res.json({
         products,
         orders,
         revenue: revenue || 0,
         averageRating: averageRating ? averageRating.toFixed(1) : 'N/A',
-        recentOrders: recentOrders.map(order => ({
-            id: order.id,
-            status: order.status,
-            total: order.total,
-            customer: order.customer,
-            timeAgo: order.created_at
-        }))
+        recentOrders: mappedRecentOrders
     });
 });
 
@@ -776,7 +779,6 @@ router.post('/logo',
   logoUpload.single('logo'),
   async (req, res) => {
     try {
-      // Check if file was uploaded
       if (!req.file) {
         return res.status(400).json({
           success: false,
@@ -784,7 +786,6 @@ router.post('/logo',
         });
       }
 
-      // Check for file validation errors
       if (req.fileValidationError) {
         return res.status(400).json({
           success: false,
@@ -792,19 +793,31 @@ router.post('/logo',
         });
       }
 
-      // Update the vendor_profiles table with the logo URL
-      const logoUrl = `/uploads/logos/${req.file.filename}`;
+      // Upload to S3
+      const s3Url = await uploadFileToS3(req.file, 'logos');
       
+      // Get existing logo URL to delete from S3
+      const [[profile]] = await pool.query(
+        'SELECT logo_url FROM vendor_profiles WHERE user_id = ?',
+        [req.user.id]
+      );
+
+      // Delete old logo from S3 if exists
+      if (profile && profile.logo_url) {
+        await deleteFileFromS3(profile.logo_url);
+      }
+
+      // Update vendor profile with new logo URL
       await pool.query(`
         UPDATE vendor_profiles
         SET logo_url = ?
         WHERE user_id = ?
-      `, [logoUrl, req.user.id]);
+      `, [s3Url, req.user.id]);
 
       res.json({
         success: true,
         message: 'Logo uploaded successfully',
-        logo_url: `${BASE_URL}${logoUrl}`
+        logo_url: s3Url
       });
     } catch (error) {
       console.error('Error uploading vendor logo:', error);
@@ -848,6 +861,202 @@ router.get('/logo',
         success: false,
         message: 'Error getting vendor logo'
       });
+    }
+  }
+);
+
+// Add new product (Vendor)
+router.post('/products',
+  verifyToken,
+  checkRole(['vendor']),
+  productUpload.array('images'),
+  async (req, res) => {
+    try {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        console.error('Validation errors:', errors.array());
+        return res.status(400).json({ success: false, errors: errors.array() });
+      }
+
+      const { name, category_id, price, stock_quantity, status, description } = req.body;
+      const images = req.files;
+      console.log('Received images:', images ? images.map(f => f.originalname) : images);
+
+      // Get vendor profile ID
+      const [[vendorProfile]] = await pool.query(
+        'SELECT id FROM vendor_profiles WHERE user_id = ?',
+        [req.user.id]
+      );
+      if (!vendorProfile) {
+        console.error('Vendor profile not found for user:', req.user.id);
+        return res.status(404).json({ success: false, message: 'Vendor profile not found' });
+      }
+      const vendorProfileId = vendorProfile.id;
+
+      // Save product to database first
+      const [productResult] = await pool.query(`
+        INSERT INTO products (vendor_id, name, description, price, stock_quantity, status, category_id, created_at, updated_at)
+        VALUES (?, ?, ?, ?, ?, ?, ?, NOW(), NOW())
+      `, [vendorProfileId, name, description, price, stock_quantity, status, category_id]);
+
+      const productId = productResult.insertId;
+
+      // Handle image uploads to S3
+      if (images && images.length > 0) {
+        try {
+          const imagePromises = images.map(async (file, index) => {
+            console.log('Uploading to S3:', file.originalname);
+            const s3Url = await uploadFileToS3(file, 'products');
+            console.log('S3 upload success:', s3Url);
+            return [productId, s3Url, index === 0]; // First image is primary
+          });
+
+          const imageResults = await Promise.all(imagePromises);
+          
+          // Save image URLs to database
+          await pool.query(
+            'INSERT INTO product_images (product_id, image_url, is_primary) VALUES ?',
+            [imageResults]
+          );
+        } catch (uploadError) {
+          console.error('S3 upload error:', uploadError);
+          // If image upload fails, delete the product
+          await pool.query('DELETE FROM products WHERE id = ?', [productId]);
+          return res.status(500).json({ success: false, message: 'Failed to upload product images', error: uploadError.message });
+        }
+      } else {
+        console.warn('No images received for product upload.');
+      }
+
+      res.status(201).json({
+        success: true,
+        message: 'Product created successfully',
+        productId: productId
+      });
+
+    } catch (error) {
+      console.error('Error creating product:', error);
+      res.status(500).json({
+        success: false,
+        message: error.message || 'Failed to create product'
+      });
+    }
+  }
+);
+
+// Update product (Vendor)
+router.put('/products/:id',
+  verifyToken,
+  checkRole(['vendor']),
+  productUpload.array('images'),
+  async (req, res) => {
+    try {
+      const { id } = req.params;
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res.status(400).json({ success: false, errors: errors.array() });
+      }
+
+      const { name, category_id, price, stock_quantity, status, description } = req.body;
+      const images = req.files;
+
+      // Verify product ownership
+      const [[product]] = await pool.query(`
+        SELECT p.* FROM products p
+        JOIN vendor_profiles vp ON p.vendor_id = vp.id
+        WHERE p.id = ? AND vp.user_id = ?
+      `, [id, req.user.id]);
+
+      if (!product) {
+        return res.status(404).json({
+          success: false,
+          message: 'Product not found or unauthorized'
+        });
+      }
+
+      // Update product details
+      await pool.query(`
+        UPDATE products
+        SET name = ?, description = ?, price = ?, stock_quantity = ?, status = ?, category_id = ?, updated_at = NOW()
+        WHERE id = ?
+      `, [name, description, price, stock_quantity, status, category_id, id]);
+
+      // Handle new image uploads if any
+      if (images && images.length > 0) {
+        // Get existing images
+        const [existingImages] = await pool.query(
+          'SELECT image_url FROM product_images WHERE product_id = ?',
+          [id]
+        );
+
+        // Delete old images from S3
+        for (const image of existingImages) {
+          await deleteFileFromS3(image.image_url);
+        }
+
+        // Delete old image records
+        await pool.query('DELETE FROM product_images WHERE product_id = ?', [id]);
+
+        // Upload new images
+        const imagePromises = images.map(async (file, index) => {
+          const s3Url = await uploadFileToS3(file, 'products');
+          return [id, s3Url, index === 0]; // First image is primary
+        });
+
+        const imageResults = await Promise.all(imagePromises);
+        
+        // Save new image URLs
+        await pool.query(
+          'INSERT INTO product_images (product_id, image_url, is_primary) VALUES ?',
+          [imageResults]
+        );
+      }
+
+      res.json({
+        success: true,
+        message: 'Product updated successfully'
+      });
+
+    } catch (error) {
+      console.error('Error updating product:', error);
+      res.status(500).json({
+        success: false,
+        message: error.message || 'Failed to update product'
+      });
+    }
+  }
+);
+
+// Delete product (Vendor)
+router.delete('/products/:id',
+  verifyToken,
+  checkRole(['vendor']),
+  async (req, res) => {
+    try {
+      const { id } = req.params;
+
+      // Optional: Fetch image URLs from DB and delete from S3 before deleting product
+      // const [images] = await pool.query('SELECT image_url FROM product_images WHERE product_id = ?', [id]);
+      // for (const img of images) {
+      //     await deleteFileFromS3(img.image_url);
+      // }
+
+      // Delete product from the database (including product_images due to foreign key CASCADE DELETE if set up)
+      const [result] = await pool.query(
+        'DELETE FROM products WHERE id = ? AND vendor_id = (SELECT id FROM vendor_profiles WHERE user_id = ?)',
+        [id, req.user.id]
+      );
+
+      if (result.affectedRows === 0) {
+        return res.status(404).json({ success: false, message: 'Product not found or unauthorized' });
+      }
+
+      res.json({ success: true, message: 'Product deleted successfully' });
+
+    } catch (error) {
+      console.error('Error deleting product:', error);
+       // In a real app, you might want error handling here if DB delete fails after S3 delete
+      res.status(500).json({ success: false, message: 'Failed to delete product' });
     }
   }
 );

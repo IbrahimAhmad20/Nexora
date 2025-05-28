@@ -503,6 +503,7 @@ body {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* Adjusted minmax */
     gap: 2rem; /* Adjusted gap */
+    align-items: stretch; /* Ensure all cards stretch to same height */
 }
 
 .product-card {
@@ -515,6 +516,8 @@ body {
     text-decoration: none; /* Remove link underline */
     color: inherit; /* Inherit text color */
     transition: box-shadow 0.2s, transform 0.2s;
+    min-height: 410px; /* Enforce equal height */
+    height: 100%;
 }
 
 .product-card:hover {

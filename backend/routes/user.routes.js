@@ -10,17 +10,18 @@ router.get('/profile',
   verifyToken,
   async (req, res) => {
     try {
-      const [users] = await pool.query(
-        'SELECT id, email, role, first_name, last_name, phone, created_at, two_factor_enabled, totp_secret FROM users WHERE id = ?',
-        [req.user.id]
-      );
+      const [profiles] = await pool.query(`
+        SELECT * FROM users WHERE id = ?
+      `, [req.user.id]);
 
-      if (users.length === 0) {
+      if (profiles.length === 0) {
         return res.status(404).json({
           success: false,
-          message: 'User not found'
+          message: 'User profile not found'
         });
       }
+
+      const profile = profiles[0];
 
       // Fetch user stats (example - you'll need to implement this query)
       const [[stats]] = await pool.query(
@@ -35,7 +36,7 @@ router.get('/profile',
 
       res.json({
         success: true,
-        data: { ...users[0], stats: stats || {} }
+        data: { ...profile, stats: stats || {} }
       });
     } catch (error) {
       console.error('Error fetching user profile:', error);

@@ -255,7 +255,9 @@ class CartManager {
 
     createCartItemHTML(item) {
         // Ensure item.image is handled correctly, similar to product card
-        const imageUrl = item.image && !item.image.startsWith('http') ? `${window.BASE_API_URL}${item.image}` : item.image || 'https://via.placeholder.com/60x60?text=No+Image';
+        const imageUrl = item.image
+            ? (item.image.startsWith('http') ? item.image : `${window.API_BASE_URL}${item.image}`)
+            : 'https://via.placeholder.com/60x60?text=No+Image';
 
         return `
             <div class="cart-item" data-product-id="${item.product_id}">

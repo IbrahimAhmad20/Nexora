@@ -78,13 +78,27 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // Image Preview
     productImage.addEventListener('change', (e) => {
-        const file = e.target.files[0];
-        if (file) {
-            currentImageFile = file;
+        const files = e.target.files;
+        imagePreview.style.display = 'block';
+        imagePreview.innerHTML = '';
+        
+        for (let i = 0; i < files.length; i++) {
+            if (i >= 5) break; // Maximum 5 images
+            
+            const file = files[i];
+            if (!file.type.startsWith('image/')) continue;
+            
             const reader = new FileReader();
             reader.onload = (e) => {
-                imagePreview.style.display = 'block';
-                imagePreview.innerHTML = `<img src="${e.target.result}" alt="Preview">`;
+                const previewItem = document.createElement('div');
+                previewItem.className = 'preview-item';
+                previewItem.innerHTML = `
+                    <img src="${e.target.result}" alt="Preview">
+                    <button type="button" class="remove-image" onclick="removeImage(${i})">
+                        <i class="fas fa-times"></i>
+                    </button>
+                `;
+                imagePreview.appendChild(previewItem);
             };
             reader.readAsDataURL(file);
         }
@@ -146,20 +160,19 @@ document.addEventListener('DOMContentLoaded', async () => {
         console.log(products);
         productTableBody.innerHTML = '';
         products.forEach((product, idx) => {
-            // Use product.category directly, with a fallback for missing data
-            const categoryName = product.category || 'Unknown';
-
+            const primaryImage = product.images?.find(img => img.is_primary)?.url || product.images?.[0]?.url || 'https://via.placeholder.com/60';
+            
             const row = document.createElement('tr');
             row.innerHTML = `
                 <td>
                     <div class="product-cell">
-                        <img src="${product.image || 'images/placeholder.png'}" alt="${product.name}" class="product-thumbnail" data-idx="${idx}">
+                        <img src="${primaryImage}" alt="${product.name}" class="product-thumbnail" data-idx="${idx}">
                         <span>${product.name}</span>
                     </div>
                 </td>
-                <td>${categoryName}</td>
-                <td>$${product.price.toFixed(2)}</td>
-                <td>${product.stock}</td>
+                <td>${product.category || product.category_name || 'Uncategorized'}</td>
+                <td>$${parseFloat(product.price).toFixed(2)}</td>
+                <td>${product.stock_quantity}</td>
                 <td><span class="status-tag ${product.status.toLowerCase()}">${product.status}</span></td>
                 <td>
                     <button class="edit-btn" data-id="${product.id}"><i class="fas fa-edit"></i></button>
@@ -248,7 +261,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             const variants = collectVariants();
             formData.append('variants', JSON.stringify(variants));
             
-            const response = await fetch(`${window.API_BASE_URL}/api/products`, {
+            const response = await fetch(`${window.API_BASE_URL}/api/vendor/products`, {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${token}`
@@ -291,7 +304,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             const variants = collectVariants();
             formData.append('variants', JSON.stringify(variants));
 
-            const response = await fetch(`${window.API_BASE_URL}/api/products/${productId}`, {
+            const response = await fetch(`${window.API_BASE_URL}/api/vendor/products/${productId}`, {
                 method: 'PUT',
                 headers: {
                     'Authorization': `Bearer ${token}`
@@ -316,7 +329,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     async function deleteProduct(productId) {
         try {
             const token = localStorage.getItem('token');
-            const response = await fetch(`${window.API_BASE_URL}/api/products/${productId}`, {
+            const response = await fetch(`${window.API_BASE_URL}/api/vendor/products/${productId}`, {
                 method: 'DELETE',
                 headers: {
                     'Authorization': `Bearer ${token}`
@@ -352,23 +365,30 @@ document.addEventListener('DOMContentLoaded', async () => {
             const product = await response.json();
             
             // Fill the form with product details
-            document.getElementById('productId').value = product._id || product.id;
-            console.log('Fetched product details:', product);
-
+            document.getElementById('productId').value = product.id;
             document.getElementById('productName').value = product.name;
-            document.getElementById('productCategory').value = product.category;
+            document.getElementById('productCategory').value = product.category_id;
             document.getElementById('productPrice').value = product.price;
             document.getElementById('productStock').value = product.stock;
             document.getElementById('productStatus').value = product.status;
             document.getElementById('productDescription').value = product.description;
-            if (product.image) {
-                imagePreview.style.display = 'block';
-                imagePreview.innerHTML = `<img src="${product.image}" alt="Current Image">`;
-                currentImageFile = null;  // Only change if user picks new file
-            } else {
-                imagePreview.style.display = 'none';
-                imagePreview.innerHTML = '';
+
+            // Handle images
+            imagePreview.style.display = 'block';
+            imagePreview.innerHTML = '';
+            
+            if (product.images && product.images.length > 0) {
+                product.images.forEach((img, index) => {
+                    const previewItem = document.createElement('div');
+                    previewItem.className = 'preview-item';
+                    previewItem.innerHTML = `
+                        <img src="${img.url}" alt="Current Image">
+                        <span class="primary-badge" style="display: ${img.is_primary ? 'block' : 'none'}">Primary</span>
+                    `;
+                    imagePreview.appendChild(previewItem);
+                });
             }
+
             modalTitle.textContent = 'Edit Product';
             showModal(productModal);
         } catch (error) {

@@ -560,13 +560,13 @@ function updateUIWithUserData(userData) {
     if (userData.avatar_url) {
         const avatarElement = document.querySelector('.profile-avatar img');
         if (avatarElement) {
-            avatarElement.src = userData.avatar_url;
+            avatarElement.src = userData.avatar_url.startsWith('http') ? userData.avatar_url : `${window.API_BASE_URL}${userData.avatar_url}`;
         } else {
             // Create an image element if it doesn't exist
             const avatarDiv = document.querySelector('.profile-avatar');
             if (avatarDiv) {
                 const img = document.createElement('img');
-                img.src = userData.avatar_url;
+                img.src = userData.avatar_url.startsWith('http') ? userData.avatar_url : `${window.API_BASE_URL}${userData.avatar_url}`;
                 // Optional: Add alt text
                 img.alt = `${userData.first_name} ${userData.last_name}'s avatar`;
                  // Remove the initials span if it exists
@@ -606,7 +606,7 @@ async function loadAddresses() {
         addressCardsContainer.innerHTML = addresses.data.map(address => `
             <div class="address-card" data-address-id="${address.id}">
                 <div class="address-card-header">
-                    <h3>${address.title}</h3>
+                    <h3>${address.label}</h3>
                     <div class="address-card-actions">
                         <button class="address-card-action edit-address" title="Edit">
                             <i class="fas fa-edit"></i>
@@ -616,11 +616,9 @@ async function loadAddresses() {
                         </button>
                     </div>
                 </div>
-                <p>${address.street}${address.apartment ? `, ${address.apartment}` : ''}</p>
-                <p>${address.city}, ${address.state} ${address.zip_code}</p>
+                <p>${address.address}</p>
+                <p>${address.city}, ${address.state} ${address.zip}</p>
                 <p>${address.country}</p>
-                ${address.phone ? `<p>Phone: ${address.phone}</p>` : ''}
-                ${address.is_default ? '<span class="default-badge">Default</span>' : ''}
             </div>
         `).join('');
     } catch (error) {

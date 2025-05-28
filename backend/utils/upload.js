@@ -1,45 +1,19 @@
 // backend/utils/upload.js
 const multer = require('multer');
 const path = require('path');
-const fs = require('fs');
+// fs is no longer needed if using memory storage
 
-// Ensure upload directories exist
-const productUploadDir = path.join(__dirname, '../uploads/products');
-const logoUploadDir = path.join(__dirname, '../uploads/logos');
+// Ensure upload directories exist (This is now less critical for S3, but keeping directory creation logic elsewhere is fine)
+// const productUploadDir = path.join(__dirname, '../uploads/products');
+// const logoUploadDir = path.join(__dirname, '../uploads/logos');
+// if (!fs.existsSync(productUploadDir)) { fs.mkdirSync(productUploadDir, { recursive: true }); }
+// if (!fs.existsSync(logoUploadDir)) { fs.mkdirSync(logoUploadDir, { recursive: true }); }
 
-if (!fs.existsSync(productUploadDir)) {
-    fs.mkdirSync(productUploadDir, { recursive: true });
-}
+// --- CONFIGURE MULTER ---
+// Use memory storage to get file buffer instead of saving to disk
+const storage = multer.memoryStorage(); 
 
-if (!fs.existsSync(logoUploadDir)) {
-    fs.mkdirSync(logoUploadDir, { recursive: true });
-}
-
-// Configure storage for products
-const productStorage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        cb(null, 'uploads/products');
-    },
-    filename: (req, file, cb) => {
-        // Create unique filename with timestamp
-        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-        cb(null, file.fieldname + '-' + uniqueSuffix + path.extname(file.originalname));
-    }
-});
-
-// Configure storage for logos
-const logoStorage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        cb(null, 'uploads/logos');
-    },
-    filename: (req, file, cb) => {
-        // Create unique filename with timestamp
-        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-        cb(null, file.fieldname + '-' + uniqueSuffix + path.extname(file.originalname));
-    }
-});
-
-// File filter
+// File filter (keep this)
 const imageFileFilter = (req, file, cb) => {
     // Accept images only
     if (!file.originalname.match(/\.(jpg|JPG|jpeg|JPEG|png|PNG|gif|GIF)$/)) {
@@ -49,18 +23,18 @@ const imageFileFilter = (req, file, cb) => {
     cb(null, true);
 };
 
-// Configure multer for products
+// Configure multer for products (adjust limits if needed)
 const productUpload = multer({
-    storage: productStorage,
+    storage: storage, // Use memory storage
     fileFilter: imageFileFilter,
     limits: {
-        fileSize: 5 * 1024 * 1024 // 5MB max file size
+        fileSize: 10 * 1024 * 1024 // Example: 10MB max file size
     }
 });
 
-// Configure multer for logos
+// Configure multer for logos (adjust limits if needed)
 const logoUpload = multer({
-    storage: logoStorage,
+    storage: storage, // Use memory storage
     fileFilter: imageFileFilter,
     limits: {
         fileSize: 2 * 1024 * 1024 // 2MB max file size for logos

@@ -283,7 +283,7 @@
             <idleTime>true</idleTime>
             <connectTime>true</connectTime>
           </value>
-        </objProp>
+        </objProp>1
         <stringProp name="filename"></stringProp>
       </ResultCollector>
       <hashTree/>

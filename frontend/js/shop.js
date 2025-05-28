@@ -106,19 +106,32 @@ class ShopManager {
 
         // Event delegation for product card clicks (to open modal or go to product page)
         this.elements.productGrid?.addEventListener('click', (e) => {
+            const wishlistBtn = e.target.closest('.wishlist-btn');
+            if (wishlistBtn) {
+                const productId = wishlistBtn.getAttribute('data-product-id');
+                console.log('[Shop] Wishlist heart clicked. productId:', productId, 'window.wishlistManager:', !!window.wishlistManager);
+                if (productId && window.wishlistManager) {
+                    window.wishlistManager.toggleWishlist(Number(productId), wishlistBtn);
+                }
+                e.stopPropagation(); // Prevent triggering card click
+                return;
+            }
+
             const productCard = e.target.closest('.product-card');
             if (!productCard) return;
 
             const productId = productCard.dataset.productId;
             const target = e.target;
 
-            // Check if the click was on the add to cart or wishlist buttons
+            // Check if the click was on the add to cart button
             if (target.closest('.add-to-cart')) {
+                const token = localStorage.getItem('token');
+                if (!token) {
+                    window.location.href = 'login.html';
+                    return;
+                }
                 const quantity = 1;
                 window.cartManager?.addItem(productId, quantity);
-            } else if (target.closest('.wishlist-btn')) {
-                 // The wishlist button logic is handled by event listener on the button itself if needed,
-                 // or could be handled here. The current code block is empty, so leaving it as is.
             } else {
                 // If not on specific buttons, redirect to product detail page
                 if (productId) {
@@ -222,9 +235,16 @@ class ShopManager {
             const data = await res.json();
             if (!Array.isArray(data.products)) throw new Error('Invalid products data format');
 
+            const products = data.products.map(p => ({
+                ...p,
+                image: p.image
+                    ? (p.image.startsWith('http') ? p.image : `${window.API_BASE_URL}${p.image}`)
+                    : null
+            }));
+
             this.setState({
-                products: data.products,
-                filteredProducts: data.products,
+                products: products,
+                filteredProducts: products,
                 isLoading: false
             });
 

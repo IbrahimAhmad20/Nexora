@@ -6,6 +6,7 @@ const { pool } = require('../config/db.config');
 const { verifyToken, checkRole } = require('../middleware/auth.middleware');
 const { body, validationResult } = require('express-validator');
 const { productUpload } = require('../utils/upload');
+const { BASE_URL } = require('../config/url.config');
 
 // Public: Get all featured products
 router.get('/featured', async (req, res) => {
@@ -23,13 +24,16 @@ router.get('/featured', async (req, res) => {
     // Format products for frontend
     const formatted = products.map(p => ({
       ...p,
-      image: p.primary_image,
+      image: p.primary_image
+        ? (p.primary_image.startsWith('http') ? p.primary_image : `${BASE_URL}${p.primary_image}`)
+        : null,
       vendor: { name: p.vendor_name },
       price: parseFloat(p.price)
     }));
 
     res.json({ success: true, products: formatted });
   } catch (error) {
+    console.error('Error in /api/products/featured:', error);
     res.status(500).json({ success: false, message: 'Failed to fetch featured products' });
   }
 });

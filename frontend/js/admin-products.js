@@ -52,10 +52,22 @@ async function fetchCategoriesMap() {
 
 async function loadProducts() {
     try {
-        const res = await api.getAllProducts();
-        const products = res.products || res.data;
-        allProducts = products;
-        renderProducts(allProducts); // Render using the global allProducts
+        const res = await fetch(`${window.API_BASE_URL}/api/admin/products`, {
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('token')}`
+            }
+        });
+        const data = await res.json();
+        if (data.success) {
+            const products = data.products.map(p => ({
+                ...p,
+                image: p.image
+                    ? (p.image.startsWith('http') ? p.image : `${window.API_BASE_URL}${p.image}`)
+                    : null
+            }));
+            allProducts = products;
+            renderProducts(allProducts);
+        }
     } catch (err) {
         alert('Failed to load products');
         console.error(err);
@@ -68,15 +80,12 @@ function renderProducts(products) {
     products
         .filter(product => product.status !== 'deleted')
         .forEach(product => {
-            // Look up category name using category_id from the map
-            const categoryName = categoriesMap.get(product.category_id) || 'Unknown';
-
             const tr = document.createElement('tr');
             tr.innerHTML = `
                 <td>${product.id}</td>
                 <td>${product.name}</td>
                 <td>${product.vendor_name || ''}</td>
-                <td>${categoryName}</td> <!-- Use looked up category name -->
+                <td>${product.category || 'Uncategorized'}</td>
                 <td>${product.price}</td>
                 <td>${product.stock_quantity}</td>
                 <td>${product.status}</td>

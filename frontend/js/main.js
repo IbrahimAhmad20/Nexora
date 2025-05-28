@@ -447,8 +447,7 @@ async function loadFeaturedProducts() {
 function handleLandingAddToCart(productId) {
     const token = localStorage.getItem('token');
     if (!token) {
-        pendingAddToCartProductId = productId;
-        showModal(loginModal);
+        window.location.href = 'login.html';
         return;
     }
     addToCartLanding(productId);

@@ -44,7 +44,7 @@ class WishlistManager {
             return;
         }
 
-        const isAdding = !this.state.items.has(productId);
+        const isAdding = !this.state.items.has(Number(productId));
         const endpoint = `/api/products/${productId}/wishlist`;
         const method = isAdding ? 'POST' : 'DELETE';
 
@@ -58,15 +58,11 @@ class WishlistManager {
 
             if (!res.ok) throw new Error('Failed to update wishlist');
 
-            if (isAdding) {
-                this.state.items.add(productId, this.state.items.get(productId));
-                buttonElement.classList.add('active');
-                buttonElement.querySelector('i')?.classList.replace('far', 'fas');
-            } else {
-                this.state.items.delete(productId);
-                buttonElement.classList.remove('active');
-                buttonElement.querySelector('i')?.classList.replace('fas', 'far');
-            }
+            // Debug: Log action
+            console.log(`[Wishlist] ${isAdding ? 'Adding' : 'Removing'} productId:`, productId);
+
+            // Reload wishlist from server to get the correct state and update UI
+            await this.loadWishlist();
 
             this.showNotification(
                 isAdding ? 'Added to wishlist' : 'Removed from wishlist'
@@ -78,10 +74,14 @@ class WishlistManager {
     }
 
     updateWishlistUI() {
-        // Update elements that show wishlist status (like icons on shop page)
+        // Debug: Log current wishlist state
+        const wishlistIds = Array.from(this.state.items.keys());
+        console.log('[Wishlist] Current wishlist product IDs:', wishlistIds);
         document.querySelectorAll('.wishlist-btn').forEach(btn => {
-            const productId = parseInt(btn.getAttribute('data-product-id')); // Ensure productId is a number
-            if (this.state.items.has(productId)) {
+            const productId = Number(btn.getAttribute('data-product-id'));
+            const isInWishlist = this.state.items.has(productId);
+            console.log(`[Wishlist] Button for productId ${productId}: isInWishlist=${isInWishlist}`);
+            if (isInWishlist) {
                 btn.classList.add('active');
                 btn.querySelector('i')?.classList.replace('far', 'fas');
             } else {
@@ -90,15 +90,17 @@ class WishlistManager {
             }
         });
 
-        // Render the wishlist items on the wishlist page
-        this.renderWishlist();
+        // Only render the wishlist items if the container exists
+        if (document.getElementById('wishlistProductGrid')) {
+            this.renderWishlist();
+        }
     }
 
     renderWishlist() {
         console.log('Rendering wishlist...', this.state.items);
         const container = document.getElementById('wishlistProductGrid');
         if (!container) {
-            console.error('Wishlist grid container not found.');
+            alert('Wishlist grid container not found. Please check your HTML.');
             return;
         }
 
@@ -111,7 +113,7 @@ class WishlistManager {
 
         container.innerHTML = products.map(product => {
             const imageUrl = product.primary_image
-                ? (product.primary_image.startsWith('http') ? product.primary_image : window.BASE_API_URL + product.primary_image)
+                ? (product.primary_image.startsWith('http') ? product.primary_image : window.API_BASE_URL + product.primary_image)
                 : 'https://upload.wikimedia.org/wikipedia/commons/d/d1/Image_not_available.png';
             // Adapting product card structure from shop.js
             return `
@@ -157,12 +159,29 @@ class WishlistManager {
     }
 
     showNotification(message, type = 'success') {
-        // Implement notification system
-        alert(message); // Temporary implementation
+        showToast(message, type);
     }
 }
 
-// Initialize wishlist manager when DOM is loaded
+function showToast(message, type = 'success') {
+    // Remove any existing toast
+    document.querySelectorAll('.custom-toast').forEach(el => el.remove());
+
+    const toast = document.createElement('div');
+    toast.className = `custom-toast toast-${type}`;
+    toast.textContent = message;
+    document.body.appendChild(toast);
+
+    setTimeout(() => {
+        toast.classList.add('show');
+    }, 10);
+    setTimeout(() => {
+        toast.classList.remove('show');
+        setTimeout(() => toast.remove(), 300);
+    }, 2500);
+}
+
+// Always initialize wishlist manager on every page
 document.addEventListener('DOMContentLoaded', () => {
     window.wishlistManager = new WishlistManager();
 });
