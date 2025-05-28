@@ -87,7 +87,7 @@ function renderProducts(products) {
                 <td>${product.vendor_name || ''}</td>
                 <td>${product.category || 'Uncategorized'}</td>
                 <td>${product.price}</td>
-                <td>${product.stock_quantity}</td>
+                <td>${product.stock}</td>
                 <td>${product.status}</td>
                 <td><input type="checkbox" class="featured-toggle" data-id="${product.id}" ${product.featured ? 'checked' : ''}></td>
                 <td>${product.created_at ? new Date(product.created_at).toLocaleString() : ''}</td>
@@ -149,7 +149,7 @@ function openEditProductModal(product) {
     document.getElementById('editProductName').value = product.name;
     document.getElementById('editProductDescription').value = product.description || '';
     document.getElementById('editProductPrice').value = product.price;
-    document.getElementById('editProductStock').value = product.stock_quantity;
+    document.getElementById('editProductStock').value = product.stock;
     document.getElementById('editProductStatus').value = product.status;
     
     // Load categories into dropdown for the modal

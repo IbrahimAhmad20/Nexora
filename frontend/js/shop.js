@@ -282,7 +282,8 @@ class ShopManager {
             rating = 4.5,
             reviews = 20,
             badge,
-            badgeClass
+            badgeClass,
+            stock
         } = product;
 
         const imageUrl = this.getProductImageUrl(primary_image);
@@ -308,9 +309,13 @@ class ShopManager {
                         ${displayOldPrice ? `<span class="original-price">$${displayOldPrice}</span>` : ''}
                         ${discount ? `<span class="discount-badge">${discount}% OFF</span>` : ''}
                     </div>
+                    <div class="product-stock">
+                        <span class="stock-label">Stock:</span>
+                        <span class="stock-value ${stock <= 5 ? 'low-stock' : ''}">${stock || 0}</span>
+                    </div>
                     <div class="product-actions">
-                        <button class="add-to-cart" data-product-id="${id}">
-                            <i class="fas fa-shopping-cart"></i> Add to Cart
+                        <button class="add-to-cart" data-product-id="${id}" ${stock <= 0 ? 'disabled' : ''}>
+                            <i class="fas fa-shopping-cart"></i> ${stock <= 0 ? 'Out of Stock' : 'Add to Cart'}
                         </button>
                         <button class="wishlist-btn ${isInWishlist ? 'active' : ''}" data-product-id="${id}">
                             <i class="${isInWishlist ? 'fas' : 'far'} fa-heart"></i>

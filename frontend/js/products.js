@@ -260,10 +260,10 @@ function renderProducts(products) {
             <td>${product.name}</td>
             <td>${product.category || ''}</td>
             <td>$${product.price}</td>
-            <td>${product.stock_quantity}</td>
+            <td>${product.stock}</td>
             <td>
-                <span class="product-status ${product.stock_quantity > 10 ? 'status-instock' : product.stock_quantity > 0 ? 'status-low' : 'status-out'}">
-                    ${product.stock_quantity > 10 ? 'In Stock' : product.stock_quantity > 0 ? 'Low Stock' : 'Out of Stock'}
+                <span class="product-status ${product.stock > 10 ? 'status-instock' : product.stock > 0 ? 'status-low' : 'status-out'}">
+                    ${product.stock > 10 ? 'In Stock' : product.stock > 0 ? 'Low Stock' : 'Out of Stock'}
                 </span>
             </td>
             <td>

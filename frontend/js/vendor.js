@@ -436,7 +436,7 @@ function createProductCard(product) {
         <div class="product-info">
             <h3 class="product-name">${product.name}</h3>
             <p class="product-price">$${product.price.toFixed(2)}</p>
-            <p class="product-stock">Stock: ${product.stock_quantity}</p>
+            <p class="product-stock">Stock: ${product.stock}</p>
             <div class="product-actions">
                 <button class="btn btn-edit" onclick="editProduct(${product.id})">
                     <i class="fas fa-edit"></i> Edit
