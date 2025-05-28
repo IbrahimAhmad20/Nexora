@@ -464,14 +464,21 @@ class ShopManager {
     }
 
     setProfileInitials() {
-        const user = JSON.parse(localStorage.getItem('user') || '{}');
-        const initials = user.name
-            ? user.name.split(' ').map(n => n[0]).join('').toUpperCase()
-            : 'GU';
-        const avatarElement = this.elements.profileMenu?.querySelector('.user-avatar');
-         if (avatarElement) {
-             avatarElement.textContent = initials;
-         }
+        const userJson = localStorage.getItem('user');
+        let user = {};
+        if (userJson && userJson !== "undefined") {
+            try {
+                user = JSON.parse(userJson);
+            } catch (e) {
+                console.error("Error parsing user data from localStorage in shop.js:", e);
+                // Optionally clear the invalid data
+                // localStorage.removeItem('user');
+            }
+        }
+        const initialsElement = document.getElementById('userProfileInitials');
+        if (initialsElement && user && user.initials) {
+            initialsElement.textContent = user.initials;
+        }
     }
 }
 

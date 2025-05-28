@@ -1,6 +1,6 @@
 // Vendor Products JavaScript
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
     // DOM Elements
     const productTableBody = document.getElementById('productTableBody');
     const productSearch = document.querySelector('.product-search');
@@ -18,6 +18,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const closeGallery = document.getElementById('closeGallery');
     const prevImage = document.getElementById('prevImage');
     const nextImage = document.getElementById('nextImage');
+    const productCategorySelect = document.getElementById('productCategory');
 
     // State
     let currentPage = 1;
@@ -27,6 +28,53 @@ document.addEventListener('DOMContentLoaded', () => {
     let currentImageFile = null;
     let currentGalleryImages = [];
     let currentGalleryIndex = 0;
+    let categories = [];
+
+    // --- Fetch Categories ---
+    async function fetchCategories() {
+        try {
+            const token = localStorage.getItem('token');
+            if (!token) return;
+
+            const response = await fetch(`${window.API_BASE_URL}/api/admin/categories`, {
+                 headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                console.error('Failed to fetch categories:', response.status, errorData.message);
+                throw new Error(errorData.message || 'Failed to fetch categories');
+            }
+
+            const data = await response.json();
+            categories = data.categories || [];
+            populateCategoryDropdown();
+
+        } catch (error) {
+            console.error('Error fetching categories:', error);
+        }
+    }
+
+    // --- Populate Category Dropdown ---
+    function populateCategoryDropdown() {
+        if (!productCategorySelect) return;
+
+        productCategorySelect.innerHTML = '';
+
+        const defaultOption = document.createElement('option');
+        defaultOption.value = '';
+        defaultOption.textContent = 'Select Category';
+        productCategorySelect.appendChild(defaultOption);
+
+        categories.forEach(category => {
+            const option = document.createElement('option');
+            option.value = category.id;
+            option.textContent = category.name;
+            productCategorySelect.appendChild(option);
+        });
+    }
 
     // Image Preview
     productImage.addEventListener('change', (e) => {
@@ -183,7 +231,7 @@ document.addEventListener('DOMContentLoaded', () => {
             // Create FormData object for multipart/form-data
             const formData = new FormData();
             formData.append('name', productData.name);
-            formData.append('category', productData.category);
+            formData.append('category_id', productCategorySelect.value);
             formData.append('price', productData.price);
             formData.append('stock_quantity', productData.stock);
             formData.append('status', productData.status);
@@ -226,7 +274,7 @@ document.addEventListener('DOMContentLoaded', () => {
             // Create FormData object for multipart/form-data
             const formData = new FormData();
             formData.append('name', productData.name);
-            formData.append('category', productData.category);
+            formData.append('category_id', productCategorySelect.value);
             formData.append('price', productData.price);
             formData.append('stock_quantity', productData.stock);
             formData.append('status', productData.status);
@@ -398,6 +446,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Initial load
     fetchProducts();
+    fetchCategories();
 
     // Redirect to products page when the 'Products' button is clicked
     const productsLink = document.querySelector('.sidebar-nav a[href="vendor-products.html"]');

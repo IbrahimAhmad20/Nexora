@@ -1,0 +1,98 @@
+@startuml Technology Stack Comparison - Improved
+
+skinparam backgroundColor white
+skinparam handwritten false
+skinparam defaultFontName Arial
+skinparam defaultFontSize 12
+skinparam roundCorner 10
+skinparam shadowing false
+
+title Technology Stack Comparison
+
+' Define styles
+skinparam package {
+    BackgroundColor LightGrey
+    BorderColor DarkGrey
+    FontColor Black
+}
+
+skinparam component {
+    BackgroundColor LightBlue
+    BorderColor DarkBlue
+    FontColor Black
+}
+
+skinparam component "Selected" {
+    BackgroundColor LightGreen
+    BorderColor DarkGreen
+    FontColor Black
+}
+
+' Selected Stack
+package "Selected Stack" as SelectedStack {
+  package "Frontend" as Frontend {
+    component "HTML5/CSS3" as HTML <<Selected>>
+    component "JavaScript" as JS <<Selected>>
+    component "Bootstrap" as Bootstrap <<Selected>>
+    component "jQuery" as jQuery <<Selected>>
+    component "AJAX" as AJAX <<Selected>>
+  }
+
+  package "Backend" as Backend {
+    component "Node.js" as NodeJS <<Selected>>
+    component "Express.js" as Express <<Selected>>
+  }
+
+  package "Database" as Database {
+    component "MySQL" as MySQL <<Selected>>
+    component "Sequelize ORM" as Sequelize <<Selected>>
+  }
+
+  Frontend -- Backend : "API Communication"
+  Backend -- Database : "ORM"
+}
+
+' Alternative Technologies
+package "Alternative Technologies" as Alternatives {
+  package "Frontend Alternatives" as FrontendAlt {
+    component "React" as React
+    component "Angular" as Angular
+    component "Vue.js" as VueJs
+  }
+
+  package "Backend Alternatives" as BackendAlt {
+    component "Python/Django" as Django
+    component "PHP/Laravel" as Laravel
+    component "Java/Spring" as Spring
+  }
+
+  package "Database Alternatives" as DatabaseAlt {
+    component "MongoDB" as MongoDB
+    component "PostgreSQL" as PostgreSQL
+  }
+}
+
+' Notes for Selected Technologies
+note right of NodeJS
+  Node.js Advantages:
+  * Event-driven
+  * Non-blocking I/O
+  * npm ecosystem
+end note
+
+note right of Express
+  Express.js Advantages:
+  * Lightweight
+  * Middleware support
+  * Routing
+end note
+
+note right of MySQL
+  MySQL Advantages:
+  * ACID Compliant
+  * Transaction Support
+  * Widely Used
+end note
+
+
+@enduml 

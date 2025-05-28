@@ -1,0 +1,111 @@
+{
+	"id": "nexora-test-env",
+	"name": "Nexora Test Environment",
+	"values": [
+		{
+			"key": "BASE_URL",
+			"value": "http://localhost:5000",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "TOKEN",
+			"value": "",
+			"type": "secret",
+			"enabled": true
+		},
+		{
+			"key": "testUser",
+			"value": "{\"email\":\"test@example.com\",\"password\":\"Test123!\",\"role\":\"customer\",\"first_name\":\"Test\",\"last_name\":\"User\",\"phone\":\"+1234567890\"}",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "testUserEmail",
+			"value": "test@example.com",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "testUserPassword",
+			"value": "Test123!",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "testUserRole",
+			"value": "customer",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "testUserFirstName",
+			"value": "Test",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "testUserLastName",
+			"value": "User",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "testUserPhone",
+			"value": "+1234567890",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "testVendor",
+			"value": "{\"email\":\"vendor@example.com\",\"password\":\"Test123!\",\"role\":\"vendor\",\"first_name\":\"Test\",\"last_name\":\"Vendor\",\"phone\":\"+1234567890\"}",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "testProduct",
+			"value": "{\"name\":\"Test Product\",\"description\":\"This is a test product\",\"price\":\"99.99\",\"stock_quantity\":\"100\",\"category_id\":\"1\"}",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "PRODUCT_ID",
+			"value": "",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "ORDER_ID",
+			"value": "",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "ADDRESS_ID",
+			"value": "",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "testVendorEmail",
+			"value": "vendor@example.com",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "testVendorPassword",
+			"value": "Test123!",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "VENDOR_TOKEN",
+			"value": "",
+			"type": "secret",
+			"enabled": true
+		}
+	],
+	"_postman_variable_scope": "environment",
+	"_postman_exported_at": "2024-03-19T12:00:00.000Z",
+	"_postman_exported_using": "Postman/10.0.0"
+} 

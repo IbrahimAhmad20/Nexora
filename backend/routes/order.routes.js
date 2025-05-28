@@ -48,14 +48,17 @@ router.post('/cart',
       }
 
       const { product_id, quantity } = req.body;
+      console.log('Add to Cart: Received product_id', product_id, 'and quantity', quantity);
 
       // Check if product exists and has enough stock
       const [products] = await pool.query(
         'SELECT * FROM products WHERE id = ? AND status = ?',
         [product_id, 'active']
       );
+      console.log('Add to Cart: Product check query result:', products);
 
       if (products.length === 0) {
+        console.log('Add to Cart: Product not found or inactive, returning 404.');
         return res.status(404).json({
           success: false,
           message: 'Product not found'
@@ -63,6 +66,7 @@ router.post('/cart',
       }
 
       if (products[0].stock_quantity < quantity) {
+        console.log('Add to Cart: Not enough stock, returning 400.');
         return res.status(400).json({
           success: false,
           message: 'Not enough stock available'

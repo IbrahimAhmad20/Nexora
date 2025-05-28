@@ -91,7 +91,7 @@ router.post('/',
         body('description').notEmpty().withMessage('Product description is required'),
         body('price').isFloat({ min: 0 }).withMessage('Price must be a positive number'),
         body('stock_quantity').isInt({ min: 0 }).withMessage('Stock quantity must be a positive number'),
-        body('category').notEmpty().withMessage('Category is required')
+        body('category_id').notEmpty().withMessage('Category is required')
     ],
     async (req, res) => {
         try {
@@ -108,7 +108,7 @@ router.post('/',
                 });
             }
 
-            const { name, description, price, stock_quantity, category } = req.body;
+            const { name, description, price, stock_quantity, category_id } = req.body;
 
             // Get vendor profile ID
             const [vendorProfiles] = await pool.query(
@@ -132,8 +132,8 @@ router.post('/',
             try {
                 // Create product
                 const [result] = await connection.query(
-                    'INSERT INTO products (vendor_id, name, description, price, stock_quantity, category) VALUES (?, ?, ?, ?, ?, ?)',
-                    [vendorId, name, description, price, stock_quantity, category]
+                    'INSERT INTO products (vendor_id, name, description, price, stock_quantity, category_id) VALUES (?, ?, ?, ?, ?, ?)',
+                    [vendorId, name, description, price, stock_quantity, category_id]
                 );
 
                 // Upload images
@@ -199,7 +199,7 @@ router.put('/:id',
     body('description').optional().notEmpty().withMessage('Product description cannot be empty'),
     body('price').optional().isFloat({ min: 0 }).withMessage('Price must be a positive number'),
     body('stock_quantity').optional().isInt({ min: 0 }).withMessage('Stock quantity must be a positive number'),
-    body('category').optional().notEmpty().withMessage('Category cannot be empty')
+    body('category_id').optional().notEmpty().withMessage('Category cannot be empty')
   ],
   async (req, res) => {
     try {
@@ -209,7 +209,7 @@ router.put('/:id',
       }
 
       const productId = req.params.id;
-      const { name, description, price, stock_quantity, category } = req.body;
+      const { name, description, price, stock_quantity, category_id } = req.body;
 
       // Check if product exists and belongs to vendor
       const [products] = await pool.query(`
@@ -245,9 +245,9 @@ router.put('/:id',
         updateFields.push('stock_quantity = ?');
         updateValues.push(stock_quantity);
       }
-      if (category) {
-        updateFields.push('category = ?');
-        updateValues.push(category);
+      if (category_id) {
+        updateFields.push('category_id = ?');
+        updateValues.push(category_id);
       }
 
       if (updateFields.length > 0) {

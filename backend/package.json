@@ -12,6 +12,7 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "bcryptjs": "^3.0.2",
     "cors": "^2.8.5",
     "dotenv": "^16.5.0",
     "express": "^5.1.0",
@@ -28,8 +29,7 @@
     "passport-local": "^1.0.0",
     "pg": "^8.15.6",
     "qrcode": "^1.5.1",
-    "speakeasy": "^2.0.0",
-    "bcryptjs": "^3.0.2"
+    "speakeasy": "^2.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.27.1",

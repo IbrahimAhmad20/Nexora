@@ -5,7 +5,19 @@ const { isAdmin, logAdminAction } = require('../middleware/admin.middleware');
 const { pool } = require('../config/db.config');
 const { verifyToken, checkRole } = require('../middleware/auth.middleware');
 
-// Apply admin middleware to all routes
+// Get all categories (Public Route - placed before authentication middleware)
+router.get('/categories', async (req, res) => {
+    console.log('User in /categories:', req.user);
+    try {
+        const [categories] = await db.query('SELECT id, name FROM categories ORDER BY name');
+        res.json({ success: true, categories });
+    } catch (error) {
+        console.error('Error fetching categories:', error);
+        res.status(500).json({ success: false, message: 'Failed to fetch categories' });
+    }
+});
+
+// Apply admin middleware to all subsequent routes
 router.use(verifyToken);
 router.use(isAdmin);
 router.use(logAdminAction);
@@ -660,17 +672,6 @@ router.get('/vendors', async (req, res) => {
     }
 });
 
-// Get all categories
-router.get('/categories', verifyToken, async (req, res) => {
-    console.log('User in /categories:', req.user);
-    try {
-        const [categories] = await db.query('SELECT id, name FROM categories ORDER BY name');
-        res.json({ success: true, categories });
-    } catch (error) {
-        res.status(500).json({ success: false, message: 'Failed to fetch categories' });
-    }
-});
-// ... existing code ...
 // Category Management (Admin)
 router.post('/categories', verifyToken, checkRole(['admin']), async (req, res) => {
     const { name } = req.body;

@@ -356,7 +356,17 @@ async function showTotpLogin(user, token) {
 // Utility: Check if customer is logged in
 function isCustomerLoggedIn() {
     const token = localStorage.getItem('token');
-    const user = JSON.parse(localStorage.getItem('user') || '{}');
+    const userJson = localStorage.getItem('user');
+    let user = {};
+    if (userJson && userJson !== "undefined") {
+        try {
+            user = JSON.parse(userJson);
+        } catch (e) {
+            console.error("Error parsing user data from localStorage:", e);
+            // Optionally clear the invalid data
+            // localStorage.removeItem('user');
+        }
+    }
     return token && user && user.role === 'customer';
 }
 

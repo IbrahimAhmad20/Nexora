@@ -6,28 +6,47 @@
 }
 
 :root {
-    --primary-color: #2563eb;
-    --secondary-color: #1e293b;
-    --accent-color: #10b981;
-    --text-color: #e5eaf5;
-    --light-gray: #232c43;
-    --border-color: #233056;
-    --success-color: #10b981;
-    --warning-color: #f1c40f;
-    --error-color: #ef4444;
-    --background-dark: #10172a;
-    --background-light: #19213a;
-    --card-bg: #181f2a;
-    --card-bg-alt: #232c43;
-    --light-blue: #3b82f6;
-    --lighter-blue: #60a5fa;
+    /* Dark Blueish Color Palette (Matching shop.css) */
+    --primary-dark: #0a192f;
+    --primary-dark-2: #172a45;
+    --primary-dark-3: #303f60;
+    --accent-blue: #64ffda;
+    --accent-blue-2: #1cb9a8;
+    --accent-blue-3: #00a8cc;
+    --light-blue: #88ccf1;
+    --text-light: #ccd6f6;
+    --text-gray: #8892b0;
+    --text-dark: #495670;
+    --success: #4cc9f0; /* Using a blueish success color from shop.css */
+    --warning: #f8961e;
+    --danger: #f72585;
+    
+    /* Keeping some landing-specific variables but aligning colors */
+    --background-dark: var(--primary-dark);
+    --background-light: var(--primary-dark-2);
+    --card-bg: var(--primary-dark-2);
+    --card-bg-alt: var(--primary-dark-3);
+    --border-color: rgba(100, 255, 218, 0.1);
+    
+    /* Old variables replaced or mapped */
+    /* --primary-color: #2563eb; */
+    /* --secondary-color: #1e293b; */
+    /* --accent-color: #10b981; */
+    /* --text-color: #e5eaf5; */
+    /* --light-gray: #232c43; */
+    /* --border-color: #233056; */
+    /* --success-color: #10b981; */
+    /* --warning-color: #f1c40f; */
+    /* --error-color: #ef4444; */
+    /* --light-blue: #3b82f6; */
+    /* --lighter-blue: #60a5fa; */
 }
 
 body {
     margin: 0;
-    font-family: 'Segoe UI', Arial, sans-serif;
+    font-family: 'Inter', sans-serif; /* Changed font to match shop.css */
     background: var(--background-dark);
-    color: var(--text-color);
+    color: var(--text-light); /* Using text-light from shop.css */
 }
 
 .container {
@@ -38,9 +57,9 @@ body {
 
 /* Header Styles */
 .landing-header {
-    background: rgba(25,33,58,0.92);
+    background: var(--primary-dark-3); /* Using primary-dark-3 from shop.css */
     backdrop-filter: blur(8px);
-    box-shadow: 0 2px 12px rgba(16,23,42,0.10);
+    box-shadow: 0 2px 12px rgba(2, 12, 27, 0.7); /* Adjusted shadow to match shop.css color */
     padding: 0.7rem 0;
     position: sticky;
     top: 0;
@@ -48,39 +67,45 @@ body {
     transition: background 0.3s, box-shadow 0.3s;
 }
 
+.landing-header .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
 .logo {
-    font-size: 2rem;
-    font-weight: bold;
-    color: #fff;
-    letter-spacing: 1px;
+    font-size: 1.5rem; /* Adjusted font size to match shop.css header logo */
+    font-weight: 600; /* Adjusted font weight */
+    color: var(--accent-blue); /* Using accent-blue from shop.css */
+    letter-spacing: normal; /* Removed letter spacing */
     display: inline-block;
 }
 
 .landing-nav {
-    float: right;
     display: flex;
     align-items: center;
     gap: 1.5rem;
 }
 
 .landing-nav a {
-    color: var(--text-color);
+    color: var(--text-gray); /* Using text-gray from shop.css */
     text-decoration: none;
     font-weight: 500;
     font-size: 1rem;
     transition: color 0.2s;
-    opacity: 0.92;
+    opacity: 1; /* Removed opacity */
 }
 
 .landing-nav a:hover {
-    color: var(--primary-color);
+    color: var(--accent-blue); /* Using accent-blue from shop.css */
     opacity: 1;
 }
 
 .landing-nav a.active, .landing-nav a:active {
-    border-bottom: 2.5px solid var(--primary-color);
-    color: var(--primary-color);
+    border-bottom: 2px solid var(--accent-blue); /* Adjusted border to match shop.css active link */
+    color: var(--accent-blue); /* Using accent-blue */
     opacity: 1;
+    padding-bottom: 0.2rem; /* Added padding for border */
 }
 
 /* Button Styles */
@@ -95,70 +120,71 @@ body {
 }
 
 .btn-primary {
-    background: linear-gradient(90deg, var(--primary-color) 60%, var(--light-blue) 100%);
-    color: #fff;
+    background: var(--accent-blue); /* Using accent-blue */
+    color: var(--primary-dark); /* Using primary-dark */
     border: none;
-    box-shadow: 0 2px 8px rgba(37,99,235,0.08);
+    box-shadow: none; /* Removed box shadow */
+    transition: background 0.2s, filter 0.2s; /* Simplified transition */
 }
 
 .btn-primary:hover {
-    background: linear-gradient(90deg, var(--light-blue) 0%, var(--primary-color) 100%);
-    filter: brightness(1.08);
+    background: var(--accent-blue-2); /* Using accent-blue-2 */
+    filter: none; /* Removed filter */
 }
 
 .btn-secondary {
     background: transparent;
-    color: #fff;
-    border: 2px solid var(--primary-color);
+    color: var(--accent-blue); /* Using accent-blue */
+    border: 1.5px solid var(--accent-blue); /* Using accent-blue */
     box-shadow: none;
 }
 
 .btn-secondary:hover {
-    background: var(--primary-color);
-    color: #fff;
+    background: var(--accent-blue); /* Using accent-blue */
+    color: var(--primary-dark); /* Using primary-dark */
 }
 
 .btn-login {
-    background: linear-gradient(90deg, var(--primary-color) 60%, var(--light-blue) 100%);
-    color: #fff;
+    background: var(--accent-blue); /* Using accent-blue */
+    color: var(--primary-dark); /* Using primary-dark */
     border: none;
     border-radius: 8px;
     padding: 0.5rem 1.5rem;
     font-size: 1.05rem;
     font-weight: 700;
-    box-shadow: 0 2px 8px rgba(37,99,235,0.10);
+    box-shadow: var(--box-shadow); /* Using box-shadow from shop.css */
     transition: background 0.2s, color 0.2s, box-shadow 0.2s, transform 0.15s;
     opacity: 1;
 }
 
 .btn-login:hover {
-    background: linear-gradient(90deg, var(--light-blue) 0%, var(--primary-color) 100%);
-    color: #fff;
-    box-shadow: 0 4px 16px rgba(37,99,235,0.13);
+    background: var(--accent-blue-2); /* Using accent-blue-2 */
+    color: var(--primary-dark); /* Using primary-dark */
+    box-shadow: var(--box-shadow-lg); /* Using box-shadow-lg from shop.css */
     transform: translateY(-2px) scale(1.03);
 }
 
 .btn-register {
-    background: var(--background-dark);
-    color: var(--primary-color);
-    border: 1.5px solid var(--primary-color);
+    background: transparent; /* Changed to transparent */
+    color: var(--accent-blue); /* Using accent-blue */
+    border: 1.5px solid var(--accent-blue); /* Using accent-blue */
     margin-left: 0.5rem;
-    opacity: 0.92;
+    opacity: 1; /* Removed opacity */
 }
 
 .btn-register:hover {
-    background: var(--primary-color);
-    color: #fff;
+    background: var(--accent-blue); /* Using accent-blue */
+    color: var(--primary-dark); /* Using primary-dark */
     opacity: 1;
 }
 
 /* Hero Section */
 .hero {
-    background: linear-gradient(120deg, var(--background-light) 0%, var(--primary-color) 100%);
-    color: #fff;
+    background: var(--primary-dark); /* Using primary-dark */
+    color: var(--text-light); /* Using text-light */
     padding: 4.5rem 0 3.5rem 0;
     text-align: center;
-    box-shadow: 0 4px 32px rgba(16,23,42,0.10);
+    box-shadow: none; /* Removed box-shadow as it's usually on headers/cards */
     position: relative;
     overflow: hidden;
     padding-bottom: 6rem;
@@ -169,9 +195,10 @@ body {
     position: absolute;
     left: 0; right: 0; bottom: -1px;
     height: 80px;
-    background: url('data:image/svg+xml;utf8,<svg width="100%25" height="100" viewBox="0 0 1440 100" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M0 0H1440V100C1200 80 900 40 720 60C540 80 240 100 0 80V0Z" fill="%231e40af"/></svg>') no-repeat bottom center/cover;
+    /* Update SVG fill color to match the new background color */
+    background: url('data:image/svg+xml;utf8,<svg width="100%25" height="100" viewBox="0 0 1440 100" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M0 0H1440V100C1200 80 900 40 720 60C540 80 240 100 0 80V0Z" fill="%230a192f"/></svg>') no-repeat bottom center/cover; /* Updated fill color to primary-dark */
     z-index: 1;
-    opacity: 0.7;
+    opacity: 1; /* Increased opacity */
 }
 
 .hero-content {
@@ -180,35 +207,36 @@ body {
 }
 
 .hero-content h1 {
-    font-size: 2.8rem;
-    font-weight: 800;
+    font-size: 2.5rem; /* Adjusted font size */
+    font-weight: 700; /* Adjusted font weight */
     margin-bottom: 1rem;
-    letter-spacing: 0.5px;
-    background: linear-gradient(90deg, var(--light-blue), var(--primary-color));
+    letter-spacing: normal; /* Removed letter spacing */
+    background: linear-gradient(90deg, var(--light-blue), var(--accent-blue)); /* Using light-blue and accent-blue */
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
 }
 
 .hero-content p {
-    font-size: 1.3rem;
+    font-size: 1.1rem; /* Adjusted font size */
     margin-bottom: 2rem;
-    color: #c7d0e6;
+    color: var(--text-gray); /* Using text-gray */
 }
 
 /* Features */
 .features {
-    background: linear-gradient(120deg, var(--background-light) 80%, var(--background-dark) 100%);
+    background: var(--primary-dark-2); /* Using primary-dark-2 */
     padding: 3rem 0 2.5rem 0;
-    color: var(--text-color);
+    color: var(--text-light); /* Using text-light */
 }
 
 .features h2 {
     text-align: center;
-    font-size: 2rem;
-    font-weight: 700;
-    letter-spacing: 0.2px;
-    margin-bottom: 1.2rem;
+    font-size: 1.8rem; /* Adjusted font size */
+    font-weight: 600; /* Adjusted font weight */
+    letter-spacing: normal; /* Removed letter spacing */
+    margin-bottom: 1.5rem; /* Adjusted margin */
+    color: var(--text-light); /* Ensuring heading color is text-light */
 }
 
 .features-grid {
@@ -218,133 +246,139 @@ body {
 }
 
 .feature-card {
-    background: var(--card-bg);
-    border-radius: 16px;
-    box-shadow: 0 2px 12px rgba(16,23,42,0.10);
-    padding: 2rem 1.2rem 1.5rem 1.2rem;
+    background: var(--card-bg); /* Using card-bg */
+    border-radius: var(--border-radius); /* Using border-radius from shop.css variables */
+    box-shadow: var(--box-shadow); /* Using box-shadow from shop.css variables */
+    padding: 1.5rem 1rem; /* Adjusted padding */
     text-align: center;
-    color: var(--text-color);
-    border: 1px solid var(--border-color);
+    color: var(--text-light); /* Using text-light */
+    border: 1px solid var(--border-color); /* Using border-color */
     transition: box-shadow 0.2s, transform 0.2s;
 }
 
 .feature-card i {
-    font-size: 2.2rem;
-    color: var(--primary-color);
-    margin-bottom: 0.7rem;
-    opacity: 0.85;
+    font-size: 2rem; /* Adjusted font size */
+    color: var(--accent-blue); /* Using accent-blue */
+    margin-bottom: 0.6rem;
+    opacity: 1; /* Removed opacity */
 }
 
 .feature-card h3 {
-    margin: 0.5rem 0 0.7rem 0;
-    font-size: 1.2rem;
-    font-weight: 700;
+    margin: 0.4rem 0 0.6rem 0;
+    font-size: 1.1rem; /* Adjusted font size */
+    font-weight: 600; /* Adjusted font weight */
+    color: var(--text-light); /* Ensuring heading color is text-light */
 }
 
 .feature-card:hover {
-    box-shadow: 0 8px 32px rgba(37,99,235,0.13);
-    transform: translateY(-4px) scale(1.04);
+    box-shadow: var(--box-shadow-lg); /* Using box-shadow-lg */
+    transform: translateY(-2px) scale(1.02); /* Adjusted transform */
 }
 
 /* Categories */
 .categories {
-    background: #fff;
+    background: var(--primary-dark-3); /* Using primary-dark-3 */
     padding: 3rem 0 2.5rem 0;
-    color: #232c43;
+    color: var(--text-light); /* Using text-light */
 }
 
 .categories h2 {
     text-align: center;
-    font-size: 2rem;
-    font-weight: 700;
-    letter-spacing: 0.2px;
-    margin-bottom: 1.2rem;
+    font-size: 1.8rem; /* Adjusted font size */
+    font-weight: 600; /* Adjusted font weight */
+    letter-spacing: normal; /* Removed letter spacing */
+    margin-bottom: 1.5rem; /* Adjusted margin */
+     color: var(--text-light); /* Ensuring heading color is text-light */
 }
 
 .category-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-    gap: 2.5rem;
-    justify-items: center;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); /* Adjusted minmax for smaller cards */
+    gap: 1.5rem;
 }
 
 .category-card {
-    background: #f7f9fa;
-    border-radius: 16px;
-    box-shadow: 0 2px 12px rgba(16,23,42,0.10);
-    padding: 1.5rem 1rem;
+    background: var(--card-bg-alt); /* Using card-bg-alt */
+    border-radius: var(--border-radius); /* Using border-radius */
+    box-shadow: var(--box-shadow); /* Using box-shadow */
+    padding: 1.5rem 1rem; /* Adjusted padding */
     text-align: center;
-    font-size: 1.1rem;
-    color: #232c43;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+    color: var(--text-light); /* Using text-light */
+    border: 1px solid var(--border-color); /* Using border-color */
     transition: box-shadow 0.2s, transform 0.2s;
-    cursor: pointer;
-    border: 1px solid #e0e7ef;
+    text-decoration: none; /* Ensure no underline if it's a link */
+    display: block; /* Ensure card takes up space if it's a link */
 }
 
 .category-card i {
-    font-size: 2rem;
-    color: #2563eb;
-    margin-bottom: 0.7rem;
-    opacity: 0.85;
+    font-size: 2rem; /* Adjusted font size */
+    color: var(--accent-blue); /* Using accent-blue */
+    margin-bottom: 0.6rem;
+    opacity: 1;
+}
+
+.category-card span {
+     font-size: 1.1rem; /* Adjusted font size */
+    font-weight: 600; /* Adjusted font weight */
 }
 
 .category-card:hover {
-    box-shadow: 0 8px 32px rgba(37,99,235,0.13);
-    transform: translateY(-4px) scale(1.04);
-    background: #eaf3fb;
+    box-shadow: var(--box-shadow-lg); /* Using box-shadow-lg */
+    transform: translateY(-2px) scale(1.02); /* Adjusted transform */
 }
 
 /* Vendor CTA */
 .vendor-cta {
-    background: linear-gradient(90deg, #3498db 0%, #2ecc71 100%);
-    color: #fff;
+    background: var(--primary-dark-2); /* Using primary-dark-2 */
+    color: var(--text-light); /* Using text-light */
+    padding: 3rem 0;
     text-align: center;
-    padding: 3.5rem 0 3rem 0;
 }
 
 .vendor-cta h2 {
-    font-size: 2rem;
+    font-size: 1.8rem; /* Adjusted font size */
+    font-weight: 600; /* Adjusted font weight */
     margin-bottom: 1rem;
+     color: var(--text-light); /* Ensuring heading color is text-light */
 }
 
 .vendor-cta p {
-    font-size: 1.2rem;
+    font-size: 1.1rem; /* Adjusted font size */
     margin-bottom: 2rem;
+    color: var(--text-gray); /* Using text-gray */
 }
 
 /* Footer */
 .footer {
-    background: var(--background-light);
-    color: var(--text-color);
-    padding: 2.5rem 0 1rem 0;
-    border-top: 1px solid var(--border-color);
+    background: var(--primary-dark); /* Using primary-dark */
+    color: var(--text-gray); /* Using text-gray */
+    padding: 3rem 0 1.5rem 0;
+    font-size: 0.9rem;
 }
 
 .footer-content {
     display: flex;
-    flex-wrap: wrap;
-    gap: 2.5rem;
     justify-content: space-between;
-    align-items: flex-start;
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 1.5rem;
+    gap: 2rem;
+    margin-bottom: 2rem;
+    flex-wrap: wrap; /* Added wrap */
+}
+
+.footer-content > div {
+    flex: 1;
+    min-width: 150px; /* Added min-width */
 }
 
 .footer-content h3 {
+    font-size: 1.2rem;
+    font-weight: 600;
     margin-bottom: 1rem;
-    font-size: 1.1rem;
-    color: var(--primary-color);
-    opacity: 0.95;
+    color: var(--text-light); /* Using text-light */
 }
 
 .footer-content ul {
     list-style: none;
     padding: 0;
-    margin: 0;
 }
 
 .footer-content ul li {
@@ -352,168 +386,214 @@ body {
 }
 
 .footer-content ul li a {
-    color: var(--text-color);
+    color: var(--text-gray); /* Using text-gray */
     text-decoration: none;
     transition: color 0.2s;
 }
 
 .footer-content ul li a:hover {
-    color: var(--accent-color);
+    color: var(--accent-blue); /* Using accent-blue */
 }
 
 .social-links a {
-    color: var(--primary-color);
-    font-size: 1.3rem;
+    color: var(--text-gray); /* Using text-gray */
+    font-size: 1.5rem;
     margin-right: 1rem;
     transition: color 0.2s;
-    opacity: 0.85;
 }
 
 .social-links a:hover {
-    color: var(--accent-color);
-    opacity: 1;
+    color: var(--accent-blue); /* Using accent-blue */
 }
 
 .footer-bottom {
     text-align: center;
-    color: var(--text-color);
-    font-size: 0.95rem;
-    margin-top: 2rem;
-    background: var(--background-dark);
-    border-top: 1px solid var(--border-color);
+    border-top: 1px solid rgba(136, 146, 176, 0.1); /* Subtle border */
+    padding-top: 1.5rem;
+    margin-top: 1.5rem;
+    color: var(--text-gray); /* Using text-gray */
 }
 
-/* Responsive Design */
+/* Mobile/Responsive styles */
 @media (max-width: 900px) {
     .footer-content {
-        flex-direction: column;
+        flex-direction: column; /* Stack footer content */
         gap: 1.5rem;
-        align-items: flex-start;
     }
+
     .landing-nav {
-        display: none;
-        position: absolute;
-        top: 60px;
-        right: 0;
-        background: rgba(25,33,58,0.98);
-        flex-direction: column;
-        width: 200px;
-        box-shadow: 0 8px 32px rgba(16,23,42,0.18);
-        border-radius: 0 0 12px 12px;
-        padding: 1.2rem 0;
+        /* Existing mobile nav styles */
     }
+
     .landing-nav.open {
-        display: flex;
+        /* Existing mobile nav open styles */
     }
+
     .hamburger {
-        display: flex;
+        /* Existing hamburger styles */
     }
+
     .hero-content h1 {
-        font-size: 2rem;
+        font-size: 2rem; /* Adjusted size */
     }
+    h2, .features h2, .categories h2, .featured-products h2 {
+        font-size: 1.5rem; /* Adjusted size */
+    }
+    .hero-content p, .features p, .categories p, .vendor-cta p {
+         font-size: 1rem; /* Adjusted size */
+    }
+
     .features-grid, .category-grid {
-        grid-template-columns: 1fr;
+         gap: 1rem; /* Adjusted gap */
     }
-    .footer-content {
-        padding: 0 0.7rem;
-    }
+
 }
 
 @media (max-width: 600px) {
     .container {
-        padding: 0 0.7rem;
+        padding: 0 1rem; /* Adjusted padding */
     }
+
     .hero-content h1 {
-        font-size: 2rem;
+        font-size: 1.8rem; /* Further adjusted size */
     }
+    h2, .features h2, .categories h2, .featured-products h2 {
+        font-size: 1.3rem; /* Further adjusted size */
+    }
+     .hero-content p, .features p, .categories p, .vendor-cta p {
+         font-size: 0.9rem; /* Further adjusted size */
+    }
+
     .features-grid, .category-grid {
-        grid-template-columns: 1fr;
+        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); /* Adjusted grid minmax */
+         gap: 0.8rem; /* Further adjusted gap */
     }
+    
+    .feature-card, .category-card {
+        padding: 1rem 0.8rem; /* Adjusted padding */
+    }
+
     .footer-content {
-        padding: 0 0.7rem;
+        /* Existing styles */
+    }
+     
+    .social-links a {
+        font-size: 1.2rem; /* Adjusted size */
+        margin-right: 0.8rem; /* Adjusted margin */
     }
 }
 
-/* Featured Products Section */
+/* Featured Products Section Styles (Matching shop.css product card style) */
 .featured-products {
-    background: #fff;
-    padding: 3rem 0 2.5rem 0;
+    background: var(--primary-dark-2); /* Using primary-dark-2 */
+    padding: 3rem 0;
+    color: var(--text-light); /* Using text-light */
 }
+
 .featured-products h2 {
     text-align: center;
-    font-size: 2rem;
-    font-weight: 700;
-    letter-spacing: 0.2px;
-    margin-bottom: 1.2rem;
-    color: var(--text-color);
-}
-.product-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 2.5rem;
-}
-.product-card {
-    background: var(--card-bg);
-    border-radius: 16px;
-    box-shadow: 0 2px 12px rgba(16,23,42,0.10);
-    padding: 1.2rem 1.2rem 1.5rem 1.2rem;
-    text-align: center;
-    color: var(--text-color);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    transition: box-shadow 0.2s, transform 0.2s;
-    position: relative;
-    border: 1px solid var(--border-color);
-}
-.product-card:hover {
-    box-shadow: 0 8px 32px rgba(37,99,235,0.13);
-    transform: translateY(-4px) scale(1.04);
-}
-.product-card img {
-    width: 100%;
-    max-width: 180px;
-    height: 160px;
-    object-fit: cover;
-    border-radius: 10px;
-    margin-bottom: 1rem;
-    background: #eaeaea;
-}
-.product-title {
-    font-size: 1.1rem;
-    font-weight: 700;
-    margin-bottom: 0.5rem;
-}
-.product-price {
-    color: var(--accent-color);
-    font-size: 1.1rem;
-    font-weight: bold;
-    margin-bottom: 0.5rem;
-}
-.product-vendor {
-    color: #888;
-    font-size: 0.95rem;
-    margin-bottom: 0.7rem;
-}
-.add-cart-btn {
-    background: linear-gradient(90deg, var(--primary-color) 60%, var(--light-blue) 100%);
-    color: #fff;
-    border: none;
-    border-radius: 8px;
-    padding: 0.6rem 1.2rem;
-    font-size: 1rem;
-    font-weight: 700;
-    cursor: pointer;
-    transition: background 0.2s;
-    margin-top: 0.5rem;
-    box-shadow: 0 2px 8px rgba(37,99,235,0.08);
-}
-.add-cart-btn:hover {
-    background: linear-gradient(90deg, var(--light-blue) 0%, var(--primary-color) 100%);
-    filter: brightness(1.08);
+    font-size: 1.8rem; /* Adjusted font size */
+    font-weight: 600; /* Adjusted font weight */
+    letter-spacing: normal; /* Removed letter spacing */
+    margin-bottom: 1.5rem; /* Adjusted margin */
+     color: var(--text-light); /* Ensuring heading color is text-light */
 }
 
-/* Modal Styles */
+.product-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* Adjusted minmax */
+    gap: 2rem; /* Adjusted gap */
+}
+
+.product-card {
+    background: var(--card-bg); /* Using card-bg */
+    border-radius: var(--border-radius); /* Using border-radius */
+    box-shadow: var(--box-shadow); /* Using box-shadow */
+    overflow: hidden;
+    display: flex; /* Changed to flex */
+    flex-direction: column; /* Stack children */
+    text-decoration: none; /* Remove link underline */
+    color: inherit; /* Inherit text color */
+    transition: box-shadow 0.2s, transform 0.2s;
+}
+
+.product-card:hover {
+     box-shadow: var(--box-shadow-lg); /* Using box-shadow-lg */
+    transform: translateY(-4px) scale(1.03); /* Adjusted transform */
+}
+
+.product-card img {
+    width: 100%;
+    height: 200px; /* Fixed height for images */
+    object-fit: cover; /* Cover the area */
+    display: block;
+}
+
+.product-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin: 0.8rem 1rem 0.4rem 1rem;
+    color: var(--text-light); /* Using text-light */
+}
+
+.product-price {
+    font-size: 1rem;
+    font-weight: 700;
+    margin: 0 1rem 0.4rem 1rem;
+    color: var(--accent-blue); /* Using accent-blue */
+}
+
+.product-vendor {
+    font-size: 0.9rem;
+    color: var(--text-gray); /* Using text-gray */
+    margin: 0 1rem 1rem 1rem;
+}
+
+.product-details {
+     padding: 0 1rem 1rem 1rem; /* Added padding */
+     display: flex;
+     flex-direction: column;
+     flex-grow: 1; /* Allow details to grow */
+}
+
+.product-actions {
+    margin-top: auto; /* Push actions to the bottom */
+    display: flex;
+    gap: 0.5rem; /* Adjusted gap */
+    padding: 0 1rem 1rem 1rem; /* Added padding */
+}
+
+.product-actions .btn-primary, .product-actions .btn-secondary {
+     padding: 0.6rem 1rem; /* Adjusted padding */
+     font-size: 0.9rem; /* Adjusted font size */
+     flex-grow: 1; /* Allow buttons to grow */
+     text-align: center; /* Center text in buttons */
+}
+
+.add-cart-btn {
+    background: var(--accent-blue); /* Using accent-blue */
+    color: var(--primary-dark); /* Using primary-dark */
+    border: none;
+    border-radius: var(--border-radius); /* Using border-radius */
+    padding: 0.6rem 1.2rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.1s;
+    display: inline-flex; /* Use flex for icon and text */
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.add-cart-btn i {
+    font-size: 0.9em;
+}
+
+.add-cart-btn:hover {
+    background: var(--accent-blue-2); /* Using accent-blue-2 */
+    transform: translateY(-1px);
+}
+
 .modal {
     display: none;
     position: fixed;
@@ -530,14 +610,15 @@ body {
     display: flex;
 }
 .modal-content {
-    background: #fff;
-    border-radius: 10px;
+    background: var(--primary-dark-2);
+    border-radius: var(--border-radius);
     width: 90%;
-    max-width: 400px;
+    max-width: 500px; /* Adjusted max-width */
     margin: auto;
     padding: 2rem 1.5rem 1.5rem 1.5rem;
-    box-shadow: 0 4px 24px rgba(44,62,80,0.13);
+    box-shadow: var(--box-shadow-lg);
     position: relative;
+    color: var(--text-light);
 }
 .close {
     position: absolute;
@@ -545,43 +626,67 @@ body {
     right: 1rem;
     font-size: 1.5rem;
     cursor: pointer;
-    color: #888;
+    color: var(--text-gray);
     transition: color 0.2s;
 }
 .close:hover {
-    color: #2ecc71;
+    color: var(--danger);
 }
 .modal h2 {
-    margin-bottom: 1.2rem;
-    color: #2ecc71;
+    color: var(--accent-blue);
     text-align: center;
+    margin-bottom: 1.5rem;
 }
 .form-group {
     margin-bottom: 1rem;
 }
 .form-group label {
     display: block;
-    margin-bottom: 0.4rem;
-    color: #333;
-    font-weight: 500;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    color: var(--text-gray);
 }
 .form-group input, .form-group select {
     width: 100%;
-    padding: 0.7rem;
-    border: 1px solid #ddd;
-    border-radius: 4px;
+    padding: 0.75rem 1rem;
+    border: 1px solid var(--primary-dark);
+    border-radius: var(--border-radius);
+    background: var(--primary-dark);
+    color: var(--text-light);
     font-size: 1rem;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+.form-group input:focus,
+.form-group select:focus {
+    outline: none;
+    border-color: var(--accent-blue);
+    box-shadow: 0 0 0 3px rgba(100, 255, 218, 0.1);
+}
+.form-group textarea {
+    resize: vertical;
 }
 .modal button[type="submit"] {
-    width: 100%;
+    background: var(--accent-blue);
+    color: var(--primary-dark);
+    border: none;
+    border-radius: var(--border-radius);
+    padding: 0.8rem 2rem;
+    font-size: 1.1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.2s, box-shadow 0.2s;
     margin-top: 1rem;
+}
+.modal button[type="submit"]:hover {
+    background: var(--accent-blue-2);
+    box-shadow: var(--box-shadow);
 }
 .modal p {
-    margin-top: 1rem;
-    text-align: center;
+    margin-top: 1.5rem;
+    color: var(--text-gray);
 }
 .modal a {
-    color: #3498db;
+    color: var(--accent-blue);
     text-decoration: none;
 }
 .modal a:hover {
@@ -589,7 +694,8 @@ body {
 }
 @media (max-width: 600px) {
     .product-grid {
-        grid-template-columns: 1fr;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+         gap: 1rem;
     }
     .modal-content {
         padding: 1rem 0.5rem;
@@ -639,41 +745,535 @@ p, .hero-content p, .about-story {
 }
 
 .wishlist-btn {
-    background: #fff;
-    color: #e74c3c;
-    border: 1px solid #e74c3c;
-    border-radius: 8px;
-    padding: 0.6rem 1.2rem;
-    font-size: 1rem;
-    font-weight: 700;
+    background: none; /* Transparent background */
+    border: 1.5px solid var(--text-gray); /* Subtle border */
+    color: var(--text-gray); /* Gray icon */
+    border-radius: var(--border-radius); /* Rounded corners */
+    padding: 0.6rem 1rem; /* Adjusted padding */
+    font-size: 0.9rem; /* Adjusted font size */
     cursor: pointer;
-    margin-left: 0.5rem;
-    transition: background 0.2s, color 0.2s, border 0.2s;
-    box-shadow: 0 2px 8px rgba(231,76,60,0.08);
-    display: inline-flex;
+    transition: color 0.2s, border-color 0.2s, transform 0.1s;
+    display: inline-flex; /* Use flex for icon */
     align-items: center;
-    gap: 0.4rem;
+    justify-content: center; /* Center icon */
 }
 .wishlist-btn:hover {
-    background: #e74c3c;
-    color: #fff;
+    color: var(--danger); /* Red on hover */
+    border-color: var(--danger); /* Red border on hover */
+    transform: translateY(-1px) scale(1.1); /* Slight scale and lift */
 }
-
+.wishlist-btn.active {
+    color: var(--danger); /* Red when active */
+    border-color: var(--danger); /* Red border when active */
+}
 .product-actions .btn-secondary {
-    background: #2563eb;
-    color: #fff;
-    border: none;
-    border-radius: 8px;
-    padding: 0.6rem 1.2rem;
-    font-size: 1rem;
-    font-weight: 700;
-    margin-left: 0.5rem;
-    transition: background 0.2s;
-    display: inline-flex;
-    align-items: center;
-    gap: 0.4rem;
+    background: transparent; /* Ensure secondary button in actions is transparent */
+    color: var(--text-light); /* Use text-light for text color */
+    border: 1px solid var(--text-gray); /* Subtle border */
+    box-shadow: none;
+    transition: background 0.2s, color 0.2s, border-color 0.2s;
 }
 .product-actions .btn-secondary:hover {
-    background: #1e293b;
+    background: var(--text-gray); /* Darker background on hover */
+    color: var(--primary-dark); /* Dark text on hover */
+    border-color: var(--text-gray); /* Keep border color */
+}
+
+/* Added styles for modal */
+.cart-modal,
+.login-modal,
+.register-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0,0,0,0.35);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+}
+
+.cart-modal-content,
+.modal-content {
+    background: var(--primary-dark-2);
+    border-radius: var(--border-radius);
+    width: 90%;
+    max-width: 500px; /* Adjusted max-width */
+    margin: auto;
+    padding: 2rem 1.5rem 1.5rem 1.5rem;
+    box-shadow: var(--box-shadow-lg);
+    position: relative;
+    color: var(--text-light);
+}
+
+.cart-modal-content h2,
+.modal h2 {
+    color: var(--accent-blue);
+    text-align: center;
+    margin-bottom: 1.5rem;
+}
+
+.cart-modal-content .close,
+.modal-content .close {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: var(--text-gray);
+    transition: color 0.2s;
+}
+
+.cart-modal-content .close:hover,
+.modal-content .close:hover {
+    color: var(--danger);
+}
+
+.cart-modal-footer {
+    margin-top: 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 1.1rem;
+}
+
+.cart-modal-footer .btn {
+    font-size: 1rem;
+}
+
+#cartItems {
+    max-height: 300px; /* Limit height for scroll */
+    overflow-y: auto;
+    margin-bottom: 1rem;
+    padding-right: 10px; /* Space for scrollbar */
+}
+
+#cartItems::-webkit-scrollbar {
+    width: 8px;
+}
+
+#cartItems::-webkit-scrollbar-track {
+    background: var(--primary-dark);
+    border-radius: 4px;
+}
+
+#cartItems::-webkit-scrollbar-thumb {
+    background: var(--accent-blue-2);
+    border-radius: 4px;
+}
+
+.cart-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 0;
+    border-bottom: 1px solid var(--primary-dark-3);
+}
+
+.cart-item:last-child {
+    border-bottom: none;
+}
+
+.cart-item img {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: var(--border-radius);
+    flex-shrink: 0;
+}
+
+.cart-item-details {
+    flex-grow: 1;
+}
+
+.cart-item-details h3 {
+    font-size: 1rem;
+    margin: 0 0 0.4rem 0;
+    color: var(--text-light);
+}
+
+.cart-item-details p {
+    font-size: 0.9rem;
+    color: var(--text-gray);
+    margin: 0;
+}
+
+.cart-item-price {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--accent-blue);
+    margin-left: 1rem;
+}
+
+/* Form styles within modals */
+.form-group {
+    margin-bottom: 1rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    color: var(--text-gray);
+}
+
+.form-group input[type="text"],
+.form-group input[type="email"],
+.form-group input[type="password"],
+.form-group input[type="number"],
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 1px solid var(--primary-dark);
+    border-radius: var(--border-radius);
+    background: var(--primary-dark);
+    color: var(--text-light);
+    font-size: 1rem;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: var(--accent-blue);
+    box-shadow: 0 0 0 3px rgba(100, 255, 218, 0.1);
+}
+
+.form-group textarea {
+    resize: vertical;
+}
+
+.modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+
+/* Alert/Message styles within modals */
+.alert {
+    padding: 0.8rem 1rem;
+    border-radius: var(--border-radius);
+    margin-bottom: 1rem;
+    font-size: 0.95rem;
+}
+
+.alert-danger {
+    background: #f8d7da; /* Light red */
+    color: #721c24; /* Dark red text */
+}
+
+.alert-success {
+     background: #d4edda; /* Light green */
+    color: #155724; /* Dark green text */
+}
+
+.alert-warning {
+    background: #fff3cd; /* Light yellow */
+    color: #856404; /* Dark yellow text */
+}
+
+/* Login/Register modal specific styles */
+.modal-toggle-link {
+    display: block;
+    text-align: center;
+    margin-top: 1rem;
+    color: var(--accent-blue);
+    text-decoration: none;
+}
+
+.modal-toggle-link:hover {
+    text-decoration: underline;
+}
+
+.login-modal .modal-content,
+.register-modal .modal-content {
+     max-width: 400px; /* Slightly smaller for auth forms */
+}
+
+/* Cart count in header */
+.header-cart {
+    position: relative;
+}
+
+.header-cart #cartCount {
+     position: absolute;
+    top: -7px;
+    right: -10px;
+    background: var(--danger);
     color: #fff;
-} 
+    font-size: 0.8rem;
+    border-radius: 50%;
+    padding: 2px 6px;
+    font-weight: bold;
+    min-width: 22px; /* Ensure it's round even with single digit */
+    text-align: center;
+}
+
+/* Adjust hero section wave fill color */
+.hero::after {
+    /* Existing styles */
+    background: url('data:image/svg+xml;utf8,<svg width="100%25" height="100" viewBox="0 0 1440 100" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M0 0H1440V100C1200 80 900 40 720 60C540 80 240 100 0 80V0Z" fill="%230a192f"/></svg>') no-repeat bottom center/cover; /* Updated fill color to primary-dark */
+}
+
+/* Admin link in header */
+#adminLink {
+    margin-left: 1.5rem; /* Add some space */
+}
+
+/* Basic styles for about page */
+.about-section {
+    padding: 3rem 0;
+    background: var(--primary-dark-2);
+    color: var(--text-light);
+}
+
+.about-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+}
+
+.about-title {
+    text-align: center;
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 2rem;
+    color: var(--accent-blue);
+}
+
+.about-story p {
+    margin-bottom: 1.5rem;
+    line-height: 1.8;
+    color: var(--text-gray);
+}
+
+.about-story h3 {
+     font-size: 1.5rem;
+     margin-bottom: 1rem;
+     color: var(--text-light);
+}
+
+.about-values {
+     margin-top: 3rem;
+}
+
+.about-values h3 {
+    text-align: center;
+    font-size: 1.8rem;
+    margin-bottom: 1.5rem;
+    color: var(--text-light);
+}
+
+.values-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 2rem;
+}
+
+.value-item {
+    background: var(--primary-dark-3);
+    padding: 1.5rem;
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    text-align: center;
+}
+
+.value-item i {
+    font-size: 2rem;
+    color: var(--accent-blue);
+    margin-bottom: 1rem;
+}
+
+.value-item h4 {
+    font-size: 1.1rem;
+    margin-bottom: 0.8rem;
+    color: var(--text-light);
+}
+
+.value-item p {
+    font-size: 0.9rem;
+    color: var(--text-gray);
+}
+
+/* Add some basic styles for login/register pages */
+.auth-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: calc(100vh - 80px); /* Adjust for header height if fixed */
+    background: var(--primary-dark-2); /* Use a dark background */
+    padding: 2rem 1rem;
+}
+
+.auth-form {
+    background: var(--primary-dark-3); /* Use a slightly lighter dark for form background */
+    padding: 2rem;
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow-lg);
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+}
+
+.auth-form h2 {
+    color: var(--accent-blue); /* Use accent color for headings */
+    margin-bottom: 1.5rem;
+}
+
+.form-group {
+    margin-bottom: 1.2rem;
+    text-align: left; /* Align labels/inputs left */
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.6rem;
+    font-weight: 600;
+    color: var(--text-gray); /* Use text-gray for labels */
+}
+
+.form-group input[type="email"],
+.form-group input[type="password"],
+.form-group input[type="text"],
+.form-group select {
+    width: 100%;
+    padding: 0.8rem 1rem;
+    border: 1px solid var(--primary-dark-2); /* Subtle border */
+    border-radius: var(--border-radius);
+    background: var(--primary-dark); /* Darker background for inputs */
+    color: var(--text-light); /* Light text color */
+    font-size: 1rem;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+    outline: none;
+    border-color: var(--accent-blue); /* Accent color border on focus */
+    box-shadow: 0 0 0 3px rgba(100, 255, 218, 0.1); /* Accent color glow on focus */
+}
+
+.auth-form button[type="submit"] {
+    background: var(--accent-blue); /* Accent color for submit button */
+    color: var(--primary-dark); /* Dark text color */
+    border: none;
+    border-radius: var(--border-radius);
+    padding: 0.8rem 2rem;
+    font-size: 1.1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.2s, box-shadow 0.2s;
+    margin-top: 1rem;
+}
+
+.auth-form button[type="submit"]:hover {
+    background: var(--accent-blue-2); /* Darker accent color on hover */
+    box-shadow: var(--box-shadow); /* Subtle shadow on hover */
+}
+
+.auth-form p {
+    margin-top: 1.5rem;
+    color: var(--text-gray); /* Use text-gray for info text */
+}
+
+.auth-form p a {
+    color: var(--accent-blue); /* Accent color for links */
+    text-decoration: none;
+}
+
+.auth-form p a:hover {
+    text-decoration: underline;
+}
+
+/* TOTP Modal Styles (Matching existing modal styles) */
+#totpLoginModal .modal-content {
+    background: var(--primary-dark-2);
+    border-radius: var(--border-radius);
+    width: 90%;
+    max-width: 400px;
+    margin: auto;
+    padding: 2rem 1.5rem 1.5rem 1.5rem;
+    box-shadow: var(--box-shadow-lg);
+    position: relative;
+    color: var(--text-light);
+    text-align: center; /* Center content */
+}
+
+#totpLoginModal h2 {
+    color: var(--accent-blue);
+    text-align: center;
+    margin-bottom: 1.5rem;
+}
+
+#totpLoginModal .close {
+     position: absolute;
+    top: 1rem;
+    right: 1rem;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: var(--text-gray);
+    transition: color 0.2s;
+}
+
+#totpLoginModal .close:hover {
+    color: var(--danger);
+}
+
+#totpLoginModal .form-group {
+    margin-bottom: 1.5rem;
+    text-align: left; /* Align label/input left */
+}
+
+#totpLoginModal .form-group label {
+     display: block;
+    margin-bottom: 0.6rem;
+    font-weight: 600;
+    color: var(--text-gray);
+}
+
+#totpLoginModal .form-group input[type="text"] {
+     width: 100%;
+    padding: 0.8rem 1rem;
+    border: 1px solid var(--primary-dark-2);
+    border-radius: var(--border-radius);
+    background: var(--primary-dark);
+    color: var(--text-light);
+    font-size: 1.1rem; /* Slightly larger font */
+    text-align: center; /* Center the input text */
+    letter-spacing: 2px; /* Add some letter spacing */
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+#totpLoginModal .form-group input:focus {
+     outline: none;
+    border-color: var(--accent-blue);
+    box-shadow: 0 0 0 3px rgba(100, 255, 218, 0.1);
+}
+
+#totpLoginModal button[type="submit"] {
+    background: var(--accent-blue);
+    color: var(--primary-dark);
+    border: none;
+    border-radius: var(--border-radius);
+    padding: 0.8rem 2rem;
+    font-size: 1.1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.2s, box-shadow 0.2s;
+}
+
+#totpLoginModal button[type="submit"]:hover {
+    background: var(--accent-blue-2);
+    box-shadow: var(--box-shadow);
+}
+
+#totpLoginModal #totpLoginMsg {
+    color: var(--danger); /* Use danger color for error messages */
+    margin-top: 1rem;
+    font-size: 0.95rem;
+}
