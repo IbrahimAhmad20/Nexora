@@ -99,6 +99,21 @@ class ProductManager {
                 }
             });
         }
+
+        document.querySelectorAll('.action-btn.edit').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const id = btn.getAttribute('data-id');
+                // Call your edit function here, e.g.:
+                this.editProduct(id);
+            });
+        });
+        document.querySelectorAll('.action-btn.delete').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const id = btn.getAttribute('data-id');
+                // Call your delete function here, e.g.:
+                this.deleteProduct(id);
+            });
+        });
     }
 
     // Render categories
@@ -150,10 +165,27 @@ class ProductManager {
                         <a href="/product.html?id=${product.id}" class="btn btn-secondary">
                             View Details
                         </a>
+                        <button class="action-btn edit" data-id="${product.id}" title="Edit"><i class="fas fa-edit"></i></button>
+                        <button class="action-btn delete" data-id="${product.id}" title="Delete"><i class="fas fa-trash"></i></button>
                     </div>
                 </div>
             </div>
         `).join('');
+
+        // Attach event listeners to edit and delete buttons after rendering
+        productGrid.querySelectorAll('.action-btn.edit').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const id = btn.getAttribute('data-id');
+                console.log('Edit clicked', id);
+                this.editProduct(id);
+            });
+        });
+        productGrid.querySelectorAll('.action-btn.delete').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const id = btn.getAttribute('data-id');
+                this.deleteProduct(id);
+            });
+        });
     }
 
     // Render pagination
@@ -235,6 +267,20 @@ class ProductManager {
         this.currentPage = 1;
         this.loadProducts();
     }
+
+    editProduct(id) {
+        console.log('editProduct method called with id:', id);
+        alert('Edit product with ID: ' + id);
+        // TODO: Open your edit modal and populate with product data
+    }
+
+    deleteProduct(id) {
+        console.log('deleteProduct method called with id:', id);
+        if (confirm('Are you sure you want to delete this product?')) {
+            alert('Delete product with ID: ' + id);
+            // TODO: Call your API to delete the product, then reload the table
+        }
+    }
 }
 
 // Create global product manager instance
@@ -249,6 +295,7 @@ document.addEventListener('DOMContentLoaded', () => {
 window.productManager = productManager;
 
 function renderProducts(products) {
+    console.log('renderProducts called', products);
     const tbody = document.getElementById('productsTableBody');
     if (!tbody) return;
     if (!products.length) {
@@ -267,11 +314,32 @@ function renderProducts(products) {
                 </span>
             </td>
             <td>
-                <button class="action-btn edit" title="Edit"><i class="fas fa-edit"></i></button>
-                <button class="action-btn delete" title="Delete"><i class="fas fa-trash"></i></button>
+                <button class="action-btn edit" data-id="${product.id}" title="Edit"><i class="fas fa-edit"></i></button>
+                <button class="action-btn delete" data-id="${product.id}" title="Delete"><i class="fas fa-trash"></i></button>
             </td>
         </tr>
     `).join('');
+
+    const editBtns = tbody.querySelectorAll('.action-btn.edit');
+    const deleteBtns = tbody.querySelectorAll('.action-btn.delete');
+    console.log('Edit buttons found:', editBtns.length, 'Delete buttons found:', deleteBtns.length);
+    if (editBtns.length === 0) {
+        console.warn('No edit buttons found after rendering table!');
+    }
+    editBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            const id = btn.getAttribute('data-id');
+            console.log('Edit button clicked, id:', id);
+            window.productManager.editProduct(id);
+        });
+    });
+    deleteBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            const id = btn.getAttribute('data-id');
+            console.log('Delete button clicked, id:', id);
+            window.productManager.deleteProduct(id);
+        });
+    });
 }
 
 

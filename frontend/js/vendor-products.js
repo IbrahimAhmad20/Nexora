@@ -157,11 +157,9 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // Render products in the table
     function renderProducts() {
-        console.log(products);
         productTableBody.innerHTML = '';
         products.forEach((product, idx) => {
             const primaryImage = product.images?.find(img => img.is_primary)?.url || product.images?.[0]?.url || 'https://via.placeholder.com/60';
-            
             const row = document.createElement('tr');
             row.innerHTML = `
                 <td>
@@ -175,8 +173,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                 <td>${product.stock}</td>
                 <td><span class="status-tag ${product.status.toLowerCase()}">${product.status}</span></td>
                 <td>
-                    <button class="edit-btn" data-id="${product.id}"><i class="fas fa-edit"></i></button>
-                    <button class="delete-btn" data-id="${product.id}"><i class="fas fa-trash"></i></button>
+                    <button class="action-btn edit-btn" data-id="${product.id}"><i class="fas fa-edit"></i></button>
+                    <button class="action-btn delete-btn" data-id="${product.id}"><i class="fas fa-trash"></i></button>
                 </td>
             `;
             productTableBody.appendChild(row);
@@ -186,7 +184,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         document.querySelectorAll('.edit-btn').forEach(btn => {
             btn.addEventListener('click', () => editProduct(btn.dataset.id));
         });
-
         document.querySelectorAll('.delete-btn').forEach(btn => {
             btn.addEventListener('click', () => showDeleteConfirmation(btn.dataset.id));
         });
@@ -350,16 +347,68 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     async function editProduct(productId) {
-        // ... implementation ...
+        const product = products.find(p => p.id == productId);
+        if (!product) return;
+        document.getElementById('productId').value = product.id;
+        document.getElementById('productName').value = product.name;
+        document.getElementById('productPrice').value = product.price;
+        document.getElementById('productStock').value = product.stock;
+        document.getElementById('productStatus').value = product.status;
+        document.getElementById('productDescription').value = product.description;
+        // Set category
+        productCategorySelect.value = product.category_id || product.category || '';
+        modalTitle.textContent = 'Edit Product';
+        showModal(productModal);
     }
 
     function showDeleteConfirmation(productId) {
-        // ... implementation ...
+        currentProductId = productId;
+        showModal(deleteModal);
     }
 
-    // ... any other functions ...
+    // Add Product button opens the modal
+    addProductBtn.addEventListener('click', () => {
+        resetForm();
+        showModal(productModal);
+    });
 
     // Initial load
     fetchProducts();
     fetchCategories();
+
+    productForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const productData = {
+            name: document.getElementById('productName').value,
+            price: parseFloat(document.getElementById('productPrice').value),
+            stock: parseInt(document.getElementById('productStock').value),
+            status: document.getElementById('productStatus').value,
+            description: document.getElementById('productDescription').value,
+            // Add more fields as needed
+        };
+        if (document.getElementById('productId').value) {
+            await updateProduct(document.getElementById('productId').value, productData);
+        } else {
+            await addProduct(productData);
+        }
+    });
+
+    document.querySelector('#deleteModal .delete-btn').addEventListener('click', () => {
+        if (currentProductId) {
+            deleteProduct(currentProductId);
+        }
+    });
+
+    document.querySelectorAll('#deleteModal .cancel-btn, #deleteModal .close-modal').forEach(btn => {
+        btn.addEventListener('click', () => hideModal(deleteModal));
+    });
+
+    // Close product modal on cancel or X
+    document.querySelectorAll('#productModal .cancel-btn, #productModal .close-modal').forEach(btn => {
+        btn.addEventListener('click', () => hideModal(productModal));
+    });
+
+    function collectVariants() {
+        return [];
+    }
 });
