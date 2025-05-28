@@ -20,7 +20,10 @@ router.get('/cart',
 
       res.json({
         success: true,
-        data: cartItems
+        data: cartItems.map(item => ({
+          ...item,
+          stock: item.stock_quantity
+        }))
       });
     } catch (error) {
       console.error('Error fetching cart:', error);

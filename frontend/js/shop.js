@@ -125,11 +125,6 @@ class ShopManager {
 
             // Check if the click was on the add to cart button
             if (target.closest('.add-to-cart')) {
-                const token = localStorage.getItem('token');
-                if (!token) {
-                    window.location.href = 'login.html';
-                    return;
-                }
                 const quantity = 1;
                 window.cartManager?.addItem(productId, quantity);
             } else {

@@ -28,7 +28,8 @@ router.get('/featured', async (req, res) => {
         ? (p.primary_image.startsWith('http') ? p.primary_image : `${BASE_URL}${p.primary_image}`)
         : null,
       vendor: { name: p.vendor_name },
-      price: parseFloat(p.price)
+      price: parseFloat(p.price),
+      stock: p.stock_quantity
     }));
 
     res.json({ success: true, products: formatted });
@@ -71,8 +72,14 @@ router.get('/', async (req, res) => {
 
         const [products] = await pool.query(query, queryParams);
 
+        // Map stock_quantity to stock for all products
+        const formatted = products.map(p => ({
+          ...p,
+          stock: p.stock_quantity
+        }));
+
         res.json({
-            products,
+            products: formatted,
             totalPages: 1 // Assuming no pagination for now
         });
     } catch (error) {

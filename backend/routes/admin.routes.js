@@ -106,7 +106,10 @@ router.get('/products', verifyToken, checkRole(['admin']), async (req, res) => {
         `, [limit, offset]);
         res.json({
             success: true,
-            products,
+            products: products.map(p => ({
+                ...p,
+                stock: p.stock_quantity
+            })),
             total: count,
             totalPages,
             currentPage: page
