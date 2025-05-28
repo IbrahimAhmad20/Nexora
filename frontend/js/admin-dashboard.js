@@ -1,5 +1,20 @@
 document.addEventListener('DOMContentLoaded', () => {
     loadDashboardStats();
+
+    // Add event listener for logout
+    const logoutLink = document.querySelector('.sidebar-nav a[href="#"] i.fas.fa-sign-out-alt').closest('a');
+    if (logoutLink) {
+        logoutLink.addEventListener('click', (e) => {
+            e.preventDefault(); // Prevent the default link behavior
+            
+            // Clear token and user from local storage
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+
+            // Redirect to login page
+            window.location.href = 'login.html'; // Assuming your login page is login.html
+        });
+    }
 });
 
 async function loadDashboardStats() {

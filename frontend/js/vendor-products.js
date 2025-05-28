@@ -146,6 +146,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         console.log(products);
         productTableBody.innerHTML = '';
         products.forEach((product, idx) => {
+            // Use product.category directly, with a fallback for missing data
+            const categoryName = product.category || 'Unknown';
+
             const row = document.createElement('tr');
             row.innerHTML = `
                 <td>
@@ -154,7 +157,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                         <span>${product.name}</span>
                     </div>
                 </td>
-                <td>${product.category}</td>
+                <td>${categoryName}</td>
                 <td>$${product.price.toFixed(2)}</td>
                 <td>${product.stock}</td>
                 <td><span class="status-tag ${product.status.toLowerCase()}">${product.status}</span></td>

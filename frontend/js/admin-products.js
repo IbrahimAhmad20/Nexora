@@ -1,6 +1,10 @@
 document.addEventListener('DOMContentLoaded', () => {
     console.log('[admin-products] DOMContentLoaded');
-    loadProducts();
+    // Fetch categories and products concurrently
+    fetchCategoriesMap().then(() => {
+        loadProducts();
+    });
+    
     document.querySelector('.add-product-btn').onclick = openAddProductModal;
     document.querySelectorAll('.product-search').forEach(input => {
         input.addEventListener('input', function() {
@@ -21,15 +25,40 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 let allProducts = [];
+let categoriesMap = new Map(); // Map to store categories by ID
+
+// Function to fetch categories and build the categoriesMap
+async function fetchCategoriesMap() {
+    const token = localStorage.getItem('token');
+    try {
+        const res = await fetch(window.API_BASE_URL + '/api/admin/categories', {
+            headers: {
+                'Authorization': 'Bearer ' + token
+            }
+        });
+        const data = await res.json();
+        categoriesMap.clear();
+        if (data.categories && data.categories.length) {
+            data.categories.forEach(cat => {
+                categoriesMap.set(cat.id, cat.name);
+            });
+        }
+        console.log('[admin-products] Categories Map built:', categoriesMap);
+    } catch (error) {
+        console.error('Failed to fetch categories map:', error);
+         // Optionally display an error to the user or in the table
+    }
+}
 
 async function loadProducts() {
     try {
         const res = await api.getAllProducts();
         const products = res.products || res.data;
         allProducts = products;
-        renderProducts(products);
+        renderProducts(allProducts); // Render using the global allProducts
     } catch (err) {
         alert('Failed to load products');
+        console.error(err);
     }
 }
 
@@ -39,12 +68,15 @@ function renderProducts(products) {
     products
         .filter(product => product.status !== 'deleted')
         .forEach(product => {
+            // Look up category name using category_id from the map
+            const categoryName = categoriesMap.get(product.category_id) || 'Unknown';
+
             const tr = document.createElement('tr');
             tr.innerHTML = `
                 <td>${product.id}</td>
                 <td>${product.name}</td>
                 <td>${product.vendor_name || ''}</td>
-                <td>${product.category || ''}</td>
+                <td>${categoryName}</td> <!-- Use looked up category name -->
                 <td>${product.price}</td>
                 <td>${product.stock_quantity}</td>
                 <td>${product.status}</td>
@@ -75,7 +107,7 @@ function renderProducts(products) {
             if (!data.success) {
                 alert(data.message || 'Failed to update featured status');
             }
-            await loadProducts();
+            await loadProducts(); // Reload products after update
         });
     });
 }
@@ -86,17 +118,22 @@ function filterProducts(query) {
         renderProducts(allProducts);
         return;
     }
-    const filtered = allProducts.filter(product =>
-        (product.name && product.name.toLowerCase().includes(query)) ||
-        (product.vendor_name && product.vendor_name.toLowerCase().includes(query)) ||
-        (product.category && product.category.toLowerCase().includes(query))
-    );
+    const filtered = allProducts.filter(product => {
+        // Look up category name for filtering, default to empty string if not found
+        const categoryName = categoriesMap.get(product.category_id) || ''; 
+        return (
+            (product.name && product.name.toLowerCase().includes(query)) ||
+            (product.vendor_name && product.vendor_name.toLowerCase().includes(query)) ||
+            (categoryName.toLowerCase().includes(query))
+        );
+    });
     renderProducts(filtered);
 }
 
 function openAddProductModal() {
     alert('Add Product modal coming soon!');
 }
+
 // Open modal and populate with product data
 function openEditProductModal(product) {
     document.getElementById('editProductId').value = product.id;
@@ -105,15 +142,15 @@ function openEditProductModal(product) {
     document.getElementById('editProductPrice').value = product.price;
     document.getElementById('editProductStock').value = product.stock_quantity;
     document.getElementById('editProductStatus').value = product.status;
-    // Set category after categories are loaded
-    loadCategories(product.category_id);
+    
+    // Load categories into dropdown for the modal
+    loadCategories('editProductCategory', product.category_id); // Keep existing modal function call
   
     document.getElementById('editProductModal').style.display = 'flex';
   }
   
-  // Load categories into dropdown
-  function loadCategories(selectedId) {
-    // Get the token from localStorage (or wherever you store it)
+// Load categories into dropdown (existing function, kept for edit modal)
+function loadCategories(selectElementId, selectedId) {
     const token = localStorage.getItem('token');
     fetch(window.API_BASE_URL + '/api/admin/categories', {
       headers: {
@@ -122,7 +159,7 @@ function openEditProductModal(product) {
     })
       .then(res => res.json())
       .then(data => {
-        const select = document.getElementById('editProductCategory');
+        const select = document.getElementById(selectElementId);
         select.innerHTML = '';
         if (data.categories && data.categories.length) {
           data.categories.forEach(cat => {
@@ -138,6 +175,15 @@ function openEditProductModal(product) {
           opt.textContent = 'No categories found';
           select.appendChild(opt);
         }
+      })
+      .catch(error => {
+        console.error('Failed to load categories for modal:', error);
+         const select = document.getElementById(selectElementId);
+         select.innerHTML = '';
+         const opt = document.createElement('option');
+         opt.value = '';
+         opt.textContent = 'Error loading categories';
+         select.appendChild(opt);
       });
   }
   
@@ -170,37 +216,45 @@ function openEditProductModal(product) {
     if (result.success) {
       alert('Product updated!');
       document.getElementById('editProductModal').style.display = 'none';
-      await loadProducts();
+      await loadProducts(); // Reload products after update
     } else {
       alert('Failed to update product: ' + result.message);
     }
   };
   
-  // Example: Attach to edit buttons in your product table
-  // document.querySelectorAll('.edit-btn').forEach(btn => {
-  //   btn.onclick = function() {
-  //     const product = ... // get product data for this row
-  //     openEditProductModal(product);
-  //   };
-  // });
-window.editProduct = function(productId) {
-    alert('Edit product ' + productId);
-};
+  // Example: Attach to edit buttons in your product table (likely handled by event delegation now)
+  // window.editProduct = function(productId) { /* ... */ };
 
 async function deleteProduct(productId) {
     if (!confirm('Are you sure you want to delete this product?')) return;
     const token = localStorage.getItem('token');
-    const res = await fetch(window.API_BASE_URL + '/api/admin/products/' + productId, {
-        method: 'DELETE',
-        headers: {
-            'Authorization': 'Bearer ' + token
+    try {
+        const res = await fetch(window.API_BASE_URL + '/api/admin/products/' + productId, {
+            method: 'DELETE',
+            headers: {
+                'Authorization': 'Bearer ' + token
+            }
+        });
+        const result = await res.json();
+        if (result.success) {
+            alert('Product deleted!');
+            await loadProducts(); // Reload products after deletion
+        } else {
+            alert('Failed to delete product: ' + result.message);
+            console.error(result.message);
         }
-    });
-    const result = await res.json();
-    if (result.success) {
-        alert('Product deleted!');
-        await loadProducts();
-    } else {
-        alert('Failed to delete product: ' + result.message);
+    } catch (error) {
+        alert('Failed to delete product');
+        console.error(error);
     }
-} 
+}
+
+// Add this function if you need to access product data easily by ID
+/*
+function getProductById(productId) {
+    return allProducts.find(p => p.id == productId);
+}
+*/
+
+// Keep this function if it's called elsewhere, otherwise it can be removed
+// window.editProduct = function(productId) { /* ... */ }; 

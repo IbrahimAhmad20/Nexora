@@ -103,8 +103,10 @@ router.get('/products',
       const search = req.query.search;
       let productsQuery = `
         SELECT p.*,
+        c.name as category_name,
         (SELECT image_url FROM product_images WHERE product_id = p.id AND is_primary = 1 LIMIT 1) as primary_image
         FROM products p
+        LEFT JOIN categories c ON p.category_id = c.id
         JOIN vendor_profiles vp ON p.vendor_id = vp.id
         WHERE vp.user_id = ?
       `;
@@ -132,6 +134,8 @@ router.get('/products',
       // Fetch products
       const [products] = await pool.query(productsQuery, productsParams);
 
+      console.log('Fetched raw products from DB:', products);
+
       // Fetch all images for these products
       const productIds = products.map(p => p.id);
       let imagesByProduct = {};
@@ -152,7 +156,7 @@ router.get('/products',
       const mappedProducts = products.map(p => ({
         id: p.id,
         name: p.name,
-        category: p.category,
+        category: p.category_name,
         price: parseFloat(p.price),
         stock: p.stock_quantity,
         status: p.stock_quantity === 0 ? 'outofstock' : (p.status === 'deleted' ? 'inactive' : p.status),
@@ -162,6 +166,14 @@ router.get('/products',
         createdAt: p.created_at,
         updatedAt: p.updated_at
       }));
+
+      console.log('Mapped products for frontend:', mappedProducts);
+
+      
+
+
+
+
 
       res.json({
         products: mappedProducts,
